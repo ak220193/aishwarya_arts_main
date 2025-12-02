@@ -16,14 +16,18 @@ export default function FeaturedProducts() {
     },
     {
       name: "Saraswathi",
-      img: "/assets/Products/24+18/saraswathi/saraswa.hd.jpg",
+      img: "/assets/Products/24+18/saraswathi/saraswa-hd.jpg",
       desc: "Vibrant Saraswathi artwork in gold foil painting finish with beads.",
       price: "₹15,000",
       size: "14x18 inch",
     },
     {
       name: "Shiva",
+<<<<<<< HEAD
       img: "/assets/Products/24+18/Shiva/Shivap.jpg",
+=======
+      img: "/assets/Products/24+18/Shiva/Shiva-pravathi.jpg",
+>>>>>>> 59616995cd4be6f0fff7de16f23deda4da9040b4
       desc: "Hand-painted Shiva portrait with traditional detailing.",
       price: "₹10,500",
       size: "10x14 inch",
@@ -79,7 +83,7 @@ export default function FeaturedProducts() {
                 fill
                 className="object-cover"
                 placeholder="blur"
-                blurDataURL="/assets/bestsellers/image1.jpg"
+                
               />
             </div>
 
