@@ -64,7 +64,7 @@ const Header = () => {
                   key={idx}
                   type="button"
                   aria-label={item.label}
-                  className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#006D5B] text-black"
+                  className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#800000] text-black"
                 >
                   <Icon size={24} />
                  
@@ -126,7 +126,7 @@ const Header = () => {
             type="button"
             aria-label="Close mobile menu"
             onClick={() => setMobileOpen(false)}
-            className="absolute right-4 text-black p-2 rounded-md hover:text-[#006D5B] transition duration-300"
+            className="absolute right-4 text-black p-2 rounded-md hover:text-[#800000] transition duration-300"
           >
             <FiX size={28} />
           </button>
@@ -142,8 +142,8 @@ const Header = () => {
               key={idx}
               href={item.href}
               role="menuitem"
-              className={`text-black font-medium transition transform duration-300 hover:scale-105 hover:text-[#006D5B] ${
-                pathname === item.href ? "text-[#006D5B]" : ""
+              className={`text-black font-medium transition transform duration-300 hover:scale-105 hover:text-[#800000] ${
+                pathname === item.href ? "text[-#800000]" : ""
               }`}
               onClick={() => setMobileOpen(false)}
               aria-current={pathname === item.href ? "page" : undefined}
@@ -162,7 +162,8 @@ const Header = () => {
                     key={idx}
                     type="button"
                     aria-label={item.label}
-                    className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#006D5B] text-black"
+                    className="p-2 rounded-md transition transform duration-300 hover:scale-110 hover:text-[#800000] text-black"
+
                   >
                     <Icon size={24} />
                   </button>
