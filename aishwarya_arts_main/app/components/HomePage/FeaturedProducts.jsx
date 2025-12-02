@@ -23,7 +23,7 @@ export default function FeaturedProducts() {
     },
     {
       name: "Shiva",
-      img: "/assets/Products/24+18/Shiva/ShivaPravathi.jpg",
+      img: "/assets/Products/24+18/Shiva/Shivap.jpg",
       desc: "Hand-painted Shiva portrait with traditional detailing.",
       price: "₹10,500",
       size: "10x14 inch",
@@ -37,7 +37,7 @@ export default function FeaturedProducts() {
     },
     {
       name: "Lord Murga",
-      img: "/assets/Products/24+18/Murugan/Murgan.jpg",
+      img: "/assets/Products/24+18/Murugan/Murgan-hd.jpg",
       desc: "Vibrant Krishna artwork in gold foil painting finish with beads.",
       price: "₹15,000",
       size: "14x18 inch",
