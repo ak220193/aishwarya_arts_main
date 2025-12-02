@@ -23,11 +23,7 @@ export default function FeaturedProducts() {
     },
     {
       name: "Shiva",
-<<<<<<< HEAD
       img: "/assets/Products/24+18/Shiva/Shivap.jpg",
-=======
-      img: "/assets/Products/24+18/Shiva/Shiva-pravathi.jpg",
->>>>>>> 59616995cd4be6f0fff7de16f23deda4da9040b4
       desc: "Hand-painted Shiva portrait with traditional detailing.",
       price: "₹10,500",
       size: "10x14 inch",
@@ -82,7 +78,7 @@ export default function FeaturedProducts() {
                 alt={product.name}
                 fill
                 className="object-cover"
-                placeholder="blur"
+                
                 
               />
             </div>
