@@ -13,7 +13,8 @@ const font = Outfit({
 
 export const metadata = {
   title: {
-    default: "Aishwarya Art Gallery – Buy Handmade Paintings & Art Collections Online",
+    default:
+      "Aishwarya Art Gallery – Buy Handmade Paintings & Art Collections Online",
     template: "%s | Aishwarya Art Gallery",
   },
   description:
@@ -84,11 +85,13 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
-      <body className={`${font.variable} antialiased flex flex-col min-h-screen`}>
+      <body
+        className={`${font.variable} antialiased flex flex-col min-h-screen`}
+      >
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <Whatsapp/>
+        <Whatsapp />
       </body>
     </html>
   );
