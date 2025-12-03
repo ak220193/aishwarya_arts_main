@@ -7,15 +7,15 @@ import Link from "next/link";
 
 export default function AboutSection() {
   const images = [
-    { src: "/assets/about/Rectangle 55.svg", alt: "Tanjore Art" },
-    { src: "/assets/about/Rectangle 52.svg", alt: "Gold Foil Work" },
-    { src: "/assets/about/Rectangle 54.svg", alt: "Handcrafted Painting" },
-    { src: "/assets/about/Rectangle 53.svg", alt: "Art Detail" },
+    { src: "/assets/grid/grid-image-1.jpg", alt: "Tanjore Art" },
+    { src: "/assets/grid/grid-image-7.jpg", alt: "Gold Foil Work" },
+    { src: "/assets/grid/grid-image-8.jpg", alt: "Handcrafted Painting" },
+    { src: "/assets/grid/grid-image-6.jpg", alt: "Art Detail" },
   ];
 
   const infoBoxes = [
     {
-      title: "40+ Years Experience",
+      title: "30+ Years Experience",
       desc: "of artistic tradition and precision",
     },
     { title: "500+ Designs", desc: "completed with intricate creativity" },
@@ -86,7 +86,7 @@ export default function AboutSection() {
             </div>
 
             <Link
-              href="/tanjore"
+              href="/collections"
               className="py-4 mt-5  text-center text-xl bg-gradient-to-r from-yellow-700 to-yellow-500 shadow-md hover:shadow-xl hover:-translate-y-0.5 text-white rounded-lg font-medium transition transform"
               role="button"
               aria-label="Explore Tanjore art collections"
