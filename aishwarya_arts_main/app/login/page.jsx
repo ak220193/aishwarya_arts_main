@@ -1,9 +1,99 @@
-import React from 'react'
+'use client'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
+import { useStore } from "../store/useStore";
 
-const page = () => {
+export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+
+  const { login } = useStore(); 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const res = await fetch("/api/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      login(data.user, data.token); // update global state
+      router.push("/");     // redirect to products
+    } else {
+      setError(data.message);
+    }
+  };
+
   return (
-    <div>page</div>
-  )
-}
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md"
+      >
+        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
+          Login to Your Account
+        </h1>
 
-export default page
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2">Email</label>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div className="mb-2 relative">
+          <label className="block text-gray-700 mb-2">Password</label>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12"
+          />
+          <span
+            className="absolute right-3 top-1/2 translate-y-1/4 cursor-pointer"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+          </span>
+        </div>
+
+        <div className="mb-6 text-right">
+          <Link href="/forgot-password" className="text-blue-600 hover:underline text-sm">
+            Forgot password?
+          </Link>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+        >
+          Login
+        </button>
+
+        <p className="mt-6 text-center text-gray-600">
+          New here?{" "}
+          <Link href="/signup" className="text-blue-600 font-medium hover:underline">
+            Create an account
+          </Link>
+        </p>
+      </form>
+    </div>
+  );
+}
