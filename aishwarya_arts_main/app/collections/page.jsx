@@ -1,16 +1,16 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
+'use client'
+import React, { useEffect, useState } from "react";
 import GodFilter from "../components/Collections/GodFilter";
 import FrameSizeFilter from "../components/Collections/FrameSizeFilter";
 import PriceFilter from "../components/Collections/PriceFilter";
-import ProductGrid from "../components/Collections/ProductGrid";
 import AvailabilityFilter from "../components/Collections/AvailablityFilter";
-import { allProducts } from "../data/products";
+import ProductGrid from "../components/Collections/ProductGrid";
 import ModernTanjore from "../components/Collections/ModernTanjore";
 
 const CollectionsPage = () => {
-  const [filtered, setFiltered] = useState(allProducts);
+  const [products, setProducts] = useState([]);   // raw DB data
+  const [filtered, setFiltered] = useState([]);   // filtered data
+  const [loading, setLoading] = useState(true);
 
   const [filters, setFilters] = useState({
     god: "",
@@ -20,50 +20,79 @@ const CollectionsPage = () => {
     availability: "",
   });
 
+  // ================= FETCH PRODUCTS =================
   useEffect(() => {
-    let temp = [...allProducts];
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/products");
+        const data = await res.json();
 
-    // ---- GOD FILTER ----
+        setProducts(data);
+        setFiltered(data);
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // ================= APPLY FILTERS =================
+  useEffect(() => {
+    if (!products.length) return;
+
+    let temp = [...products];
+
+    // GOD FILTER
     if (filters.god) {
       temp = temp.filter((p) => p.category === filters.god);
     }
 
-    // ---- FRAME SIZE FILTER ----
+    // FRAME SIZE FILTER
     if (filters.frameSize) {
       temp = temp.filter((p) =>
         p.variations?.sizes?.includes(filters.frameSize)
       );
     }
 
-    // ---- PRICE RANGE FILTER ----
+    // PRICE FILTER
     temp = temp.filter((p) => {
-      const priceValues = Object.values(p.variations?.prices || {});
+      const prices = Object.values(p.variations?.prices || {});
+      if (!prices.length) return true;
 
-      // If no prices exist → always include product
-      if (priceValues.length === 0) return true;
+      const minPrice = Math.min(...prices);
+      const maxPrice = Math.max(...prices);
 
-      const minPrice = Math.min(...priceValues);
-      const maxPrice = Math.max(...priceValues);
-
-      return maxPrice >= filters.min && minPrice <= filters.max;
+      return (
+        maxPrice >= filters.min && minPrice <= filters.max
+      );
     });
 
-    // ---- AVAILABILITY FILTER ----
+    // AVAILABILITY FILTER
     if (filters.availability === "in-stock") {
-      temp = temp.filter((p) => p.inStock === true);
+      temp = temp.filter((p) => p.inStock);
     }
+
     if (filters.availability === "out-of-stock") {
-      temp = temp.filter((p) => p.inStock === false);
+      temp = temp.filter((p) => !p.inStock);
     }
 
     setFiltered(temp);
-  }, [filters]);
+  }, [filters, products]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* HEADER */}
       <div className="flex flex-col items-center text-center mb-10">
-        <h1 className="text-3xl font-semibold">Aishwarya Arts — Collections</h1>
-        <p className="mt-2 text-lg">Explore our exquisite collections</p>
+        <h1 className="text-3xl font-semibold">
+          Aishwarya Arts — Collections
+        </h1>
+        <p className="mt-2 text-lg">
+          Explore our exquisite collections
+        </p>
       </div>
 
       <div className="flex gap-10">
@@ -74,33 +103,47 @@ const CollectionsPage = () => {
           <div className="space-y-6 border-t pt-4">
             <GodFilter
               selected={filters.god}
-              onChange={(v) => setFilters({ ...filters, god: v })}
+              onChange={(v) =>
+                setFilters((prev) => ({ ...prev, god: v }))
+              }
             />
 
             <FrameSizeFilter
               selected={filters.frameSize}
-              onChange={(v) => setFilters({ ...filters, frameSize: v })}
+              onChange={(v) =>
+                setFilters((prev) => ({ ...prev, frameSize: v }))
+              }
             />
 
             <PriceFilter
               selected={[filters.min, filters.max]}
-              onChange={([min, max]) => setFilters({ ...filters, min, max })}
+              onChange={([min, max]) =>
+                setFilters((prev) => ({ ...prev, min, max }))
+              }
             />
           </div>
 
           <AvailabilityFilter
             selected={filters.availability}
-            onChange={(v) => setFilters({ ...filters, availability: v })}
+            onChange={(v) =>
+              setFilters((prev) => ({ ...prev, availability: v }))
+            }
           />
         </aside>
 
         {/* MAIN CONTENT */}
         <main className="flex-1">
-          
+          {loading ? (
+            <p className="text-center py-20">Loading products…</p>
+          ) : filtered.length === 0 ? (
+            <p className="text-center py-20">
+              No products found for selected filters
+            </p>
+          ) : (
+            <ProductGrid products={filtered} />
+          )}
 
-          {/* IMPORTANT FIX */}
-          <ProductGrid products={filtered} />
-          <ModernTanjore/>
+          <ModernTanjore />
         </main>
       </div>
     </div>
