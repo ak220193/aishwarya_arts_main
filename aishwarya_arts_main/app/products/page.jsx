@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "next/navigation";
-import RelatedProducts from "../../components/Collections/RelatedProducts";
+import RelatedProducts from "../components/Collections/RelatedProducts";
 
 export default function ProductPage() {
   const params = useParams();
