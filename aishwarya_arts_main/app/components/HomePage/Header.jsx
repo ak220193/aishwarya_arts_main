@@ -9,6 +9,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { navItems, utilities } from "../HomePage";
 import LogoMain from "../../../public/assets/logo/logosample.png";
 import { useStore } from "../../store/useStore";
+import toast from "react-hot-toast";
 
 const iconMap = {
   FiSearch,
@@ -29,6 +30,7 @@ const Header = () => {
     logout();
     setMobileOpen(false);
     setDropdownOpen(false);
+    toast.success("Account Logged out")
     router.push("/");
   };
 

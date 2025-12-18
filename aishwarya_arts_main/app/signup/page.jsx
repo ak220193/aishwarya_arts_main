@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -37,6 +38,7 @@ export default function SignupPage() {
     const data = await res.json();
 
     if (data.success) {
+      toast.success("Account Created")
       router.push("/login");
     } else {
       setError(data.message);

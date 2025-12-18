@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { useStore } from "../store/useStore";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function LoginPage() {
 
     if (data.success) {
       login(data.user, data.token); // update global state
+      toast.success("Login successful");
       router.push("/");     // redirect to products
     } else {
       setError(data.message);
