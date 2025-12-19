@@ -1,8 +1,26 @@
 import React from "react";
 import Link from "next/link";
 import { Heart } from "lucide-react";
+import { useStore } from "../../store/useStore";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 const ProductCard = ({ product }) => {
+  const { data: session } = useSession();
+  const wishlist = useStore((state) => state.wishlist);
+  const toggleWishlist = useStore((state) => state.toggleWishlist);
+
+  const isWishlisted = wishlist.some((p) => p._id === product._id);
+
+  const handleWishlist = () => {
+    if (!session) {
+      toast.error("Login to add wishlist");
+      return;
+    }
+    toggleWishlist(product);
+  };
+
+
   return (
     <div
       className="
@@ -26,11 +44,17 @@ const ProductCard = ({ product }) => {
         </span>
 
         {/* Heart Button */}
-        <button
-          className="
-            absolute top-3 right-3 p-2 bg-white border rounded-full 
-            hover:bg-amber-100 transition shadow-sm">
-          <Heart className="w-4 h-4 text-gray-700" />
+         <button
+          className={`absolute top-3 right-3 p-2 rounded-full shadow-sm transition
+            ${
+              isWishlisted
+                ? "bg-gradient-to-r from-yellow-700 to-yellow-500 text-white"
+                : "bg-white border text-gray-700 hover:bg-amber-100"
+            }
+          `}
+          onClick={handleWishlist}
+        >
+          <Heart className="w-4 h-4" />
         </button>
 
         {/* Product Image */}
@@ -46,7 +70,7 @@ const ProductCard = ({ product }) => {
         {product.name}
       </h3>
 
-       {/* Description */}
+      {/* Description */}
       <h5 className="font-medium text-md mt-3 leading-snug text-center">
         {product.desc}
       </h5>

@@ -7,6 +7,7 @@ import AvailabilityFilter from "../components/Collections/AvailablityFilter";
 import ProductGrid from "../components/Collections/ProductGrid";
 import ModernTanjore from "../components/Collections/ModernTanjore";
 
+
 const CollectionsPage = () => {
   const [products, setProducts] = useState([]);   // raw DB data
   const [filtered, setFiltered] = useState([]);   // filtered data
@@ -19,6 +20,8 @@ const CollectionsPage = () => {
     max: 100000,
     availability: "",
   });
+
+
 
   // ================= FETCH PRODUCTS =================
   useEffect(() => {

@@ -23,7 +23,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const user = await User.findOne({ email: credentials.email });
+        const user = await User.findOne({ email: credentials.email }).select("+password");
         if (!user) throw new Error("No user found");
 
         const isValid = await bcrypt.compare(

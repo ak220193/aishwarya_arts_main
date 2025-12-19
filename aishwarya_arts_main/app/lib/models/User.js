@@ -2,10 +2,17 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    name: { type: String, required: false },
-    email: { type: String, required: true, unique: true },
+    name: { type: String, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
-    role: { type: String, default: "user" }, 
+    image: { type: String },
+    role: { type: String, default: "user" },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
   },
   { timestamps: true }
 );

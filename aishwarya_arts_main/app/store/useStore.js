@@ -1,14 +1,14 @@
 // app/store/useStore.js
 import { create } from "zustand";
+import toast from "react-hot-toast";
 
 export const useStore = create((set, get) => ({
   // ================= AUTH STATE =================
-  user: null, // logged-in user info
-  token: null, // JWT token
-  login: (userData, token) => set({ user: userData, token }),
-  logout: () => set({ user: null, token: null }),
+  // user: null, // logged-in user info
+  // token: null, // JWT token
+  // login: (userData, token) => set({ user: userData, token }),
+  // logout: () => set({ user: null, token: null }),
 
-  
   // ================= CART STATE =================
   cartItems: [],
 
@@ -44,16 +44,54 @@ export const useStore = create((set, get) => ({
 
   // ================= WISHLIST STATE =================
   wishlist: [],
-  toggleWishlist: (product) =>
-    set((state) => {
-      const exists = state.wishlist.some((p) => p._id === product._id);
 
-      return {
-        wishlist: exists
-          ? state.wishlist.filter((p) => p._id !== product._id)
-          : [...state.wishlist, product],
-      };
-    }),
+  // Toggle wishlist
+  toggleWishlist: async (product) => {
+    const currentWishlist = get().wishlist;
+    const exists = currentWishlist.some((p) => p._id === product._id);
+
+    // Optimistic UI update
+    set({
+      wishlist: exists
+        ? currentWishlist.filter((p) => p._id !== product._id)
+        : [...currentWishlist, product],
+    });
+
+    try {
+      const res = await fetch("/api/wishlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: product._id }),
+        credentials: "include",
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.message || "Failed");
+
+      // Sync with server
+      set({ wishlist: data.wishlist });
+
+      // Toast
+      if (!exists) toast.success("Product added to wishlist!");
+      else toast.error("Product removed from wishlist");
+    } catch (err) {
+      console.error(err);
+      // Rollback if API fails
+      set({ wishlist: currentWishlist });
+      toast.error("Something went wrong. Please try again.");
+    }
+  },
+
+  // Fetch wishlist on login/session restore
+  fetchWishlist: async () => {
+    try {
+      const res = await fetch("/api/wishlist", { credentials: "include" });
+      const data = await res.json();
+      if (res.ok) set({ wishlist: data.wishlist });
+    } catch (err) {
+      console.error(err);
+    }
+  },
 
   totalWishlistItems: () => get().wishlist.length,
 
