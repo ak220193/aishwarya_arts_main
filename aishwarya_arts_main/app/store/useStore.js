@@ -2,16 +2,13 @@
 import { create } from "zustand";
 
 export const useStore = create((set, get) => ({
-  
-  
   // ================= AUTH STATE =================
-  user: null,            // logged-in user info
-  token: null,           // JWT token
-  login: (userData, token) => set({ user: userData, token }), 
+  user: null, // logged-in user info
+  token: null, // JWT token
+  login: (userData, token) => set({ user: userData, token }),
   logout: () => set({ user: null, token: null }),
 
- 
- 
+  
   // ================= CART STATE =================
   cartItems: [],
 
@@ -41,40 +38,37 @@ export const useStore = create((set, get) => ({
 
   totalPrice: () =>
     get().cartItems.reduce((acc, item) => {
-      const price =
-        item.variations?.prices?.[item.selectedSize] ||
-        0; // fallback if price not set
+      const price = item.variations?.prices?.[item.selectedSize] || 0; // fallback if price not set
       return acc + price * (item.qty || 1);
     }, 0),
 
- 
-    // ================= WISHLIST STATE =================
+  // ================= WISHLIST STATE =================
   wishlist: [],
   toggleWishlist: (product) =>
     set((state) => {
-      const exists = state.wishlist.find((p) => p._id === product._id);
-      if (exists) {
-        return {
-          wishlist: state.wishlist.filter((p) => p._id !== product._id),
-        };
-      } else {
-        return { wishlist: [...state.wishlist, product] };
-      }
+      const exists = state.wishlist.some((p) => p._id === product._id);
+
+      return {
+        wishlist: exists
+          ? state.wishlist.filter((p) => p._id !== product._id)
+          : [...state.wishlist, product],
+      };
     }),
+
   totalWishlistItems: () => get().wishlist.length,
 
-  
   // ================= UI STATE =================
   isSidebarOpen: false,
-  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  toggleSidebar: () =>
+    set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 
   isCartModalOpen: false,
-  toggleCartModal: () => set((state) => ({ isCartModalOpen: !state.isCartModalOpen })),
+  toggleCartModal: () =>
+    set((state) => ({ isCartModalOpen: !state.isCartModalOpen })),
 
   toast: { message: "", type: "" },
   setToast: (toast) => set({ toast }),
 
- 
   // ================= FILTERS / SEARCH =================
   filters: {
     god: "",

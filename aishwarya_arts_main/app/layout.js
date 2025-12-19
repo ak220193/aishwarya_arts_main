@@ -4,6 +4,7 @@ import Header from "./components/HomePage/Header";
 import Footer from "./components/HomePage/Footer";
 import Whatsapp from "./components/HomePage/whatsapp";
 import { Toaster } from "react-hot-toast";
+import Providers from "./providers";
 
 const font = Outfit({
   subsets: ["latin"],
@@ -89,10 +90,15 @@ export default function RootLayout({ children }) {
       <body
         className={`${font.variable} antialiased flex flex-col min-h-screen`}
       >
-        <Header />
-        <main className="flex-1"> <Toaster position="top-center" />{children}</main>
-        <Footer />
-        <Whatsapp />
+        <Providers>
+          <Header />
+          <main className="flex-1">
+            <Toaster position="top-center" />
+            {children}
+          </main>
+          <Footer />
+          <Whatsapp />
+        </Providers>
       </body>
     </html>
   );

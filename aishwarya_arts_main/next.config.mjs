@@ -2,6 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
+  images: {
+    domains: [
+      "lh3.googleusercontent.com",
+      "lh4.googleusercontent.com",
+      "lh5.googleusercontent.com",
+    ],
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

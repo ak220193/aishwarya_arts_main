@@ -1,10 +1,10 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
-import { useStore } from "../store/useStore";
 import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,25 +13,28 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const { login } = useStore(); 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/users/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+    setError(""); // reset error
+
+    // Email + Password login (credentials)
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
     });
 
-    const data = await res.json();
-
-    if (data.success) {
-      login(data.user, data.token); // update global state
-      toast.success("Login successful");
-      router.push("/");     // redirect to products
+    if (res?.error) {
+      setError(res.error);
     } else {
-      setError(data.message);
+      toast.success("Login successful");
+      router.push("/"); // redirect to homepage or products
     }
+  };
+
+  // OAuth login handler
+  const handleOAuthLogin = async (provider) => {
+    await signIn(provider, { callbackUrl: "/" });
   };
 
   return (
@@ -46,6 +49,7 @@ export default function LoginPage() {
 
         {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
 
+        {/* ================= Email / Password Form ================= */}
         <div className="mb-6">
           <label className="block text-gray-700 mb-2">Email</label>
           <input
@@ -77,7 +81,10 @@ export default function LoginPage() {
         </div>
 
         <div className="mb-6 text-right">
-          <Link href="/forgot-password" className="text-blue-600 hover:underline text-sm">
+          <Link
+            href="/forgot-password"
+            className="text-blue-600 hover:underline text-sm"
+          >
             Forgot password?
           </Link>
         </div>
@@ -89,9 +96,29 @@ export default function LoginPage() {
           Login
         </button>
 
+        {/* ================= OAuth Login ================= */}
+        <div className="mt-6 flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={() => handleOAuthLogin("google")}
+            className="w-full flex items-center justify-center gap-2 py-3 border rounded-lg hover:bg-gray-100 transition"
+          >
+            <img
+              src="/assets/auth/google-icon-logo-svgrepo-com.png"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            Sign in with Google
+          </button>
+          {/* Add more providers here, e.g., GitHub, Facebook */}
+        </div>
+
         <p className="mt-6 text-center text-gray-600">
           New here?{" "}
-          <Link href="/signup" className="text-blue-600 font-medium hover:underline">
+          <Link
+            href="/signup"
+            className="text-blue-600 font-medium hover:underline"
+          >
             Create an account
           </Link>
         </p>
