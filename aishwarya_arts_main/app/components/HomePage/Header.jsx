@@ -8,8 +8,8 @@ import { CiMenuFries } from "react-icons/ci";
 import { usePathname, useRouter } from "next/navigation";
 import { navItems, utilities } from "../HomePage";
 import LogoMain from "../../../public/assets/logo/logosample.png";
-import { useStore } from "../../store/useStore";
 import toast from "react-hot-toast";
+import { useSession, signOut } from "next-auth/react";
 
 const iconMap = {
   FiSearch,
@@ -23,14 +23,15 @@ const Header = () => {
 
   const pathname = usePathname();
   const router = useRouter();
-  const { token, logout } = useStore();
-  const isLoggedIn = Boolean(token);
 
-  const handleLogout = () => {
-    logout();
+  const { data: session, status } = useSession();
+  const isLoggedIn = status === "authenticated";
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
     setMobileOpen(false);
     setDropdownOpen(false);
-    toast.success("Account Logged out")
+    toast.success("Account logged out");
     router.push("/");
   };
 
@@ -91,7 +92,7 @@ const Header = () => {
                 className="w-10 h-10 rounded-full overflow-hidden border"
               >
                 <Image
-                  src="/assets/about/female-1.png"
+                  src={session?.user?.image || "/assets/about/female-1.png"}
                   alt="Avatar"
                   width={40}
                   height={40}
@@ -148,10 +149,10 @@ const Header = () => {
               aria-label="User menu"
             >
               <Image
-                src="/assets/about/female-1.png"
-                alt="User Avatar"
-                width={36}
-                height={36}
+                src={session?.user?.image || "/assets/about/female-1.png"}
+                alt="Avatar"
+                width={40}
+                height={40}
               />
             </button>
           )}
