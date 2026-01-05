@@ -87,6 +87,7 @@ export const useStore = create((set, get) => ({
     try {
       const res = await fetch("/api/wishlist", { credentials: "include" });
       const data = await res.json();
+      console.log("Wishlist Data from API:", data);
       if (res.ok) set({ wishlist: data.wishlist });
     } catch (err) {
       console.error(err);
@@ -108,18 +109,25 @@ export const useStore = create((set, get) => ({
   setToast: (toast) => set({ toast }),
 
   // ================= FILTERS / SEARCH =================
-  filters: {
+ filters: {
     god: "",
     frameSize: "",
     min: 0,
     max: 100000,
     availability: "",
   },
-  setFilters: (filters) => set({ filters }),
+
+  // Helper to update specific filter fields
+  setFilters: (newFilters) => 
+    set((state) => ({ 
+      filters: { ...state.filters, ...newFilters } 
+    })),
 
   searchQuery: "",
   setSearchQuery: (q) => set({ searchQuery: q }),
 
-  sortBy: "price-low",
-  setSortBy: (sort) => set({ sortBy: sort }),
+  // Helper to reset filters
+  resetFilters: () => set({
+    filters: { god: "", frameSize: "", min: 0, max: 100000, availability: "" }
+  })
 }));

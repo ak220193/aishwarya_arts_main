@@ -7,15 +7,10 @@ import { FiSearch, FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
 import { CiMenuFries } from "react-icons/ci";
 import { usePathname, useRouter } from "next/navigation";
 import { navItems, utilities } from "../HomePage";
-import LogoMain from "../../../public/assets/logo/logosample.png";
+import LogoMain from "../../../public/assets/logo/logo.jpeg";
 import toast from "react-hot-toast";
 import { useSession, signOut } from "next-auth/react";
-
-const iconMap = {
-  FiSearch,
-  FiHeart,
-  FiShoppingCart,
-};
+import { useStore } from "../../store/useStore"; // 1. Import your store
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -27,6 +22,12 @@ const Header = () => {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
+  // 2. Pull counts from Zustand
+  const wishlistCount = useStore((state) => state.wishlist.length);
+  const cartCount = useStore((state) => 
+    state.cartItems.reduce((acc, item) => acc + (item.qty || 1), 0)
+  );
+
   const handleLogout = async () => {
     await signOut({ redirect: false });
     setMobileOpen(false);
@@ -35,19 +36,40 @@ const Header = () => {
     router.push("/");
   };
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
+
+  // Helper to render Icons with Badges
+  const renderIcon = (iconName) => {
+    if (iconName === "FiHeart") return (
+      <div className="relative">
+        <FiHeart size={22} />
+        {wishlistCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+            {wishlistCount}
+          </span>
+        )}
+      </div>
+    );
+    if (iconName === "FiShoppingCart") return (
+      <div className="relative">
+        <FiShoppingCart size={22} />
+        {cartCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-amber-700 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+            {cartCount}
+          </span>
+        )}
+      </div>
+    );
+    if (iconName === "FiSearch") return <FiSearch size={22} />;
+    return null;
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-      {/* ================= DESKTOP HEADER ================= */}
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/" aria-label="Home">
           <Image src={LogoMain} alt="Logo" width={100} priority />
         </Link>
@@ -58,196 +80,73 @@ const Header = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative font-medium transition ${
-                pathname === item.href ? "text-amber-800" : "text-black"
-              }`}
+              className={`relative font-medium transition ${pathname === item.href ? "text-amber-800" : "text-black"}`}
             >
               {item.label}
-              <span
-                className={`absolute left-0 -bottom-1 h-[2px] bg-amber-800 transition-all ${
-                  pathname === item.href ? "w-full" : "w-0"
-                }`}
-              />
+              <span className={`absolute left-0 -bottom-1 h-[2px] bg-amber-800 transition-all ${pathname === item.href ? "w-full" : "w-0"}`} />
             </Link>
           ))}
         </nav>
 
-        {/* Desktop Utilities + Auth */}
-        <div className="hidden lg:flex items-center space-x-4">
-          {utilities
-            .filter((u) => u.type === "icon")
-            .map((item) => {
-              const Icon = iconMap[item.icon];
-              return (
-                <button key={item.label} aria-label={item.label}>
-                  <Icon size={22} />
-                </button>
-              );
-            })}
+        {/* Desktop Utilities */}
+        <div className="hidden lg:flex items-center space-x-6">
+          <button aria-label="Search"><FiSearch size={22} /></button>
+          
+          <Link href="/wishlist" className="hover:text-amber-800 transition">
+            {renderIcon("FiHeart")}
+          </Link>
+          
+          <Link href="/cart" className="hover:text-amber-800 transition">
+            {renderIcon("FiShoppingCart")}
+          </Link>
 
           {isLoggedIn ? (
             <div className="relative">
-              <button
-                onClick={() => setDropdownOpen((p) => !p)}
-                className="w-10 h-10 rounded-full overflow-hidden border"
-              >
-                <Image
-                  src={session?.user?.image || "/assets/about/female-1.png"}
-                  alt="Avatar"
-                  width={40}
-                  height={40}
-                />
+              <button onClick={() => setDropdownOpen((p) => !p)} className="w-10 h-10 rounded-full overflow-hidden border">
+                <Image src={session?.user?.image || "/assets/about/female-1.png"} alt="Avatar" width={40} height={40} />
               </button>
-
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-md">
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    My Profile
-                  </Link>
-                  <Link
-                    href="/orders"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    My Orders
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-md py-2">
+                  <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>My Profile</Link>
+                  <Link href="/orders" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>My Orders</Link>
+                  <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">Logout</button>
                 </div>
               )}
             </div>
           ) : (
-            utilities
-              .filter((u) => u.type === "button")
-              .map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className="px-6 py-2 rounded bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-semibold"
-                >
-                  {item.label}
-                </Link>
-              ))
+            <Link href="/login" className="px-6 py-2 rounded bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-semibold">
+              Login
+            </Link>
           )}
         </div>
 
-        {/* Mobile Menu Button */}
-        {/* Mobile / Tablet Right Actions */}
+        {/* Mobile Button */}
         <div className="lg:hidden flex items-center gap-3">
-          {isLoggedIn && (
-            <button
-              onClick={() => setMobileOpen(true)}
-              className="w-9 h-9 rounded-full overflow-hidden border"
-              aria-label="User menu"
-            >
-              <Image
-                src={session?.user?.image || "/assets/about/female-1.png"}
-                alt="Avatar"
-                width={40}
-                height={40}
-              />
-            </button>
-          )}
-
-          <button onClick={() => setMobileOpen(true)} aria-label="Open menu">
-            <CiMenuFries size={28} />
-          </button>
+          <button onClick={() => setMobileOpen(true)}><CiMenuFries size={28} /></button>
         </div>
       </div>
 
-      {/* ================= MOBILE OVERLAY ================= */}
+      {/* Mobile Drawer (simplified for space) */}
       {mobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      {/* ================= MOBILE DRAWER ================= */}
-      {mobileOpen && (
-        <div className="fixed top-0 right-0 h-full w-full bg-white z-50">
-          <div className="flex items-center justify-between px-6 py-4 border-b">
-            <Image src={LogoMain} alt="Logo" width={80} />
-            <button onClick={() => setMobileOpen(false)}>
-              <FiX size={26} />
-            </button>
-          </div>
-
-          <nav className="flex flex-col items-center mt-10 space-y-6 px-6">
-            {/* Nav Links */}
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="text-lg font-medium"
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            {/* Icons */}
-            <div className="flex space-x-4 mt-6">
-              {utilities
-                .filter((u) => u.type === "icon")
-                .map((item) => {
-                  const Icon = iconMap[item.icon];
-                  return <Icon key={item.label} size={24} />;
-                })}
-            </div>
-
-            {/* Login (when logged out) */}
-            {!isLoggedIn && (
-              <div className="mt-8 w-full">
-                {utilities
-                  .filter((u) => u.type === "button")
-                  .map((item) => (
-                    <Link
-                      key={item.label}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block w-full text-center py-3 rounded-md bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-semibold"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+        <div className="fixed inset-0 z-50 bg-white p-6">
+           <div className="flex justify-between items-center mb-10">
+              <Image src={LogoMain} alt="Logo" width={80} />
+              <button onClick={() => setMobileOpen(false)}><FiX size={26} /></button>
+           </div>
+           <nav className="flex flex-col gap-6 text-center">
+              {navItems.map((item) => (
+                <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="text-xl font-medium">{item.label}</Link>
+              ))}
+              <div className="flex justify-center gap-8 py-6 border-y">
+                <Link href="/wishlist" onClick={() => setMobileOpen(false)}>{renderIcon("FiHeart")}</Link>
+                <Link href="/cart" onClick={() => setMobileOpen(false)}>{renderIcon("FiShoppingCart")}</Link>
               </div>
-            )}
-
-            {/* Profile / Orders / Logout (when logged in) */}
-            {isLoggedIn && (
-              <div className="mt-10 w-full border-t pt-6 text-center space-y-4">
-                <Link
-                  href="/profile"
-                  onClick={() => setMobileOpen(false)}
-                  className="block font-medium"
-                >
-                  My Profile
-                </Link>
-                <Link
-                  href="/orders"
-                  onClick={() => setMobileOpen(false)}
-                  className="block font-medium"
-                >
-                  My Orders
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="text-red-600 font-medium"
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </nav>
+              {!isLoggedIn ? (
+                <Link href="/login" className="py-3 bg-amber-700 text-white rounded-lg">Login</Link>
+              ) : (
+                <button onClick={handleLogout} className="text-red-600">Logout</button>
+              )}
+           </nav>
         </div>
       )}
     </header>
