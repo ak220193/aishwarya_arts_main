@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import LogoMain from "../../../public/assets/logo/logosample.png";
+import LogoMain from "../../../public/assets/logo/logo.jpeg";
 import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
 
 const Footer = () => {
