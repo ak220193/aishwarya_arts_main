@@ -41,21 +41,11 @@ const Header = () => {
     if (iconName === "FiHeart") return (
       <div className="relative">
         <FiHeart size={22} />
-      
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-            
-          </span>
-      
       </div>
     );
     if (iconName === "FiShoppingCart") return (
       <div className="relative">
         <FiShoppingCart size={22} />
-       
-          <span className="absolute -top-2 -right-2 bg-amber-700 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-            
-          </span>
-      
       </div>
     );
     if (iconName === "FiSearch") return <FiSearch size={22} />;
@@ -66,7 +56,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" aria-label="Home">
-          <Image src={LogoMain} alt="Logo" width={110} priority />
+          <Image src={LogoMain} alt="Logo" width={80} priority />
         </Link>
 
         {/* Desktop Navigation */}
@@ -85,7 +75,7 @@ const Header = () => {
 
         {/* Desktop Utilities */}
         <div className="hidden lg:flex items-center space-x-6">
-          <button aria-label="Search"><FiSearch size={22} /></button>
+         
           
           <Link href="/wishlist" className="hover:text-amber-800 transition">
             {renderIcon("FiHeart")}
