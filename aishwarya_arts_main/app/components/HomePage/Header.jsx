@@ -7,10 +7,10 @@ import { FiSearch, FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
 import { CiMenuFries } from "react-icons/ci";
 import { usePathname, useRouter } from "next/navigation";
 import { navItems, utilities } from "../HomePage";
-import LogoMain from "../../../public/assets/logo/logo.jpeg";
+import LogoMain from "../../../public/Logo.png";
 import toast from "react-hot-toast";
 import { useSession, signOut } from "next-auth/react";
-import { useStore } from "../../store/useStore"; // 1. Import your store
+
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -22,11 +22,6 @@ const Header = () => {
   const { data: session, status } = useSession();
   const isLoggedIn = status === "authenticated";
 
-  // 2. Pull counts from Zustand
-  const wishlistCount = useStore((state) => state.wishlist.length);
-  const cartCount = useStore((state) => 
-    state.cartItems.reduce((acc, item) => acc + (item.qty || 1), 0)
-  );
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
@@ -46,21 +41,21 @@ const Header = () => {
     if (iconName === "FiHeart") return (
       <div className="relative">
         <FiHeart size={22} />
-        {wishlistCount > 0 && (
+      
           <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-            {wishlistCount}
+            
           </span>
-        )}
+      
       </div>
     );
     if (iconName === "FiShoppingCart") return (
       <div className="relative">
         <FiShoppingCart size={22} />
-        {cartCount > 0 && (
+       
           <span className="absolute -top-2 -right-2 bg-amber-700 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-            {cartCount}
+            
           </span>
-        )}
+      
       </div>
     );
     if (iconName === "FiSearch") return <FiSearch size={22} />;
@@ -71,7 +66,7 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" aria-label="Home">
-          <Image src={LogoMain} alt="Logo" width={100} priority />
+          <Image src={LogoMain} alt="Logo" width={110} priority />
         </Link>
 
         {/* Desktop Navigation */}

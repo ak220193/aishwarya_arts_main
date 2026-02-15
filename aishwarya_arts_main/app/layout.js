@@ -1,8 +1,7 @@
-import { Poppins, Outfit } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import Header from "./components/HomePage/Header";
 import Footer from "./components/HomePage/Footer";
-import Whatsapp from "./components/HomePage/whatsapp";
 import { Toaster } from "react-hot-toast";
 import Providers from "./providers";
 
@@ -14,51 +13,41 @@ const font = Outfit({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://aishwaryaartgallery.com"),
   title: {
-    default:
-      "Aishwarya Art Gallery – Buy Handmade Paintings & Art Collections Online",
-    template: "%s | Aishwarya Art Gallery",
+    default: "Aishwarya Arts | Authentic Tanjore Handmade Paintings",
+    template: "%s | Aishwarya Arts",
   },
   description:
-    "Discover Aishwarya Art Gallery — a curated space for handmade paintings, sculptures, and modern artworks. Explore exhibitions, shop online, and bring home artistic elegance crafted by talented Indian artists.",
+    "Premium handmade Tanjore paintings and traditional Indian art. Explore curated collections of artistic elegance crafted by expert artists at Aishwarya Arts.",
   keywords: [
-    "Aishwarya Art Gallery",
-    "art gallery Namakkal",
-    "buy paintings online",
-    "handmade art India",
-    "modern art collections",
-    "wall paintings for home",
-    "Indian art store",
-    "sculpture art gallery",
-    "Namakkal art exhibitions",
-    "original Indian paintings",
+    "Tanjore Paintings",
+    "Handmade Indian Art",
+    "Aishwarya Arts Namakkal",
+    "Traditional Gold Leaf Paintings",
+    "Buy Tanjore Art Online",
   ],
   openGraph: {
-    title: "Aishwarya Art Gallery – Handmade Paintings & Sculptures",
+    title: "Aishwarya Arts – Traditional Handmade Paintings",
     description:
-      "Explore and shop curated Indian artworks from Aishwarya Art Gallery. Discover exclusive exhibitions and timeless art collections.",
-    url: "https://aishwaryaartgallery.com",
-    siteName: "Aishwarya Art Gallery",
+      "Exquisite handmade Tanjore paintings and traditional artworks for your home and office.",
+    url: "/",
+    siteName: "Aishwarya Arts",
     locale: "en_IN",
     type: "website",
     images: [
       {
-        url: "https://aishwaryaartgallery.com/assets/og-image.jpg",
+        url: "/assets/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Aishwarya Art Gallery - Handmade Paintings",
+        alt: "Aishwarya Arts - Tanjore Paintings",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aishwarya Art Gallery – Buy Art & Paintings Online",
-    description:
-      "Shop exquisite handmade paintings, modern artworks, and sculptures from Aishwarya Art Gallery, India.",
-    images: ["https://aishwaryaartgallery.com/assets/og-image.jpg"],
-  },
-  alternates: {
-    canonical: "https://aishwaryaartgallery.com",
+    title: "Aishwarya Arts | Buy Traditional Art Online",
+    images: ["/assets/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -79,7 +68,7 @@ export default function RootLayout({ children }) {
               "@type": "Organization",
               name: "Aishwarya Art Gallery",
               url: "https://aishwaryaartgallery.com",
-              logo: "https://aishwaryaartgallery.com/assets/logo.png",
+              logo: "https://aishwaryaartgallery.com/logo.png",
             }),
           }}
         />
@@ -103,3 +92,5 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+import Whatsapp from "./components/HomePage/whatsapp";
