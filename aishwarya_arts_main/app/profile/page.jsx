@@ -3,11 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useStore } from "../store/useStore";
+
 
 const ProfilePage = () => {
-  const { user, logout } = useStore();
-
+  
   return (
     <div className="bg-gray-50 min-h-screen py-10">
       <div className="max-w-7xl mx-auto px-4">
@@ -33,7 +32,7 @@ const ProfilePage = () => {
               </div>
 
               <p className="mt-4 text-sm text-gray-600">
-                {user?.email || "user@email.com"}
+               
               </p>
             </div>
 
@@ -44,7 +43,7 @@ const ProfilePage = () => {
               <SidebarLink href="/wishlist" label="Wishlist" />
 
               <button
-                onClick={logout}
+               
                 className="w-full text-left px-4 py-2 rounded-lg text-red-600 hover:bg-red-50"
               >
                 Logout

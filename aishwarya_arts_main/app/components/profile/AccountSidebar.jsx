@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useStore } from "../../store/useStore";
+
 
 /* SidebarLink stays SAME */
 const SidebarLink = ({ href, label }) => (
@@ -15,7 +15,7 @@ const SidebarLink = ({ href, label }) => (
 );
 
 const AccountSidebar = () => {
-  const { user, logout } = useStore();
+  
 
   return (
     <aside className="bg-white rounded-2xl shadow-sm p-6">
@@ -38,7 +38,7 @@ const AccountSidebar = () => {
         </div>
 
         <p className="mt-4 text-sm text-gray-600">
-          {user?.email || "user@email.com"}
+           user@email.com
         </p>
       </div>
 
@@ -49,7 +49,6 @@ const AccountSidebar = () => {
         <SidebarLink href="/wishlist" label="Wishlist" />
 
         <button
-          onClick={logout}
           className="w-full text-left px-4 py-2 rounded-lg text-red-600 hover:bg-red-50"
         >
           Logout
