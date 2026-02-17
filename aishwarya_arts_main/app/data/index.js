@@ -1,0 +1,155 @@
+// app/data/index.js
+
+export const dummyProducts = [
+  {
+    _id: "1",
+    slug: "lord-ganesha-3d-gold-foil",
+    title: "Lord Ganesha 3D Gold Foil Painting",
+    subtitle: "3D Traditional Art with 22 Carat Gold Foil",
+    price: 18000,
+    offerPrice: 15500,
+    godName: "Ganesha",
+    workType: "3d",
+    rating: 4.8,
+    reviews: 12,
+    images: [
+      "https://i.pinimg.com/1200x/ae/9b/72/ae9b72b10034ea10397ac96f7abb0287.jpg",
+      "https://i.pinimg.com/736x/b7/57/0c/b7570c2868e72717ce38f99e6756c25d.jpg"
+    ],
+    specs: {
+      category: "3D Tanjore Painting",
+      size: "18x24 inches",
+      frame: "Teak Wood Frame",
+      materials: "22K Gold Foil, Jaipur Gems",
+      weight: "3.5 kg",
+    },
+    isBestSeller: true,
+    isNewArrival: false,
+    inStock: true
+  },
+  {
+    _id: "2",
+    slug: "gajalakshmi-traditional-teak",
+    title: "Gajalakshmi Traditional Teak Frame",
+    subtitle: "Authentic Traditional Art with 22 Carat Gold Foil",
+    price: 25000,
+    offerPrice: 22000,
+    godName: "Lakshmi",
+    workType: "2d",
+    rating: 5.0,
+    reviews: 8,
+    images: [
+      "https://i.pinimg.com/736x/b7/57/0c/b7570c2868e72717ce38f99e6756c25d.jpg",
+    ],
+    specs: {
+      category: "Traditional Tanjore",
+      size: "24x30 inches",
+      frame: "Teak Wood Frame",
+      materials: "22K Gold Foil, Semi-precious stones",
+      weight: "4.2 kg",
+    },
+    isBestSeller: false,
+    isNewArrival: true,
+    inStock: true
+  },
+  {
+    _id: "3",
+    slug: "balaji-darbar-antique",
+    title: "Lord Balaji Darbar Antique Finish",
+    subtitle: "Royal Heritage Collection with Muckwork",
+    price: 32000,
+    offerPrice: 28500,
+    godName: "Balaji",
+    workType: "3d",
+    rating: 4.9,
+    reviews: 15,
+    images: [
+      "https://i.pinimg.com/1200x/ae/9b/72/ae9b72b10034ea10397ac96f7abb0287.jpg",
+    ],
+    specs: {
+      category: "Antique Tanjore",
+      size: "20x24 inches",
+      frame: "Rose Wood Finish",
+      materials: "22K Gold, Jaipur Stones",
+      weight: "3.8 kg",
+    },
+    isBestSeller: true,
+    isNewArrival: false,
+    inStock: true
+  },
+  {
+    _id: "4",
+    slug: "saraswati-veena-flat-work",
+    title: "Saraswati Veena Traditional Art",
+    subtitle: "Classic Flat Gold Foil Work",
+    price: 15000,
+    offerPrice: 13500,
+    godName: "Saraswati",
+    workType: "flat",
+    rating: 4.7,
+    reviews: 6,
+    images: [
+      "https://i.pinimg.com/736x/b7/57/0c/b7570c2868e72717ce38f99e6756c25d.jpg",
+    ],
+    specs: {
+      category: "Flat Work Tanjore",
+      size: "12x15 inches",
+      frame: "Synthetic Gold Frame",
+      materials: "22K Gold Foil, Plywood",
+      weight: "2.1 kg",
+    },
+    isBestSeller: false,
+    isNewArrival: false,
+    inStock: true
+  },
+  {
+    _id: "5",
+    slug: "radha-krishna-swing-3d",
+    title: "Radha Krishna Swing 3D Painting",
+    subtitle: "Detailed Embossed Work on Teak Wood",
+    price: 45000,
+    offerPrice: 39900,
+    godName: "Krishna",
+    workType: "3d",
+    rating: 5.0,
+    reviews: 21,
+    images: [
+      "https://i.pinimg.com/1200x/ae/9b/72/ae9b72b10034ea10397ac96f7abb0287.jpg",
+    ],
+    specs: {
+      category: "Premium 3D Tanjore",
+      size: "36x48 inches",
+      frame: "Handcrafted Teak",
+      materials: "22K Gold, Original Ruby Stones",
+      weight: "12.5 kg",
+    },
+    isBestSeller: true,
+    isNewArrival: true,
+    inStock: true
+  },
+  {
+    _id: "6",
+    slug: "lord-shiva-meditation-flat",
+    title: "Lord Shiva Meditation Tanjore",
+    subtitle: "Serene Flat Gold Foil Heritage Art",
+    price: 12000,
+    offerPrice: 10500,
+    godName: "Shiva",
+    workType: "flat",
+    rating: 4.6,
+    reviews: 4,
+    images: [
+      "https://i.pinimg.com/736x/b7/57/0c/b7570c2868e72717ce38f99e6756c25d.jpg",
+    ],
+    specs: {
+      category: "Heritage Tanjore",
+      size: "10x12 inches",
+      frame: "Teak Wood Finish",
+      materials: "22K Gold, Plywood Base",
+      weight: "1.5 kg",
+    },
+    isBestSeller: false,
+    isNewArrival: false,
+    inStock: false // Out of stock example
+  }
+];

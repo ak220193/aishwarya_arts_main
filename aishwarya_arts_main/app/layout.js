@@ -1,4 +1,4 @@
-import { Outfit } from "next/font/google";
+import { Titillium_Web } from "next/font/google";
 import "./globals.css";
 import Header from "./components/HomePage/Header";
 import Footer from "./components/HomePage/Footer";
@@ -7,10 +7,10 @@ import Whatsapp from "./components/HomePage/whatsapp";
 import Providers from "./providers";
 
 
-const font = Outfit({
+const titillium = Titillium_Web({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-outfit",
+  weight: ["300", "400", "600", "700", "900"], // 300(Light), 400(Regular), 600(SemiBold), 700(Bold), 900(Black)
+  variable: "--font-titillium",
   display: "swap",
 });
 
@@ -79,7 +79,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body
-        className={`${font.variable} antialiased flex flex-col min-h-screen`}
+       className={`${titillium.variable} antialiased flex flex-col min-h-screen font-sans`}
       >
         <Providers>
           <Header />

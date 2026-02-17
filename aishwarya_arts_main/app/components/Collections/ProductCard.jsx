@@ -1,11 +1,22 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, Star, ArrowUpRight, ShoppingBag } from "lucide-react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useWishlistStore } from "../../store/useWishlistStore";
+import { useAuthStore } from "../../store/useAuthStore";
 
-const ProductCard = ({ product }) => {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
+  const router = useRouter();
+
+  const { isLoggedIn } = useAuthStore();
+
+  const wishlist = useWishlistStore((state) => state.wishlist);
+  const isInWishlist = useWishlistStore((state) =>
+    state.wishlist.some((item) => item.id === product._id),
+  );
 
   if (!product) return null;
 
@@ -18,6 +29,21 @@ const ProductCard = ({ product }) => {
   const displayPrice = product.offerPrice || product.price || 14000;
   const originalPrice = product.price || 18000;
   const hasDiscount = product.offerPrice && product.offerPrice < product.price;
+
+  const handleWishlistClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onWishlistToggle(product);
+   
+  };
+
+  const handleBuyNow = (e) => {
+    e.preventDefault();
+    onAddToCart(product);
+   if (isLoggedIn) {
+    router.push("/cart");
+  }
+  };
 
   return (
     <div className="group relative flex flex-col bg-white transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] rounded-3xl p-2">
@@ -37,15 +63,12 @@ const ProductCard = ({ product }) => {
 
         {/* WISHLIST */}
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            setIsWishlisted(!isWishlisted);
-          }}
+          onClick={handleWishlistClick}
           className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/90 backdrop-blur-md shadow-sm transition-all hover:scale-110 active:scale-95 border border-gray-100"
         >
           <Heart
             size={15}
-            className={`transition-colors duration-300 ${isWishlisted ? "fill-red-500 text-red-500" : "text-black"}`}
+            className={`transition-colors duration-300  ${isInWishlist ? "fill-red-500 text-red-500" : "text-black"}`}
           />
         </button>
 
@@ -66,7 +89,10 @@ const ProductCard = ({ product }) => {
 
         {/* BUY NOW */}
         <div className="absolute inset-x-4 bottom-4 z-30 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
-          <button className="w-full bg-black text-white py-4 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-yellow-500 hover:text-black transition-colors shadow-2xl">
+          <button
+            onClick={handleBuyNow}
+            className="w-full bg-black text-white py-4 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-yellow-500 hover:text-black transition-colors shadow-2xl"
+          >
             <ShoppingBag size={14} /> Buy Now
           </button>
         </div>
@@ -105,7 +131,6 @@ const ProductCard = ({ product }) => {
           <p className="text-[10px] uppercase text-black font-bold tracking-wider">
             Starting from
           </p>
-
           <div className="flex items-center justify-between gap-10">
             <div className="flex items-center gap-3">
               {/* Current/Offer Price */}
@@ -123,7 +148,6 @@ const ProductCard = ({ product }) => {
             <span className="text-[11px] font-black uppercase tracking-[0.1em] text-black">
               Know More
             </span>
-
             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-yellow-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />
           </Link>
         </div>

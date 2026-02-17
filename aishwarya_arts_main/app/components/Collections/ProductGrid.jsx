@@ -1,10 +1,9 @@
 'use client'
 import React from "react";
-import { useSession } from "next-auth/react";
 import ProductCard from "./ProductCard";
 
-const ProductGrid = ({ products = [] }) => {
-  const { data: session } = useSession();
+const ProductGrid = ({ products = [], onWishlistToggle, onAddToCart }) => {
+  
 
   // If no products are found (e.g., after filtering)
   if (products.length === 0) {
@@ -20,8 +19,9 @@ const ProductGrid = ({ products = [] }) => {
       {products.map((product) => (
         <ProductCard 
           key={product._id} 
-          product={product} 
-          isLoggedIn={!!session} 
+          product={product}
+          onWishlistToggle={onWishlistToggle} 
+          onAddToCart={onAddToCart}
         />
       ))}
     </div>

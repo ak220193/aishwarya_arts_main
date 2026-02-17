@@ -6,8 +6,11 @@ import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 
+import { useAuthStore } from "../store/useAuthStore";
+
 export default function LoginPage() {
   const router = useRouter();
+  const login = useAuthStore((state) => state.login);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +18,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // reset error
+    setError(""); 
 
     // Email + Password login (credentials)
     const res = await signIn("credentials", {
@@ -27,6 +30,7 @@ export default function LoginPage() {
     if (res?.error) {
       setError(res.error);
     } else {
+      login({ email });
       toast.success("Login successful");
       router.push("/"); // redirect to homepage or products
     }
@@ -34,7 +38,7 @@ export default function LoginPage() {
 
   // OAuth login handler
   const handleOAuthLogin = async (provider) => {
-    await signIn(provider, { callbackUrl: "/" });
+    await signIn(provider, { callbackUrl: "/collections" });
   };
 
   return (
