@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, use, useEffect } from "react";
 import Image from "next/image";
 import {
   Heart,
@@ -17,16 +17,55 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { dummyProducts } from "../../data/index";
 
-const ProductPage = () => {
+
+
+import { useCartStore } from "../../store//useCartStore";
+import { useWishlistStore } from "../../store/useWishlistStore";
+import { useAuthStore } from "../../store/useAuthStore";
+
+const ProductPage = ({params}) => {
+  const [mounted, setMounted] = useState(false);
+  const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
+  const resolvedParams = use(params);
+  const productId = resolvedParams.id;
+  const product = dummyProducts.find((p) => p._id === productId);
+
+  useEffect(() => {
+    setMounted(true);
+    console.log("📄 PRODUCT PAGE MOUNTED. isLoggedIn:", useAuthStore.getState().isLoggedIn);
+  }, []);
+
+  
+
+
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
-  const [isWishlisted, setIsWishlisted] = useState(false);
-
+  const [selectedSize, setSelectedSize] = useState("18x24 inches");
   const [zoomData, setZoomData] = useState({ x: 0, y: 0, show: false });
   const imgRef = useRef(null);
+  const addToCart = useCartStore((state) => state.addToCart);
+  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
+  const wishlist = useWishlistStore((state) => state.wishlist);
 
-  const handleMouseMove = (e) => {
+  const isInWishlist = wishlist.some((item) => (item.id === product?._id || item._id === product?._id));
+
+ 
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h1 className="text-2xl font-bold">Painting not found</h1>
+      </div>
+    );
+  }
+
+  
+
+    const handleMouseMove = (e) => {
     if (!imgRef.current) return;
     const { left, top, width, height } = imgRef.current.getBoundingClientRect();
     const x = ((e.pageX - left - window.scrollX) / width) * 100;
@@ -34,25 +73,52 @@ const ProductPage = () => {
     setZoomData({ x, y, show: true });
   };
 
-  const product = {
-    title: "Siva Family Tanjore Painting",
-    subtitle: "3D Traditional Art with 22 Carat Gold Foil",
-    price: 22000,
-    offerPrice: 18500,
-    rating: 4,
-    reviews: 5,
-    images: [
-      "https://i.pinimg.com/1200x/ae/9b/72/ae9b72b10034ea10397ac96f7abb0287.jpg",
-      "https://i.pinimg.com/736x/b7/57/0c/b7570c2868e72717ce38f99e6756c25d.jpg",
-    ],
-    specs: {
-      category: "3D Tanjore Painting",
-      size: "18x24 inches",
-      frame: "Teak Wood Frame",
-      materials: "22K Gold Foil, Jaipur Gems",
-      weight: "3.5 kg",
-    },
+  const handleWishlistToggle = () => {
+   const isActuallyLoggedIn = useAuthStore.getState().isLoggedIn;
+   if (!isActuallyLoggedIn) {
+      toast.error("Login to wishlist this painting");
+      router.push("/login");
+      return;
+    }
+    toggleWishlist({
+      id: product._id,
+      title: product.title,
+      price: product.offerPrice,
+      image: product.images[0],
+    });
+    if (!isInWishlist) toast.success("Added to Wishlist");
   };
+
+  const onAddToCart = () => {
+    const isActuallyLoggedIn = useAuthStore.getState().isLoggedIn;
+    if (!isActuallyLoggedIn) {
+      toast.error("Please login to start shopping");
+      router.push("/login");
+      return;
+    }
+    addToCart({
+      id: product._id,
+      title: product.title,
+      price: product.offerPrice,
+      image: product.images[0],
+      quantity: quantity,
+      size: selectedSize,
+    });
+    toast.success(`${quantity} Item(s) added to cart`);
+  };
+
+  const onBuyNow = () => {
+    const isActuallyLoggedIn = useAuthStore.getState().isLoggedIn;
+    
+    if (!isActuallyLoggedIn) {
+      toast.error("Please login to proceed to checkout");
+      router.push("/login");
+      return;
+    }
+    onAddToCart();
+    router.push("/cart");
+  };
+
 
   return (
     <div className="min-h-screen pb-12 md:pb-24 font-outfit">
@@ -93,13 +159,9 @@ const ProductPage = () => {
             <div
               className="relative w-full max-w-xl aspect-square md:h-[30rem] lg:h-[35rem] xl:h-[40rem] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden cursor-crosshair group mb-5"
               onMouseMove={handleMouseMove}
-              onMouseEnter={() =>
-                setZoomData((prev) => ({ ...prev, show: true }))
-              }
-              onMouseLeave={() =>
-                setZoomData((prev) => ({ ...prev, show: false }))
-              }
-            >
+              onMouseEnter={() => setZoomData((prev) => ({ ...prev, show: true }))}
+              onMouseLeave={() => setZoomData((prev) => ({ ...prev, show: false }))}
+               >
               <Image
                 ref={imgRef}
                 src={product.images[activeImage]}
@@ -126,13 +188,13 @@ const ProductPage = () => {
 
               {/* Wishlist Button */}
               <button
-                onClick={() => setIsWishlisted(!isWishlisted)}
+               onClick={handleWishlistToggle}
                 className="absolute top-4 right-4 md:top-6 md:right-6 z-20 p-2 md:p-3 rounded-full bg-white/90 shadow-sm transition-transform hover:scale-110 active:scale-95"
               >
                 <Heart
                   size={20}
                   className={
-                    isWishlisted ? "fill-red-500 text-red-500" : "text-black"
+                    isInWishlist ? "fill-red-500 text-red-500" : "text-black"
                   }
                 />
               </button>
@@ -189,10 +251,13 @@ const ProductPage = () => {
                   <label className="text-[14px] md:text-[18px] font-black text-gray-900 tracking-wider">
                     Frame Size
                   </label>
-                  <select className="w-full bg-white border border-gray-100 rounded-2xl px-5 py-3 md:py-4 text-sm font-bold appearance-none focus:ring-2 focus:ring-yellow-500 outline-none shadow-sm cursor-pointer">
-                    <option>18x24 inches</option>
-                    <option>24x36 inches</option>
-                  </select>
+                  <select 
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                    className="w-full bg-white border border-gray-100 rounded-2xl px-5 py-3 md:py-4 text-sm font-bold outline-none cursor-pointer"
+                  ><option value="18x24 inches">18x24 inches</option>
+                    <option value="24x36 inches">24x36 inches</option>
+                    </select>
                 </div>
                 <div className="space-y-3">
                   <label className="text-[14px] md:text-[18px] font-black text-gray-900 tracking-wider">
@@ -217,10 +282,10 @@ const ProductPage = () => {
               </div>
 
               <div className="flex flex-row gap-3">
-                <button className="w-full bg-black text-white py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-yellow-600 transition-all shadow-xl flex items-center justify-center gap-3">
+                <button onClick={onBuyNow} className="w-full bg-black text-white py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-yellow-600 transition-all shadow-xl flex items-center justify-center gap-3">
                   <ShoppingBag size={18} /> Buy Now
                 </button>
-                <button className="w-full bg-white text-black border border-black py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-gray-100 transition-all flex items-center justify-center gap-3">
+                <button onClick={onAddToCart} className="w-full bg-white text-black border border-black py-4 md:py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-gray-100 transition-all flex items-center justify-center gap-3">
                   Add To Cart
                 </button>
               </div>

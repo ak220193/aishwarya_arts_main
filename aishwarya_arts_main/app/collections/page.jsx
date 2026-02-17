@@ -1,51 +1,82 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FilterSidebar from "../components/Collections/FilterSidebar";
 import ProductGrid from "../components/Collections/ProductGrid";
 import SortDropdown from "../components/Collections/SortDropdown";
-import { SlidersHorizontal, X } from "lucide-react"; // Install lucide-react if not already
+import { SlidersHorizontal, X } from "lucide-react"; 
+import { dummyProducts } from "../data";
+import { useCartStore } from "../store/useCartStore";
+import { useWishlistStore } from "../store/useWishlistStore";
+import { useAuthStore } from "../store/useAuthStore";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const CollectionsPage = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const dummyProducts = [
-    {
-      _id: "1",
-      title: "Lord Ganesha 3D Gold Foil Painting",
-      price: 18000,
-      offerPrice: 15500,
-      godName: "Ganesha",
-      workType: "3d",
-      images: [
-        "https://i.pinimg.com/1200x/ae/9b/72/ae9b72b10034ea10397ac96f7abb0287.jpg",
-      ],
-    },
-    {
-      _id: "2",
-      title: "Gajalakshmi Traditional Teak Frame",
-      price: 25000,
-      offerPrice: 22000,
-      godName: "Lakshmi",
-      workType: "2d",
-      images: [
-        "https://i.pinimg.com/736x/b7/57/0c/b7570c2868e72717ce38f99e6756c25d.jpg",
-      ],
-    },
-    ...Array(4)
-      .fill({})
-      .map((_, i) => ({
-        _id: `temp-${i}`,
-        title: "Traditional Tanjore Artwork",
-        price: 15000,
-        offerPrice: 13500,
-        godName: "Traditional",
-        workType: "flat",
-        images: [
-          "https://i.pinimg.com/736x/b7/57/0c/b7570c2868e72717ce38f99e6756c25d.jpg",
-        ],
-      })),
-  ];
+  
+  const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
+  
+  const addToCart = useCartStore((state) => state.addToCart);
+  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
 
+  useEffect(() => {
+  setMounted(true);
+}, []);
+
+if (!mounted) return null;
+
+  const handleAddToCart = (product) => {
+  const reactiveAuth = isLoggedIn; // From the hook
+  const absoluteAuth = useAuthStore.getState().isLoggedIn; // Direct from store
+
+  console.log("🛒 ADD TO CART CLICKED");
+  console.log("Reactive Auth (Hook):", reactiveAuth);
+  console.log("Absolute Auth (Store):", absoluteAuth);
+
+  if (!absoluteAuth) {
+    console.warn("❌ BLOCKED: User not logged in according to Store.");
+    toast.error("Please login to add items to cart!");
+    router.push("/login"); 
+    return;
+  }
+   const currentLoginStatus = useAuthStore.getState().isLoggedIn;
+
+  if (!currentLoginStatus) {
+    toast.error("Please login to add items to cart!");
+    router.push("/login"); 
+    return;
+  }
+    addToCart({
+      id: product._id,
+      title: product.title,
+      price: product.offerPrice,
+      image: product.images[0],
+      quantity: 1,
+    });
+    toast.success(`${product.title} added to cart!`);
+  };
+
+  const handleWishlistToggle = (product) => {
+    const currentLoginStatus = useAuthStore.getState().isLoggedIn;
+
+  if (!currentLoginStatus) {
+    toast.error("Please login to save favorites!");
+    router.push("/login");
+    return;
+  }
+    toggleWishlist({
+      id: product._id,
+      title: product.title,
+      price: product.offerPrice,
+      image: product.images[0],
+    });
+  };
+  
+
+  
   return (
     <div className="bg-white min-h-screen font-outfit relative">
       {/* --- MOBILE FILTER DRAWER --- */}
@@ -118,7 +149,7 @@ const CollectionsPage = () => {
 
           {/* PRODUCT GRID */}
           <main className="lg:w-3/4 w-full">
-            <ProductGrid products={dummyProducts} />
+            <ProductGrid products={dummyProducts} onWishlistToggle={handleWishlistToggle} onAddToCart={handleAddToCart}/>
 
             <div className="mt-16 flex flex-col items-center gap-4">
               <div className="h-[1px] w-12 bg-amber-200"></div>
