@@ -3,7 +3,9 @@ import "./globals.css";
 import Header from "./components/HomePage/Header";
 import Footer from "./components/HomePage/Footer";
 import { Toaster } from "react-hot-toast";
+import Whatsapp from "./components/HomePage/whatsapp";
 import Providers from "./providers";
+
 
 const font = Outfit({
   subsets: ["latin"],
@@ -93,4 +95,4 @@ export default function RootLayout({ children }) {
   );
 }
 
-import Whatsapp from "./components/HomePage/whatsapp";
+

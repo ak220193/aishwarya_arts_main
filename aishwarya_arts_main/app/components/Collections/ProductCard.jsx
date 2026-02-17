@@ -1,102 +1,133 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Heart } from "lucide-react";
-import { useStore } from "../../store/useStore";
-import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
+import { Heart, Star, ArrowUpRight, ShoppingBag } from "lucide-react";
 
 const ProductCard = ({ product }) => {
-  const { data: session } = useSession();
-  const wishlist = useStore((state) => state.wishlist);
-  const toggleWishlist = useStore((state) => state.toggleWishlist);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const isWishlisted = wishlist.some((p) => p._id === product._id);
+  if (!product) return null;
 
-  const handleWishlist = () => {
-    if (!session) {
-      toast.error("Login to add wishlist");
-      return;
-    }
-    toggleWishlist(product);
-  };
+  const imageUrl = product.images?.[0] || "/placeholder-art.jpg";
+  const title =
+    product.title ||
+    "Gaja Lakshmi Antique finish Semi Embossed Tanjore Painting";
 
+  // Pricing Logic
+  const displayPrice = product.offerPrice || product.price || 14000;
+  const originalPrice = product.price || 18000;
+  const hasDiscount = product.offerPrice && product.offerPrice < product.price;
 
   return (
-    <div
-      className="
-        bg-white rounded-2xl p-4 border border-gray-200 
-        shadow-[0_2px_10px_rgba(0,0,0,0.05)]
-        hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)]
-        transition-all duration-300 hover:-translate-y-1
-      "
-    >
-      {/* Image Wrapper with Absolute Badges */}
-      <div className="relative w-full flex justify-center">
-        {/* New Badge */}
-        <span
-          className="
-            absolute top-3 left-3
-            bg-gradient-to-r from-yellow-700 to-yellow-500 hover:shadow-xl hover:-translate-y-0.5  hover:bg-[#000000] transition transform  hover:scale-105 text-white text-xs px-3 py-1 
-            rounded-md shadow-sm
-          "
-        >
-          New
-        </span>
-
-        {/* Heart Button */}
-         <button
-          className={`absolute top-3 right-3 p-2 rounded-full shadow-sm transition
-            ${
-              isWishlisted
-                ? "bg-gradient-to-r from-yellow-700 to-yellow-500 text-white"
-                : "bg-white border text-gray-700 hover:bg-amber-100"
-            }
-          `}
-          onClick={handleWishlist}
-        >
-          <Heart className="w-4 h-4" />
-        </button>
-
-        {/* Product Image */}
-        <img
-          src={product.img}
-          alt={product.name}
-          className="h-80 w-auto object-cover rounded-lg"
-        />
-      </div>
-
-      {/* Title */}
-      <h3 className="font-semibold text-[15px] mt-3 leading-tight text-center">
-        {product.name}
-      </h3>
-
-      {/* Description */}
-      <h5 className="font-medium text-md mt-3 leading-snug text-center">
-        {product.desc}
-      </h5>
-
-      {/* Ratings */}
-      <div className="flex items-center gap-1 mt-2 justify-center">
-        {Array(4)
-          .fill(0)
-          .map((_, i) => (
-            <span key={i} className="text-yellow-500 text-sm">
-              ★
+    <div className="group relative flex flex-col bg-white transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] rounded-3xl p-2">
+      {/* --- IMAGE AREA --- */}
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1rem] transition-all duration-500">
+        {/* ABSOLUTE BADGES */}
+        <div className="absolute top-4 left-0 z-20 flex flex-col gap-2">
+          {product.isBestSeller && (
+            <span className="bg-black text-white text-[9px] font-bold uppercase tracking-[0.15em] px-4 py-2 rounded-r-full shadow-lg backdrop-blur-md">
+              Best Seller
             </span>
-          ))}
-        <span className="text-gray-400 text-sm">★</span>
-        <span className="text-gray-500 text-xs ml-1">(5)</span>
+          )}
+          <span className="bg-yellow-500 text-black text-[10px] font-medium uppercase tracking-[0.15em] px-4 py-2 rounded-r-md shadow-lg">
+            New Arrival
+          </span>
+        </div>
+
+        {/* WISHLIST */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setIsWishlisted(!isWishlisted);
+          }}
+          className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white/90 backdrop-blur-md shadow-sm transition-all hover:scale-110 active:scale-95 border border-gray-100"
+        >
+          <Heart
+            size={15}
+            className={`transition-colors duration-300 ${isWishlisted ? "fill-red-500 text-red-500" : "text-black"}`}
+          />
+        </button>
+
+        {/* MAIN IMAGE */}
+        <Link
+          href={`/collections/${product._id}`}
+          className="block h-full w-full relative"
+        >
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="object-contain p-4 transition-transform duration-1000 ease-out group-hover:scale-110"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+          <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        </Link>
+
+        {/* BUY NOW */}
+        <div className="absolute inset-x-4 bottom-4 z-30 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+          <button className="w-full bg-black text-white py-4 rounded-2xl text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-yellow-500 hover:text-black transition-colors shadow-2xl">
+            <ShoppingBag size={14} /> Buy Now
+          </button>
+        </div>
       </div>
 
-      {/* CTA Button */}
-      <Link href={`/collections/${product.slug}`}>
-        <button
-          className="
-            mt-4 w-full py-2 rounded-md bg-[#006D5B] inline-block px-8  text-white font-semibold bg-gradient-to-r from-yellow-700 to-yellow-500 shadow-md hover:shadow-xl hover:-translate-y-0.5  hover:bg-[#000000] transition transform  hover:scale-105"
+      {/* --- INFO SECTION --- */}
+      <div className="mt-6 flex flex-col px-3 pb-4">
+        {/* Category & Rating */}
+        <div className="flex justify-between items-center mb-3">
+          <p className="text-[12px] uppercase text-black tracking-wide font-medium">
+            {product.godName || "Handmade Art"}
+          </p>
+          <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
+            <Star size={10} className="fill-yellow-500 text-yellow-500" />
+            <span className="text-[10px] font-black text-black">5.0</span>
+          </div>
+        </div>
+
+        {/* Title */}
+        <Link
+          href={`/collections/${product._id}`}
+          className="group/title flex justify-between items-start gap-4 mb-2"
         >
-          Shop now
-        </button>
-      </Link>
+          <h3 className="text-[16px] leading-tight font-bold text-black transition-colors line-clamp-2 min-h-[40px]">
+            {title}
+          </h3>
+          <ArrowUpRight
+            size={20}
+            className="text-gray-300 group-hover/title:text-yellow-600 transition-all flex-shrink-0"
+          />
+        </Link>
+
+        {/* --- PRICING & ACTION ROW --- */}
+        <div className="mt-4 pt-4 border-t border-gray-50 flex flex-col gap-1">
+          {/* "Starting from" Label */}
+          <p className="text-[10px] uppercase text-black font-bold tracking-wider">
+            Starting from
+          </p>
+
+          <div className="flex items-center justify-between gap-10">
+            <div className="flex items-center gap-3">
+              {/* Current/Offer Price */}
+              <span className="text-[22px] text-black font-normal tracking-tight">
+                ₹{displayPrice?.toLocaleString("en-IN")}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center items-center mt-2">
+          <Link
+            href={`/collections/${product._id}`}
+            className="group/link relative py-1 flex items-center gap-1"
+          >
+            <span className="text-[11px] font-black uppercase tracking-[0.1em] text-black">
+              Know More
+            </span>
+
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-yellow-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

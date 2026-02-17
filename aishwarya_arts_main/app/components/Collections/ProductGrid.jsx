@@ -1,30 +1,29 @@
-import React, { useEffect, useRef } from "react";
-import ProductCard from "./ProductCard";
-import { useStore } from "../../store/useStore";
+'use client'
+import React from "react";
 import { useSession } from "next-auth/react";
+import ProductCard from "./ProductCard";
 
 const ProductGrid = ({ products = [] }) => {
   const { data: session } = useSession();
-  const { fetchWishlist } = useStore();
-  const fetchedRef = useRef(false);
 
-  // Fetch wishlist on login
-  useEffect(() => {
-    if (session && !fetchedRef.current) {
-      fetchWishlist();
-      fetchedRef.current = true;
-    }
-  }, [session, fetchWishlist]);
+  // If no products are found (e.g., after filtering)
+  if (products.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 border-2 border-dashed border-gray-100 rounded-3xl">
+        <p className="text-gray-400 font-medium">No paintings found in this collection.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {products.map((product) => {
-        return (
-          <div key={product._id} className="relative">
-            <ProductCard product={product} />
-          </div>
-        );
-      })}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+      {products.map((product) => (
+        <ProductCard 
+          key={product._id} 
+          product={product} 
+          isLoggedIn={!!session} 
+        />
+      ))}
     </div>
   );
 };
