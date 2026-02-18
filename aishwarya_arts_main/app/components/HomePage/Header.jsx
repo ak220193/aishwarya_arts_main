@@ -50,6 +50,8 @@ const Header = () => {
       logoutZustand();
     }
   }, [status, session, zustandLoggedIn, loginZustand, logoutZustand]);
+
+  
   const handleLogout = async () => {
     logoutZustand();
     await signOut({ redirect: false });
@@ -151,14 +153,14 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-xl py-2 overflow-hidden z-[60]">
                   <Link
                     href="/profile"
-                    className="block px-4 py-3 text-sm hover:bg-gray-50 border-b transition"
+                    className="block px-4 py-3 text-sm hover:bg-gray-50  transition"
                     onClick={() => setDropdownOpen(false)}
                   >
                     My Profile
                   </Link>
                   <Link
                     href="/orders"
-                    className="block px-4 py-3 text-sm hover:bg-gray-50 border-b transition"
+                    className="block px-4 py-3 text-sm hover:bg-gray-50  transition"
                     onClick={() => setDropdownOpen(false)}
                   >
                     My Orders
@@ -175,7 +177,7 @@ const Header = () => {
           ) : (
             <Link
               href="/login"
-              className="px-6 py-2 rounded-full bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-semibold hover:shadow-lg transition shadow-yellow-700/20"
+              className="px-6 py-2 rounded-md bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-semibold hover:shadow-lg transition shadow-yellow-700/20"
             >
               Login
             </Link>

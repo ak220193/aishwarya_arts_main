@@ -111,7 +111,8 @@ const WishlistPage = () => {
                         <button 
                           onClick={() => handleMoveToCart(item)}
                           disabled={item.inStock === false}
-                          className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl font-bold text-sm transition shadow-sm
+                          className={`flex-1 md:flex-none text-sm  shadow-sm rounded-lg bg-gradient-to-r from-yellow-700 to-yellow-500
+               px-8 py-3 text-white font-semibold hover:opacity-90 transition
                             ${item.inStock !== false 
                               ? "bg-amber-700 text-white hover:bg-amber-800" 
                               : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
@@ -135,9 +136,10 @@ const WishlistPage = () => {
                       className="object-contain"
                     />
                   </div>
-                  <p className="text-gray-500 font-medium italic">Your wishlist is empty.</p>
-                  <Link href="/collections" className="mt-6 inline-block bg-amber-700 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-amber-800 transition">
-                    Explore Artworks
+                  <p className="text-gray-500 font-medium italic">Add Your Products to wishlist</p>
+                  <Link href="/collections" className="mt-6 inline-block rounded-lg bg-gradient-to-r from-yellow-700 to-yellow-500
+               px-8 py-3 text-white font-semibold hover:opacity-90 transition">
+                    Explore our Premium Tanjore Collections
                   </Link>
                 </div>
               )}

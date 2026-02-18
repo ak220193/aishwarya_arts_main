@@ -98,8 +98,9 @@ const page = () => {
                     <Image src={Empty} alt="Empty" width={120} height={120}  unoptimized />
                   </div>
                   <p className="text-gray-500 mb-6">Your cart is empty.</p>
-                  <Link href="/collections" className="bg-amber-700 text-white px-8 py-3 rounded-xl font-bold shadow-md hover:bg-amber-800 transition">
-                    Browse Paintings
+                  <Link href="/collections" className="rounded-lg bg-gradient-to-r from-yellow-700 to-yellow-500
+               px-8 py-3 text-white font-semibold hover:opacity-90 transition">
+                    Explore our Premium Tanjore Collections
                   </Link>
                 </div>
               )}
@@ -118,7 +119,8 @@ const page = () => {
                    <Link href="/collections" className="flex-1 md:flex-none text-center px-8 py-3 rounded-xl border border-gray-200 font-semibold hover:bg-gray-50 transition">
                     Continue Shopping
                   </Link>
-                  <Link href="/checkout" className="flex-1 md:flex-none text-center px-8 py-3 rounded-xl bg-gradient-to-r from-amber-700 to-amber-600 text-white font-bold shadow-md hover:opacity-95 transition">
+                  <Link href="/checkout" className="flex-1 md:flex-none text-center  rounded-lg bg-gradient-to-r from-yellow-700 to-yellow-500
+               px-8 py-3 text-white font-semibold hover:opacity-90 transition">
                     Proceed to Checkout
                   </Link>
                 </div>
