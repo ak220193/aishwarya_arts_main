@@ -67,7 +67,7 @@ export default function RelatedProducts({ category, currentSlug }) {
               </div>
 
               <div className="mt-6 flex gap-4">
-                <button className="w-1/2 bg-gradient-to-r from-yellow-700 to-yellow-500 text-white py-3 rounded-lg font-semibold">
+                <button className="w-1/2 bg-linear-to-r from-yellow-700 to-yellow-500 text-white py-3 rounded-lg font-semibold">
                   Buy Now
                 </button>
 

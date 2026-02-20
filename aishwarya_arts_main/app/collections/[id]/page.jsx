@@ -139,12 +139,12 @@ const ProductPage = ({params}) => {
           {/* --- LEFT: GALLERY --- */}
           <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
             {/* Thumbnails - Horizontal on Mobile, Vertical on Desktop */}
-            <div className="flex flex-row md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-2 md:pb-0 md:mt-0 lg:mt-[2rem]">
+            <div className="flex flex-row md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-2 md:pb-0 md:mt-0 lg:mt-8">
               {product.images.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setActiveImage(idx)}
-                  className={`relative flex-shrink-0 w-20 h-16 md:w-20 md:h-20 bg-green-400 rounded-2xl overflow-hidden transition-all duration-300 ${
+                  className={`relative shrink-0 w-20 h-16 md:w-20 md:h-20 bg-green-400 rounded-2xl overflow-hidden transition-all duration-300 ${
                     activeImage === idx
                       ? "ring-2 ring-yellow-500 ring-offset-4"
                       : "opacity-60 hover:opacity-100"
@@ -157,7 +157,7 @@ const ProductPage = ({params}) => {
 
             {/* Main Display - Responsive Heights */}
             <div
-              className="relative w-full max-w-xl aspect-square md:h-[30rem] lg:h-[35rem] xl:h-[40rem] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden cursor-crosshair group mb-5"
+              className="relative w-full max-w-xl aspect-square md:h-120 lg:h-140 xl:h-160 rounded-3xl md:rounded-[2.5rem] overflow-hidden cursor-crosshair group mb-5"
               onMouseMove={handleMouseMove}
               onMouseEnter={() => setZoomData((prev) => ({ ...prev, show: true }))}
               onMouseLeave={() => setZoomData((prev) => ({ ...prev, show: false }))}
@@ -176,7 +176,7 @@ const ProductPage = ({params}) => {
               {/* Enhanced Detail Zoom Overlay - Disabled on touch devices via hidden md:block */}
               {zoomData.show && (
                 <div
-                  className="hidden md:block absolute inset-0 z-10 w-full h-full pointer-events-none border-[12px] border-white/20 rounded-[2.5rem]"
+                  className="hidden md:block absolute inset-0 z-10 w-full h-full pointer-events-none border-12 border-white/20 rounded-[2.5rem]"
                   style={{
                     backgroundImage: `url(${product.images[activeImage]})`,
                     backgroundPosition: `${zoomData.x}% ${zoomData.y}%`,
@@ -215,7 +215,7 @@ const ProductPage = ({params}) => {
             </div>
 
             {/* Price Card - Responsive Padding */}
-            <div className="p-2 md:p-4 rounded-[1.5rem] md:rounded-[2rem] border border-yellow-50 space-y-4">
+            <div className="p-2 md:p-4 rounded-3xl md:rounded-4xl border border-yellow-50 space-y-4">
               <div className="flex flex-row items-end gap-3 md:gap-4">
                 <span className="text-4xl md:text-5xl text-black tracking-tighter font-bold">
                   ₹{product.offerPrice.toLocaleString("en-IN")}
@@ -293,7 +293,7 @@ const ProductPage = ({params}) => {
 
             {/* Delivery - Responsive Flex */}
             <div className="flex items-start md:items-center gap-4 p-4 md:p-5 bg-[#FAF8F2] rounded-2xl border border-yellow-100/50">
-              <div className="p-3 bg-white rounded-xl shadow-sm flex-shrink-0">
+              <div className="p-3 bg-white rounded-xl shadow-sm shrink-0">
                 <Truck size={25} className="text-yellow-700" />
               </div>
               <div className="flex-1">
@@ -317,7 +317,7 @@ const ProductPage = ({params}) => {
               </h3>
             </div>
 
-            <div className="space-y-1 divide-y divide-yellow-100 bg-white rounded-[1.5rem] md:rounded-[2.5rem] px-6 md:px-8 py-4 border border-yellow-50 shadow-sm">
+            <div className="space-y-1 divide-y divide-yellow-100 bg-white rounded-3xl md:rounded-[2.5rem] px-6 md:px-8 py-4 border border-yellow-50 shadow-sm">
               {Object.entries(product.specs).map(([key, val]) => (
                 <div
                   key={key}
@@ -376,7 +376,7 @@ const ProductPage = ({params}) => {
               ))}
             </div>
 
-            <div className="p-6 md:p-8 bg-black rounded-[1.5rem] md:rounded-[2rem] text-white space-y-4">
+            <div className="p-6 md:p-8 bg-black rounded-3xl md:rounded-4xl text-white space-y-4">
               <div className="flex items-center gap-2 text-yellow-500">
                 <ShieldAlert size={20} />
                 <span className="text-[10px] font-black uppercase tracking-widest">

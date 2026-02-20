@@ -124,7 +124,7 @@ if (!mounted) return null;
               >
                 <SlidersHorizontal size={16} /> Filters
               </button>
-              <div className="h-4 w-[1px] "></div>
+              <div className="h-4 w-px "></div>
               <SortDropdown />
             </div>
 
@@ -152,7 +152,7 @@ if (!mounted) return null;
             <ProductGrid products={dummyProducts} onWishlistToggle={handleWishlistToggle} onAddToCart={handleAddToCart}/>
 
             <div className="mt-16 flex flex-col items-center gap-4">
-              <div className="h-[1px] w-12 bg-amber-200"></div>
+              <div className="h-px w-12 bg-amber-200"></div>
               <button className="w-full md:w-auto px-12 py-4 border border-gray-900 rounded-full font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all duration-300">
                 Load More
               </button>
