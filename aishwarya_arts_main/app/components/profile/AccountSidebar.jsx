@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react"; // Import NextAuth hooks
+import { signOut, useSession } from "next-auth/react"; 
+import toast from "react-hot-toast";
 
 const SidebarLink = ({ href, label }) => (
   <Link
@@ -16,6 +17,58 @@ const SidebarLink = ({ href, label }) => (
 
 const AccountSidebar = () => {
   const { data: session } = useSession();
+  const [uploading, setUploading] = useState(false);
+
+  // 1. Handle Avatar Upload
+  const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  setUploading(true);
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = (event) => {
+    const img = new window.Image(); // Correctly reference the browser Image object
+    img.src = event.target.result;
+    
+    img.onload = async () => {
+      // 1. Create a Canvas to resize the image
+      const canvas = document.createElement("canvas");
+      const MAX_WIDTH = 400; // Profile pics don't need to be bigger than 400px
+      const scaleSize = MAX_WIDTH / img.width;
+      canvas.width = MAX_WIDTH;
+      canvas.height = img.height * scaleSize;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      // 2. Convert to a LOW QUALITY JPEG (0.7 = 70% quality)
+      // This drastically reduces file size!
+      const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+
+      try {
+        const res = await fetch("/api/users/profile", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ avatar: compressedBase64 }),
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          toast.success("Avatar updated!");
+          setTimeout(() => window.location.reload(), 500);
+        } else {
+          toast.error(data.message);
+        }
+      } catch (err) {
+        toast.error("Upload failed.");
+      } finally {
+        setUploading(false);
+      }
+    };
+  };
+};
 
   const handleLogout = async () => {
     // signOut automatically clears the session and refreshes/redirects
@@ -31,7 +84,7 @@ const AccountSidebar = () => {
         <div className="relative">
           <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-amber-50">
             <Image
-              src={session?.user?.image || "/assets/about/female-1.png"}
+              src={session?.user?.image || ""}
               alt="Profile"
               width={96}
               height={96}
@@ -40,14 +93,14 @@ const AccountSidebar = () => {
           </div>
 
           <label className="mt-3 inline-block text-xs font-medium text-amber-700 cursor-pointer hover:underline">
-            Change photo
-            <input type="file" accept="image/*" className="hidden" />
+            {uploading ? "Uploading..." : "Change photo"}
+            <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} disabled={uploading} />
           </label>
         </div>
 
         {/* Dynamic User Info from NextAuth Session */}
         <p className="mt-4 text-sm font-semibold text-gray-800">
-           {session?.user?.name || "Art Collector"}
+           {session?.user?.name || "User"}
         </p>
         <p className="text-xs text-gray-400">{session?.user?.email || "user@email.com"}</p>
       </div>
