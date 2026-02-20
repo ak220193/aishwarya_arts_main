@@ -230,7 +230,7 @@ const CheckoutPage = () => {
                 <div key={item.id} className="flex gap-4 items-center">
                   <div className="relative h-20 w-20 rounded-xl overflow-hidden shrink-0 bg-white">
                     <Image src={item.image} alt={item.title} fill className="object-contain p-2" />
-                  </div>
+                  </div>``
                   <div className="flex-1">
                     <h4 className="text-sm font-bold">{item.title}</h4>
                     <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Qty: {item.quantity}</p>
