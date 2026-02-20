@@ -137,7 +137,7 @@ const ProfilePage = () => {
               <Input label="Address Line 2" name="addressLine2" value={formData.addressLine2} onChange={handleChange} full />
 
               <div className="md:col-span-2 pt-6 flex gap-4">
-                <button type="submit" className="rounded-lg bg-gradient-to-r from-yellow-700 to-yellow-500 px-8 py-3 text-white font-semibold hover:opacity-90 transition">
+                <button type="submit" className="rounded-lg bg-linear-to-r from-yellow-700 to-yellow-500 px-8 py-3 text-white font-semibold hover:opacity-90 transition">
                   Save Changes
                 </button>
                 <button type="button" onClick={handleCancel} className="rounded-lg border border-gray-300 px-8 py-3 text-gray-700 font-medium hover:bg-gray-100 transition">

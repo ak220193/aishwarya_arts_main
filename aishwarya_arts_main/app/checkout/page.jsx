@@ -225,10 +225,10 @@ const CheckoutPage = () => {
           <aside className="w-full lg:w-[40%] lg:sticky lg:top-24 bg-gray-50 border border-gray-100 rounded-[2.5rem] p-8 order-1 lg:order-2">
             <h2 className="text-xl font-bold uppercase tracking-wide mb-10">Summary</h2>
             
-            <div className="space-y-6 mb-10 overflow-y-auto max-h-[400px] pr-2">
+            <div className="space-y-6 mb-10 overflow-y-auto max-h-100 pr-2">
               {cart.map((item) => (
                 <div key={item.id} className="flex gap-4 items-center">
-                  <div className="relative h-20 w-20 rounded-xl overflow-hidden flex-shrink-0 bg-white">
+                  <div className="relative h-20 w-20 rounded-xl overflow-hidden shrink-0 bg-white">
                     <Image src={item.image} alt={item.title} fill className="object-contain p-2" />
                   </div>
                   <div className="flex-1">
