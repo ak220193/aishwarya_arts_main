@@ -1,6 +1,6 @@
 import "dotenv/config";
-import { connectDB } from "./app/lib/db.js";
-import Product from "./app/lib/models/Product.js";
+import { connectDB } from "./lib/db.js";
+import Product from "./lib/models/Product.js";
 
 const allProducts = [
   {
