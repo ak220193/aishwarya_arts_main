@@ -71,7 +71,7 @@ const WishlistPage = () => {
                       
                       <div className="flex items-center gap-6 w-full md:w-auto">
                         {/* Product Image Container */}
-                        <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 relative">
+                        <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 shrink-0 relative">
                           <Image 
                             src={item.image} 
                             alt={item.title} 
@@ -138,7 +138,7 @@ const WishlistPage = () => {
                     />
                   </div>
                   <p className="text-gray-500 font-medium italic">Add Your Products to wishlist</p>
-                  <Link href="/collections" className="mt-6 inline-block rounded-lg bg-gradient-to-r from-yellow-700 to-yellow-500
+                  <Link href="/collections" className="mt-6 inline-block rounded-lg bg-linear-to-r from-yellow-700 to-yellow-500
                px-8 py-3 text-white font-semibold hover:opacity-90 transition">
                     Explore our Premium Tanjore Collections
                   </Link>

@@ -83,11 +83,11 @@ export default function ProductPage() {
               </button>
             ))}
           </div>
-          <div className="flex-1 flex items-center justify-center bg-gradient-to-b from-white to-gray-50 rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="flex-1 flex items-center justify-center bg-linear-to-b from-white to-gray-50 rounded-xl border border-gray-100 shadow-sm overflow-hidden">
             <img
               src={mainImage}
               alt={product.name}
-              className="w-full h-[550px] md:h-[650px] object-contain transition-transform duration-300 hover:scale-105"
+              className="w-full h-137.5 md:h-162.5 object-contain transition-transform duration-300 hover:scale-105"
             />
           </div>
         </div>
@@ -136,7 +136,7 @@ export default function ProductPage() {
                     onClick={() => setSelectedSize(size)}
                     className={`px-4 py-2 rounded-md border text-sm font-medium transition ${
                       selectedSize === size
-                        ? "bg-gradient-to-r from-yellow-700 to-yellow-500 shadow-md text-white"
+                        ? "bg-linear-to-r from-yellow-700 to-yellow-500 shadow-md text-white"
                         : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
                     }`}
                   >
@@ -157,7 +157,7 @@ export default function ProductPage() {
                     onClick={() => setSelectedFrame(type)}
                     className={`px-4 py-2 rounded-md border text-sm font-medium transition ${
                       selectedFrame === type
-                        ? "bg-gradient-to-r from-yellow-700 to-yellow-500 shadow-md text-white"
+                        ? "bg-linear-to-r from-yellow-700 to-yellow-500 shadow-md text-white"
                         : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
                     }`}
                   >
