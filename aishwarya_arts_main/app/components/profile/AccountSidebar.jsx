@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react"; 
@@ -19,61 +19,59 @@ const AccountSidebar = () => {
   const { data: session } = useSession();
   const [uploading, setUploading] = useState(false);
 
-  // 1. Handle Avatar Upload
+  // Define a default avatar to avoid the "empty string" error
+  const defaultAvatar = "/assets/default-avatar.png"; // Make sure this file exists in your /public folder
+
   const handleImageChange = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-  setUploading(true);
+    setUploading(true);
 
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = (event) => {
-    const img = new window.Image(); // Correctly reference the browser Image object
-    img.src = event.target.result;
-    
-    img.onload = async () => {
-      // 1. Create a Canvas to resize the image
-      const canvas = document.createElement("canvas");
-      const MAX_WIDTH = 400; // Profile pics don't need to be bigger than 400px
-      const scaleSize = MAX_WIDTH / img.width;
-      canvas.width = MAX_WIDTH;
-      canvas.height = img.height * scaleSize;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new window.Image(); 
+      img.src = event.target.result;
+      
+      img.onload = async () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 400; 
+        const scaleSize = MAX_WIDTH / img.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = img.height * scaleSize;
 
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-      // 2. Convert to a LOW QUALITY JPEG (0.7 = 70% quality)
-      // This drastically reduces file size!
-      const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+        const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
 
-      try {
-        const res = await fetch("/api/users/profile", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ avatar: compressedBase64 }),
-        });
+        try {
+          const res = await fetch("/api/users/profile", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ avatar: compressedBase64 }),
+          });
 
-        const data = await res.json();
-        if (data.success) {
-          toast.success("Avatar updated!");
-          setTimeout(() => window.location.reload(), 500);
-        } else {
-          toast.error(data.message);
+          const data = await res.json();
+          if (data.success) {
+            toast.success("Avatar updated!");
+            setTimeout(() => window.location.reload(), 500);
+          } else {
+            toast.error(data.message);
+          }
+        } catch (err) {
+          toast.error("Upload failed.");
+        } finally {
+          setUploading(false);
         }
-      } catch (err) {
-        toast.error("Upload failed.");
-      } finally {
-        setUploading(false);
-      }
+      };
     };
   };
-};
 
   const handleLogout = async () => {
-    // signOut automatically clears the session and refreshes/redirects
     await signOut({ 
-      callbackUrl: "/", // Redirects to home page after logout
+      callbackUrl: "/", 
       redirect: true 
     });
   };
@@ -82,13 +80,15 @@ const AccountSidebar = () => {
     <aside className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 h-fit">
       <div className="flex flex-col items-center text-center">
         <div className="relative">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-amber-50">
+          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-amber-50 bg-gray-50 flex items-center justify-center">
             <Image
-              src={session?.user?.image || ""}
+              // FIXED: Use defaultAvatar if session image is null, undefined, or empty
+              src={session?.user?.image || defaultAvatar}
               alt="Profile"
               width={96}
               height={96}
               className="object-cover"
+              priority 
             />
           </div>
 
@@ -98,7 +98,6 @@ const AccountSidebar = () => {
           </label>
         </div>
 
-        {/* Dynamic User Info from NextAuth Session */}
         <p className="mt-4 text-sm font-semibold text-gray-800">
            {session?.user?.name || "User"}
         </p>

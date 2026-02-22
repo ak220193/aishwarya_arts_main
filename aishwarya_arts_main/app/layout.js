@@ -1,15 +1,12 @@
 import { Titillium_Web } from "next/font/google";
 import "./globals.css";
-import Header from "./components/HomePage/Header";
-import Footer from "./components/HomePage/Footer";
-import { Toaster } from "react-hot-toast";
-import Whatsapp from "./components/HomePage/whatsapp";
 import Providers from "./providers";
+import { Toaster } from "react-hot-toast";
 
 
 const titillium = Titillium_Web({
   subsets: ["latin"],
-  weight: ["300", "400", "600", "700", "900"], // 300(Light), 400(Regular), 600(SemiBold), 700(Bold), 900(Black)
+  weight: ["300", "400", "600", "700", "900"],
   variable: "--font-titillium",
   display: "swap",
 });
@@ -58,41 +55,29 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Aishwarya Art Gallery",
+    url: "https://aishwaryaartgallery.com",
+    logo: "https://aishwaryaartgallery.com/logo.png",
+  };
+   
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* JSON-LD Structured Data */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              name: "Aishwarya Art Gallery",
-              url: "https://aishwaryaartgallery.com",
-              logo: "https://aishwaryaartgallery.com/logo.png",
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
-      <body
-       className={`${titillium.variable} antialiased flex flex-col min-h-screen font-sans`}
-      >
+      <body className={`${titillium.variable} antialiased font-sans`}>
         <Providers>
-          <Header />
-          <main className="flex-1">
-            <Toaster position="top-center" />
-            {children}
-          </main>
-          <Footer />
-          <Whatsapp />
+          <Toaster position="top-center" />
+          {/* This renders either the (shop) layout or the (admin) layout */}
+          {children}
         </Providers>
       </body>
     </html>
   );
 }
-
-

@@ -1,5 +1,5 @@
 import { connectDB } from "../../../lib/db";
-import User from "../../../lib/models/User";
+import User from "../../../models/User";
 import bcrypt from "bcryptjs";
 
 export async function GET() {
