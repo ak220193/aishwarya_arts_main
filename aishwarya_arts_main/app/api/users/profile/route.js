@@ -1,7 +1,8 @@
 import { connectDB } from "../../../../lib/db";
 import User from "../../../../models/User";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
+// FIX: Import from lib/auth instead of the route file
+import { authOptions } from "../../../../lib/auth"; 
 import { NextResponse } from "next/server";
 
 // 1. GET: Fetch user data to display in the profile form
@@ -10,12 +11,10 @@ export async function GET(req) {
     await connectDB();
     const session = await getServerSession(authOptions);
 
-    // Auth Guard: Ensure user is logged in
     if (!session || !session.user) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    // Find user by email from the session
     const user = await User.findOne({ email: session.user.email }).select("-password");
     
     if (!user) {
@@ -30,7 +29,6 @@ export async function GET(req) {
 }
 
 // 2. PUT: Update user data from the profile form
-// 2. PUT: Update user data from the profile form
 export async function PUT(req) {
   try {
     await connectDB();
@@ -41,8 +39,6 @@ export async function PUT(req) {
     }
 
     const body = await req.json();
-    
-    // 🔥 ADD 'avatar' HERE in the destructuring
     const { firstName, lastName, alternatePhone, address, avatar } = body;
 
     const updatedUser = await User.findOneAndUpdate(
@@ -53,7 +49,7 @@ export async function PUT(req) {
           lastName, 
           alternatePhone, 
           address,
-          avatar // Now this variable is defined!
+          avatar 
         } 
       },
       { new: true }
@@ -70,12 +66,3 @@ export async function PUT(req) {
     return NextResponse.json({ success: false, message: "Update failed" }, { status: 500 });
   }
 }
-
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb', // Adjust this based on your needs
-    },
-  },
-};

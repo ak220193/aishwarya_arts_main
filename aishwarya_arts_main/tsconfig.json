@@ -30,7 +30,7 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx"
-, "app/not-found.tsx"  ],
+, "app/(shop)/not-found.tsx"  ],
   "exclude": [
     "node_modules"
   ]

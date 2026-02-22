@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Heart, Star, ArrowUpRight, ShoppingBag } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useWishlistStore } from "../../store/useWishlistStore";
-import { useAuthStore } from "../../store/useAuthStore";
+import { useWishlistStore } from "../../../store/useWishlistStore";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
   const router = useRouter();

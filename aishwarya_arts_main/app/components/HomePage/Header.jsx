@@ -10,11 +10,11 @@ import { navItems } from "../HomePage"; // Removed utilities if not used
 import LogoMain from "../../../public/Logo.png";
 import toast from "react-hot-toast";
 import { useSession, signOut } from "next-auth/react";
-import { useAuthStore } from "../../store/useAuthStore";
+import { useAuthStore } from "../../../store/useAuthStore";
 
 // Zustand Stores
-import { useCartStore } from "../../store/useCartStore";
-import { useWishlistStore } from "../../store/useWishlistStore";
+import { useCartStore } from "../../../store/useCartStore";
+import { useWishlistStore } from "../../../store/useWishlistStore";
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
