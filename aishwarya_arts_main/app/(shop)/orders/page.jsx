@@ -82,7 +82,7 @@ const Page = () => {
                 {/* Order Body */}
                 <div className="p-6 flex flex-col md:flex-row justify-between items-center gap-6">
                   <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0">
+                    <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden border border-gray-100 shrink-0">
                       <div className="w-full h-full bg-slate-200 animate-pulse" />
                       {/* Replace pulse div with <Image /> when ready */}
                     </div>

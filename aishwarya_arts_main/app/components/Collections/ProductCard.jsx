@@ -48,7 +48,7 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
   return (
     <div className="group relative flex flex-col bg-white transition-all duration-500 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] rounded-3xl p-2">
       {/* --- IMAGE AREA --- */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1rem] transition-all duration-500">
+      <div className="relative aspect-4/5 w-full overflow-hidden rounded-2xl transition-all duration-500">
         {/* ABSOLUTE BADGES */}
         <div className="absolute top-4 left-0 z-20 flex flex-col gap-2">
           {product.isBestSeller && (
@@ -116,12 +116,12 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
           href={`/collections/${product._id}`}
           className="group/title flex justify-between items-start gap-4 mb-2"
         >
-          <h3 className="text-[16px] leading-tight font-bold text-black transition-colors line-clamp-2 min-h-[40px]">
+          <h3 className="text-[16px] leading-tight font-bold text-black transition-colors line-clamp-2 min-h-10">
             {title}
           </h3>
           <ArrowUpRight
             size={20}
-            className="text-gray-300 group-hover/title:text-yellow-600 transition-all flex-shrink-0"
+            className="text-gray-300 group-hover/title:text-yellow-600 transition-all shrink-0"
           />
         </Link>
 
@@ -145,10 +145,10 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
             href={`/collections/${product._id}`}
             className="group/link relative py-1 flex items-center gap-1"
           >
-            <span className="text-[11px] font-black uppercase tracking-[0.1em] text-black">
+            <span className="text-[11px] font-black uppercase tracking-widest text-black">
               Know More
             </span>
-            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-yellow-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />
+            <span className="absolute bottom-0 left-0 w-full h-0.5 bg-yellow-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />
           </Link>
         </div>
       </div>
