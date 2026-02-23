@@ -1,66 +1,50 @@
 "use client";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-import { 
-  Home, ShoppingBag, Image as ImageIcon, Users, 
-  Settings, ChevronLeft, ChevronRight, LogOut 
-} from "lucide-react";
-import Link from "next/link";
+import Sidebar from "../../components/admin/Sidebar";
+import Navbar from "../../components/admin/Navbar";
 
 export default function AdminLayout({ children }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
-  
-  // Hide sidebar on the login page (/admin)
-  if (pathname === "/admin") return <>{children}</>;
 
-  const menuItems = [
-    { icon: Home, label: "Home", href: "/admin/dashboard" },
-    { icon: ShoppingBag, label: "Products", href: "/admin/products" },
-    { icon: ImageIcon, label: "Banners", href: "/admin/banners" },
-    { icon: Users, label: "Customers", href: "/admin/customers" },
-  ];
+  const isLoginPage = pathname === "/admin";
+
+  // Debugging logs
+  console.log("Layout Render - isMobileOpen:", isMobileOpen);
+
+  const handleToggleMobileMenu = () => {
+    console.log("Hamburger Clicked! Setting isMobileOpen to true");
+    setIsMobileOpen(true);
+  };
+
+  if (isLoginPage) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a]">
+        {children}
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-screen bg-[#f6f6f7]">
-      {/* SIDEBAR */}
-      <aside className={`bg-[#1a1c1d] text-[#e3e3e3] transition-all duration-300 flex flex-col ${isCollapsed ? "w-20" : "w-64"}`}>
-        <div className="p-4 flex items-center justify-between border-b border-gray-700">
-          {!isCollapsed && <span className="font-bold text-lg tracking-tight">ADMIN</span>}
-          <button onClick={() => setIsCollapsed(!isCollapsed)} className="p-2 hover:bg-gray-800 rounded-lg">
-            {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
-          </button>
-        </div>
+    <div className="flex h-screen overflow-hidden bg-[#f8f9fa]">
+      <Sidebar 
+        isCollapsed={isCollapsed} 
+        setIsCollapsed={setIsCollapsed} 
+        isMobileOpen={isMobileOpen}     
+        setIsMobileOpen={setIsMobileOpen} 
+      />
+      
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <Navbar onMenuClick={handleToggleMobileMenu} />
 
-        <nav className="flex-1 p-3 space-y-1">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link key={item.label} href={item.href} className={`flex items-center gap-3 p-3 rounded-lg transition-all ${isActive ? "bg-[#303030] text-white" : "hover:bg-gray-800 text-gray-400"}`}>
-                <item.icon size={20} />
-                {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-gray-700">
-          <button className="flex items-center gap-3 p-3 text-gray-400 hover:text-white w-full">
-            <LogOut size={20} />
-            {!isCollapsed && <span className="text-sm font-medium">Logout</span>}
-          </button>
-        </div>
-      </aside>
-
-      {/* MAIN CONTENT */}
-      <main className="flex-1 overflow-y-auto">
-        <header className="h-14 bg-white border-b border-gray-200 flex items-center px-8 sticky top-0 z-10">
-          <h2 className="text-sm font-semibold text-gray-700 uppercase tracking-widest">Store Management</h2>
-        </header>
-        <div className="p-8">
-          {children}
-        </div>
-      </main>
+        <main className="flex-1 overflow-y-auto p-6 lg:p-10">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
