@@ -40,7 +40,7 @@ export default function AdminLayout({ children }) {
         <Navbar onMenuClick={handleToggleMobileMenu} />
 
         <main className="flex-1 overflow-y-auto p-6 lg:p-10">
-          <div className="max-w-7xl mx-auto">
+          <div className="">
             {children}
           </div>
         </main>
