@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
         className="relative z-10 w-full max-w-105 bg-white/3 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_8px_32px_0_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden"
       >
         {/* Subtle glass reflection effect */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent pointer-events-none" />
 
         <div className="p-10 lg:p-14 relative z-10">
           {/* Logo & Branding */}
