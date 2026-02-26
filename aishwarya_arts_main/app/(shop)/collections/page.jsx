@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import FilterSidebar from "../../components/Collections/FilterSidebar";
 import ProductGrid from "../../components/Collections/ProductGrid";
 import SortDropdown from "../../components/Collections/SortDropdown";
-import { SlidersHorizontal, X } from "lucide-react"; 
-import { dummyProducts } from "../../data";
+import { Loader2, SlidersHorizontal, X } from "lucide-react"; 
+
+import axios from "axios";
 
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -17,6 +18,9 @@ const CollectionsPage = () => {
   const [mounted, setMounted] = useState(false);
 
   
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const router = useRouter();
   const { isLoggedIn } = useAuthStore();
   
@@ -24,8 +28,22 @@ const CollectionsPage = () => {
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
 
   useEffect(() => {
-  setMounted(true);
-}, []);
+    setMounted(true);
+    const fetchLiveProducts = async () => {
+      try {
+        const res = await axios.get("/api/admin/products");
+        // Filter: Only show products that are marked "In Stock" for customers
+        const publicProducts = (res.data.data || []).filter(p => p.inStock);
+        setProducts(publicProducts);
+      } catch (err) {
+        console.error("COLLECTION SIGNAL ERROR:", err);
+        toast.error("Could not sync gallery data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLiveProducts();
+  }, []);
 
 if (!mounted) return null;
 
@@ -113,7 +131,7 @@ if (!mounted) return null;
           </nav>
 
           <div className="flex flex-col gap-6">
-            <h1 className="text-2xl lg:text-4xl font-bold text-gray-900">
+            <h1 className="text-2xl lg:text-4xl font-semibold text-gray-900">
               All Paintings
             </h1>
 
@@ -150,14 +168,32 @@ if (!mounted) return null;
 
           {/* PRODUCT GRID */}
           <main className="lg:w-3/4 w-full">
-            <ProductGrid products={dummyProducts} onWishlistToggle={handleWishlistToggle} onAddToCart={handleAddToCart}/>
+            {/* 4. Conditional Rendering based on Signal Status */}
+            {loading ? (
+              <div className="h-96 flex flex-col items-center justify-center text-zinc-400 gap-4">
+                <Loader2 className="animate-spin" size={32} />
+                <p className="font-bold uppercase tracking-widest text-xs">Syncing Art Gallery...</p>
+              </div>
+            ) : products.length > 0 ? (
+              <ProductGrid 
+                products={products} // Now using live database signal
+                onWishlistToggle={handleWishlistToggle} 
+                onAddToCart={handleAddToCart}
+              />
+            ) : (
+              <div className="h-96 flex items-center justify-center border-2 border-dashed border-zinc-100 rounded-[3rem]">
+                 <p className="text-zinc-400 font-bold uppercase tracking-tighter">No masterpieces currently in stock.</p>
+              </div>
+            )}
 
-            <div className="mt-16 flex flex-col items-center gap-4">
-              <div className="h-px w-12 bg-amber-200"></div>
-              <button className="w-full md:w-auto px-12 py-4 border border-gray-900 rounded-full font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all duration-300">
-                Load More
-              </button>
-            </div>
+            {products.length > 12 && (
+              <div className="mt-16 flex flex-col items-center gap-4">
+                <div className="h-px w-12 bg-amber-200"></div>
+                <button className="w-full md:w-auto px-12 py-4 border border-gray-900 rounded-full font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-gray-900 hover:text-white transition-all duration-300">
+                  Load More
+                </button>
+              </div>
+            )}
           </main>
         </div>
       </div>

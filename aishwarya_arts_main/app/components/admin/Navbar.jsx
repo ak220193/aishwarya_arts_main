@@ -7,9 +7,16 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { signOut } from "next-auth/react";
 
 const Navbar = ({ onMenuClick }) => {
   const [showProfile, setShowProfile] = useState(false);
+  
+
+  const handleLogout = async () => {
+    // This clears the JWT, sessions, and redirects to /admin
+    await signOut({ callbackUrl: "/admin" });
+  };
 
   return (
     <header className="h-20 border-b border-amber-100/50 bg-white/70 backdrop-blur-xl sticky top-0 z-30 px-4 lg:px-8 flex items-center justify-between">
@@ -96,7 +103,7 @@ const Navbar = ({ onMenuClick }) => {
                       <Settings size={14} />
                       Profile Settings
                    </Link>
-                   <button className="flex items-center gap-3 w-full px-3 py-2.5 text-xs text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                   <button onClick={handleLogout} className="flex items-center gap-3 w-full px-3 py-2.5 text-xs text-red-500 hover:bg-red-50 rounded-xl transition-all">
                       <LogOut size={14} />
                       Sign Out
                    </button>

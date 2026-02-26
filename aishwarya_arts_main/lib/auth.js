@@ -6,46 +6,68 @@ import bcrypt from "bcryptjs";
 
 export const authOptions = {
   providers: [
-    // --- OAuth ---
+    // 1. Google OAuth (For Customers)
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
 
-    // --- Email + Password ---
+    // 2. Credentials Provider (Dual-Purpose)
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "your email" },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        // --- A. HARDCODED ADMIN CHECK (Akash) ---
+        const ADMIN_EMAIL = "aishwaryaarts@gmail.com";
+        const ADMIN_PASSWORD = "123456";
+
+        if (
+          credentials?.email === ADMIN_EMAIL &&
+          credentials?.password === ADMIN_PASSWORD
+        ) {
+          // Returns instant session for admin without hitting the DB
+          return {
+            id: "admin-1",
+            name: "Akash",
+            email: ADMIN_EMAIL,
+            role: "admin", // Used to distinguish from customers
+          };
+        }
+
+        // --- B. DATABASE CUSTOMER CHECK ---
         await connectDB();
         const user = await User.findOne({ email: credentials.email }).select("+password");
+        
         if (!user) throw new Error("No user found");
 
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password
         );
+        
         if (!isValid) throw new Error("Invalid password");
 
-        return { 
-          id: user._id.toString(), 
-          name: user.name, 
+        return {
+          id: user._id.toString(),
+          name: user.name,
           email: user.email,
-          image: user.avatar // Make sure this matches your DB schema field
+          image: user.avatar,
+          role: "user",
         };
       },
     }),
   ],
-  session: { strategy: "jwt" },
+  session: { 
+    strategy: "jwt" 
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
+        token.role = user.role; // Add role to the token
         token.picture = user.image || "/assets/default-avatar.png";
       }
       return token;
@@ -53,14 +75,14 @@ export const authOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
-        session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.role = token.role; // Add role to the session
         session.user.image = token.picture;
       }
       return session;
     },
   },
-  pages: { signIn: "/login" },
-  // IMPORTANT: Use an environment variable for security
-  secret: process.env.NEXTAUTH_SECRET || "your_nextauth_secret", 
+  pages: { 
+    signIn: "/admin", // Redirect for unauthorized admin attempts
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 };
