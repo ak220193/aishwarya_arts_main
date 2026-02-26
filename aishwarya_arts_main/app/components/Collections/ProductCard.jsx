@@ -102,12 +102,12 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
       <div className="mt-6 flex flex-col px-3 pb-4">
         {/* Category & Rating */}
         <div className="flex justify-between items-center mb-3">
-          <p className="text-[12px] uppercase text-black tracking-wide font-medium">
+          <p className="text-md uppercase text-black tracking-wide font-medium">
             {product.godName || "Handmade Art"}
           </p>
           <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
             <Star size={10} className="fill-yellow-500 text-yellow-500" />
-            <span className="text-[10px] font-black text-black">5.0</span>
+            <span className="text-sm font-semibold text-black">5.0</span>
           </div>
         </div>
 
@@ -145,7 +145,7 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
             href={`/collections/${product._id}`}
             className="group/link relative py-1 flex items-center gap-1"
           >
-            <span className="text-[11px] font-black uppercase tracking-widest text-black">
+            <span className="text-sm  font-semibold uppercase tracking-wider text-black">
               Know More
             </span>
             <span className="absolute bottom-0 left-0 w-full h-0.5 bg-yellow-500 scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-300" />

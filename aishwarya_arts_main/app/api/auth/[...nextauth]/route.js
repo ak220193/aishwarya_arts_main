@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-
 import { connectDB } from "../../../../lib/db";
 import { authOptions } from "../../../../lib/auth";
 

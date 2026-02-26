@@ -7,7 +7,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "lh4.googleusercontent.com",
       "lh5.googleusercontent.com",
-      
+      "utfs.io",
       "i.pinimg.com"
     ],
   },
