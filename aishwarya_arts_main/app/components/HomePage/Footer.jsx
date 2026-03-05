@@ -5,20 +5,18 @@ import Image from "next/image";
 import Link from "next/link";
 import LogoMain from "../../../public/Logo.png";
 import { FaFacebookF, FaInstagram, FaYoutube, FaTwitter } from "react-icons/fa";
+import Logo from "../../../public/LOGO.svg";
 
 const Footer = () => {
   return (
-    <footer
-      className="text-black px-6 py-10 mt-10"
-      aria-label="Footer"
-    >
+    <footer className="text-black px-6 py-10 mt-10" aria-label="Footer">
       {/* Main Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* 1. Logo + Description */}
-        <div>
+        <div className="">
           <Link href="/" aria-label="Go to homepage" className="inline-block">
             <Image
-              src={LogoMain}
+              src={Logo}
               alt="Aishwarya Arts Logo"
               width={100}
               height={40}
@@ -26,9 +24,30 @@ const Footer = () => {
               priority
             />
           </Link>
-          <p className="mt-3 text-sm leading-relaxed text-black">
-            Bringing the richness of Tanjore tradition to modern homes.
-          </p>
+          <div className="space-y-6">
+            {/* BRAND IDENTITY */}
+            <div className="flex flex-col ">
+              <h1 className="text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent">
+                Aishwaraya Arts
+              </h1>
+              <p className="text-sm uppercase tracking-wide text-zinc 900 font-semibold mt-1">
+                Tanjore Art Gallery
+              </p>
+            </div>
+
+            {/* THE MISSION (Improved Content) */}
+            <p className="text-sm leading-relaxed text-zinc-900 max-w-xs font-normal">
+              Every stroke a story, every leaf a legacy. We bring the 16th-century soul of Tamil Nadu to your modern sanctuary.
+            </p>
+
+            {/* HERITAGE TAG */}
+            <div className="flex items-center gap-3 pt-2">
+              <div className="h-px w-8 bg-amber-300"></div>
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-800">
+                ESTD. 1995 • Tamil Nadu
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* 2. Quick Links */}
@@ -134,7 +153,7 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className="border-t border-white/30 mt-6 pt-4 text-center text-sm text-black">
         <p className="space-x-6">
-          © {new Date().getFullYear()} Aishwarya Art Gallery |  All Rights
+          © {new Date().getFullYear()} Aishwarya Art Gallery | All Rights
           Reserved | Developed by{" "}
           <Link
             href="https://webxode.com"

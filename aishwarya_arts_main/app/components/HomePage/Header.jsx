@@ -6,11 +6,11 @@ import Image from "next/image";
 import { FiSearch, FiHeart, FiShoppingCart, FiX } from "react-icons/fi";
 import { CiMenuFries } from "react-icons/ci";
 import { usePathname, useRouter } from "next/navigation";
-import { navItems } from "../HomePage"; // Removed utilities if not used
-import LogoMain from "../../../public/Logo.png";
+import { navItems } from "../HomePage";
 import toast from "react-hot-toast";
 import { useSession, signOut } from "next-auth/react";
 import { useAuthStore } from "../../../store/useAuthStore";
+import Logo from "../../../public/LOGO.svg";
 
 // Zustand Stores
 import { useCartStore } from "../../../store/useCartStore";
@@ -19,7 +19,7 @@ import { useWishlistStore } from "../../../store/useWishlistStore";
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mounted, setMounted] = useState(false); // For Hydration fix
+  const [mounted, setMounted] = useState(false);
 
   // Get Store Data
   const cart = useCartStore((state) => state.cart);
@@ -44,14 +44,13 @@ const Header = () => {
     if (status === "authenticated" && !zustandLoggedIn && session?.user) {
       loginZustand(session.user);
     }
-    
+
     // If NextAuth says we are logged out, but Zustand is still 'true'
     if (status === "unauthenticated" && zustandLoggedIn) {
       logoutZustand();
     }
   }, [status, session, zustandLoggedIn, loginZustand, logoutZustand]);
 
-  
   const handleLogout = async () => {
     logoutZustand();
     await signOut({ redirect: false });
@@ -60,8 +59,6 @@ const Header = () => {
     toast.success("Account logged out");
     router.push("/");
   };
-
-
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -100,8 +97,29 @@ const Header = () => {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 font-outfit">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" aria-label="Home">
-          <Image src={LogoMain} alt="Logo" width={80} priority />
+        <Link
+          href="/"
+          aria-label="Home"
+          className="flex items-center gap-4 group"
+        >
+          <div className="relative overflow-hidden rounded-xl transition-transform group-hover:scale-105">
+            <Image
+              src={Logo}
+              alt="Logo"
+              width={55}
+              priority
+              className="object-contain"
+            />
+          </div>
+
+          <div className="flex flex-col mt-2">
+            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none">
+              Aishwaraya Arts
+            </h1>
+            <span className="text-sm md:text-[15px] uppercase trackaing-wide text-zinc-900 font-semibold mt-1">
+              Tanjore Art Gallery
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
@@ -114,7 +132,7 @@ const Header = () => {
             >
               {item.label}
               <span
-                className={`absolute left-0 -bottom-1 h-[2px] bg-amber-800 transition-all ${pathname === item.href ? "w-full" : "w-0"}`}
+                className={`absolute left-0 -bottom-1 h-0.5 bg-amber-800 transition-all ${pathname === item.href ? "w-full" : "w-0"}`}
               />
             </Link>
           ))}
@@ -134,7 +152,7 @@ const Header = () => {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen((p) => !p)}
-                className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-100 flex items-center justify-center"
+                className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-100 flex items-center justify-center transition-all hover:border-amber-300 shadow-sm"
               >
                 {session?.user?.image ? (
                   <Image
@@ -142,15 +160,20 @@ const Header = () => {
                     alt="Avatar"
                     width={40}
                     height={40}
+                    className="object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = "/default-avatar.png";
+                    }}
                   />
                 ) : (
-                  <span className="bg-amber-100 text-amber-800 font-bold w-full h-full flex items-center justify-center uppercase">
-                    {session.user.name?.charAt(0)}
-                  </span>
+                  <div className="bg-amber-100 text-amber-800 font-bold w-full h-full flex items-center justify-center uppercase text-sm">
+                    {session?.user?.name ? session.user.name.charAt(0) : "U"}
+                  </div>
                 )}
               </button>
+
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-xl py-2 overflow-hidden z-[60]">
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-xl shadow-xl py-2 overflow-hidden z-60">
                   <Link
                     href="/profile"
                     className="block px-4 py-3 text-sm hover:bg-gray-50  transition"
@@ -177,7 +200,7 @@ const Header = () => {
           ) : (
             <Link
               href="/login"
-              className="px-6 py-2 rounded-md bg-gradient-to-r from-yellow-700 to-yellow-500 text-white font-semibold hover:shadow-lg transition shadow-yellow-700/20"
+              className="px-6 py-2 rounded-md bg-linear-to-r from-yellow-700 to-yellow-500 text-white font-semibold hover:shadow-lg transition shadow-yellow-700/20"
             >
               Login
             </Link>
@@ -198,9 +221,17 @@ const Header = () => {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-[100] bg-white p-6 transition-all animate-in slide-in-from-right duration-300">
-          <div className="flex justify-between items-center mb-10">
-            <Image src={LogoMain} alt="Logo" width={80} />
+        <div className="fixed inset-0 z-100 bg-white p-6 transition-all animate-in slide-in-from-right duration-300">
+          <div className="flex justify-between items-center mb-12">
+            <Image src={Logo} alt="Logo" width={60} />
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent ">
+                Aishwaraya Arts
+              </h1>
+              <span className="text-[12px] uppercase tracking-wide text-zinc-900 font-semibold">
+                Tanjore Gallery
+              </span>
+            </div>
             <button
               onClick={() => setMobileOpen(false)}
               className="p-2 bg-gray-100 rounded-full"
