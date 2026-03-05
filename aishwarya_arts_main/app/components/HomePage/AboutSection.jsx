@@ -113,7 +113,7 @@ export default function ArtistAboutSection() {
             {images.map((img, idx) => (
               <ArtFrame
                 key={idx}
-                className={`relative rounded-2xl overflow-hidden aspect-[3/4] shadow-2xl border border-white/5 group bg-zinc-900 ${img.className}`}
+                className={`relative rounded-2xl overflow-hidden aspect-3/4 shadow-2xl border border-white/5 group bg-zinc-900 ${img.className}`}
               >
                 <Image
                   src={img.src}
@@ -121,7 +121,7 @@ export default function ArtistAboutSection() {
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60" />
               </ArtFrame>
             ))}
           </motion.div>
@@ -137,7 +137,7 @@ export default function ArtistAboutSection() {
               </div>
               <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white">
                 Sacred Gold <br />
-                <span className="bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent italic drop-shadow-[0_4px_15px_rgba(251,191,36,0.3)] select-none px-4">
+                <span className="bg-linear-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent italic drop-shadow-[0_4px_15px_rgba(251,191,36,0.3)] select-none px-4">
                   Timeless Art
                 </span>
               </h1>
