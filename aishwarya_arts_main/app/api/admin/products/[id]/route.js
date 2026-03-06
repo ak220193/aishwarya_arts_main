@@ -6,10 +6,9 @@ export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    // In Next.js 15, params must be awaited
+    // In Next.js 15, params is a Promise that must be awaited
     const { id } = await params;
 
-    // Find the specific masterpiece by its unique ID
     const product = await Product.findById(id);
 
     if (!product) {

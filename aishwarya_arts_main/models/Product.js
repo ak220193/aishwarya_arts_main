@@ -13,19 +13,26 @@ const ProductSchema = new mongoose.Schema(
       required: [true, "Product title is required"],
       trim: true,
     },
-    description: {
-      type: String,
-      required: [true, "Product description is required"],
-      default: "Handcrafted 22ct Gold Leaf Tanjore Painting",
-    },
+    // --- DYNAMIC PRICING MATRIX ---
+    // This stores the Excel-style data: [{size: "15x12", style: "flat", price: 11999}]
+    priceMatrix: [
+      {
+        size: { type: String, required: true },
+        style: { type: String, required: true },
+        price: { type: Number, required: true },
+        mrp: { type: Number },
+      }
+    ],
+    // Fallback/Starting prices
     price: {
       type: Number,
-      required: [true, "Base price is required"],
+      required: [true, "Base retail price is required"],
     },
     offerPrice: {
       type: Number,
     },
-    // CHANGED: Removed the strict enum or updated it to match UI categories
+    
+    // --- ART IDENTITY ---
     category: {
       type: String,
       required: [true, "Category is required"],
@@ -33,49 +40,20 @@ const ProductSchema = new mongoose.Schema(
     },
     godName: {
       type: String,
-      enum: [
-        "amman",
-        "annapoorni",
-        "annamalai",
-        "baba",
-        "balaji lakshmi",
-        "balaji thayaar",
-        "datchnamoorthy",
-        "durga devi",
-        "ganesha",
-        "gayathri devi",
-        "guruvayurappan",
-        "hanuman",
-        "kamadenu",
-        "krishna",
-        "lakshmi",
-        "lalitha devi",
-        "lakshmi narayana",
-        "meenakshi",
-        "murugan",
-        "pooja set painting",
-        "raja raja rajeshwari",
-        "ramar",
-        "renuga devi",
-        "sathya narayana",
-        "shiva family",
-        "shanvanthri",
-        "vishwa brahma",
-        "gajalakshmi",
-        "others",
-        "",
-      ],
+      lowercase: true,
+      trim: true,
       default: "",
     },
-    // CALIBRATED: Added 'flat' and 'embossed' to match your new UI array
     workStyle: {
       type: String,
       enum: ["3d", "2d", "flat", "embossed"],
       default: "3d",
     },
+
+    // --- TECHNICAL SPECS ---
     dimensions: {
       type: String,
-      default: "12x15 inches",
+      default: '15" X 12"',
     },
     frameType: {
       type: String,
@@ -85,13 +63,38 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       default: "2.5 kg",
     },
-    images: {
-      type: [String],
-      required: [true, "At least one image is required"],
-    },
     leadTime: {
       type: String,
       default: "Ready to Ship",
+    },
+
+    // --- RICH STORYTELLING (Necessary for the new UI) ---
+    storyTitle: { 
+      type: String, 
+      default: "Heritage in Every Stroke" 
+    },
+    description: {
+      type: String,
+      required: [true, "Short description is required"],
+      default: "Handcrafted 22ct Gold Leaf Tanjore Painting",
+    },
+    detailedDescription: { 
+      type: String, 
+      default: "" 
+    },
+    goldPurity: { 
+      type: String, 
+      default: "Certified 22ct Gold Foil" 
+    },
+    materialBase: { 
+      type: String, 
+      default: "Water-resistant Plywood & Premium Cotton Cloth" 
+    },
+
+    // --- ASSETS & STATUS ---
+    images: {
+      type: [String],
+      required: [true, "At least one image is required"],
     },
     isBestSeller: { type: Boolean, default: false },
     isNewArrival: { type: Boolean, default: false },
@@ -100,6 +103,5 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const Product =
-  mongoose.models.Product || mongoose.model("Product", ProductSchema);
+const Product = mongoose.models.Product || mongoose.model("Product", ProductSchema);
 export default Product;

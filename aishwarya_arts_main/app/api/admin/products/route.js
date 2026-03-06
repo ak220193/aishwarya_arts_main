@@ -2,13 +2,9 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Product from "@/models/Product"; 
 
-
-
 export async function GET() {
   try {
     await connectDB();
-    
-    // Fetch products and sort by newest first
     const products = await Product.find({}).sort({ createdAt: -1 });
 
     return NextResponse.json({ 
@@ -17,10 +13,9 @@ export async function GET() {
     }, { status: 200 });
 
   } catch (error) {
-    console.error("GET INVENTORY ERROR:", error.message);
     return NextResponse.json({ 
       success: false, 
-      error: "Failed to fetch signals" 
+      error: "Failed to fetch inventory signal" 
     }, { status: 500 });
   }
 }
@@ -30,13 +25,20 @@ export async function POST(req) {
     await connectDB(); 
     const body = await req.json();
 
-    // ENGINEER'S CALIBRATION: Ensure mandatory fields have values 
-    // even if the UI forgets to send them.
+    // ENGINEER'S CALIBRATION: Map the new storytelling and matrix fields
     const calibratedData = {
       ...body,
-      description: body.description || "Handcrafted 22ct Gold Leaf Tanjore Painting",
-      category: body.category || "3D Tanjore Painting",
-      godName: body.godName?.toLowerCase().replace("lord ", "") || "others"
+      // Default storytelling if empty
+      storyTitle: body.storyTitle || "Heritage in Every Stroke",
+      detailedDescription: body.detailedDescription || body.description,
+      goldPurity: body.goldPurity || "Certified 22ct Gold Foil",
+      materialBase: body.materialBase || "Water-resistant Plywood & Premium Cotton Cloth",
+      
+      // Ensure priceMatrix is at least an empty array if not provided
+      priceMatrix: body.priceMatrix || [],
+      
+      // Cleanup God Name for consistent filtering
+      godName: body.godName?.toLowerCase().trim().replace("lord ", "") || "others"
     };
 
     const newProduct = await Product.create(calibratedData);
@@ -49,10 +51,9 @@ export async function POST(req) {
   } catch (error) {
     console.error("DATABASE ERROR:", error.message);
     
-    // Check for duplicate SKU (Error code 11000)
     if (error.code === 11000) {
       return NextResponse.json({ 
-        error: "This SKU already exists. Please use a unique ID." 
+        error: "SKU Conflict: This unique ID already exists in the gallery vault." 
       }, { status: 400 });
     }
 

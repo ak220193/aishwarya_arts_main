@@ -5,28 +5,26 @@ import { motion } from "framer-motion";
 import { Target, Globe2, HeartHandshake } from "lucide-react";
 
 export default function MissionVision() {
-  const cards = [
-    {
-      id: 1,
-      title: "Our Mission",
-      icon: <Target aria-hidden="true" className="text-yellow-600 w-12 h-12" />,
-      text: "To preserve and promote the timeless beauty of Tanjore art by blending traditional craftsmanship with modern digital innovation, creating artwork that bridges heritage and contemporary style.",
-    },
-    {
-      id: 2,
-      title: "Our Vision",
-      icon: <Globe2 aria-hidden="true" className="text-yellow-600 w-12 h-12" />,
-      text: "To become a global name in digital artistry, inspiring new generations to experience the cultural richness of Indian art forms while embracing modern technology and design.",
-    },
-    {
-      id: 3,
-      title: "Our Values",
-      icon: (
-        <HeartHandshake aria-hidden="true" className="text-yellow-600 w-12 h-12" />
-      ),
-      text: "Integrity, creativity, and respect for tradition guide every creation — ensuring each piece carries meaning, craftsmanship, and emotion.",
-    },
-  ];
+const cards = [
+  {
+    id: 1,
+    title: "Our Mission",
+    icon: <Target aria-hidden="true" className="text-amber-500 w-12 h-12" />,
+    text: "Preserving the 16th-century soul of Thanjavur through authentic 22ct gold masterpieces crafted for the modern home.",
+  },
+  {
+    id: 2,
+    title: "Our Vision",
+    icon: <Globe2 aria-hidden="true" className="text-amber-500 w-12 h-12" />,
+    text: "To set the global gold standard in luxury decor by ensuring ancient Tanjore craftsmanship never fades.",
+  },
+  {
+    id: 3,
+    title: "30-Year Vow",
+    icon: <HeartHandshake aria-hidden="true" className="text-amber-500 w-12 h-12" />,
+    text: "Three decades of mastery in every stroke. We guarantee pure gold, sacred precision, and art that lasts generations.",
+  },
+];
 
   return (
     <section

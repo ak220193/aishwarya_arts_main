@@ -9,7 +9,7 @@ import ContactAnimation from '../../components/About/ContactAnimation'
 const page = () => {
   return (
     <main>
-      <AboutVideo/>
+      {/* <AboutVideo/> */}
       <ProfessionalJourney/>
       <MissionVision/>
       <WhyChoose/>

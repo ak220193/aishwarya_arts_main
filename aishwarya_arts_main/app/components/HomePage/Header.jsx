@@ -161,9 +161,6 @@ const Header = () => {
                     width={40}
                     height={40}
                     className="object-cover"
-                    onError={(e) => {
-                      e.currentTarget.src = "/default-avatar.png";
-                    }}
                   />
                 ) : (
                   <div className="bg-amber-100 text-amber-800 font-bold w-full h-full flex items-center justify-center uppercase text-sm">

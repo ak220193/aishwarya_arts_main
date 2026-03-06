@@ -20,69 +20,88 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and password are required");
+        }
+
         // --- A. HARDCODED ADMIN CHECK (Akash) ---
         const ADMIN_EMAIL = "aishwaryaarts@gmail.com";
         const ADMIN_PASSWORD = "123456";
 
         if (
-          credentials?.email === ADMIN_EMAIL &&
-          credentials?.password === ADMIN_PASSWORD
+          credentials.email === ADMIN_EMAIL &&
+          credentials.password === ADMIN_PASSWORD
         ) {
-          // Returns instant session for admin without hitting the DB
           return {
             id: "admin-1",
             name: "Akash",
             email: ADMIN_EMAIL,
-            role: "admin", // Used to distinguish from customers
+            role: "admin",
+            image: null, // Hardcoded admin has no DB avatar, set to null
           };
         }
 
         // --- B. DATABASE CUSTOMER CHECK ---
-        await connectDB();
-        const user = await User.findOne({ email: credentials.email }).select("+password");
-        
-        if (!user) throw new Error("No user found");
+        try {
+          await connectDB();
+          // select("+password") is necessary because it's hidden by default in the model
+          const user = await User.findOne({ email: credentials.email }).select("+password");
+          
+          if (!user) throw new Error("No user found with this email");
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-        
-        if (!isValid) throw new Error("Invalid password");
+          const isValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+          
+          if (!isValid) throw new Error("Incorrect password");
 
-        return {
-          id: user._id.toString(),
-          name: user.name,
-          email: user.email,
-          image: user.avatar,
-          role: "user",
-        };
+          return {
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            image: user.avatar || null, // Ensure this is null if empty
+            role: "user",
+          };
+        } catch (error) {
+          console.error("Auth Error:", error.message);
+          throw new Error(error.message);
+        }
       },
     }),
   ],
   session: { 
-    strategy: "jwt" 
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      // Standard login
       if (user) {
         token.id = user.id;
-        token.role = user.role; // Add role to the token
-        token.picture = user.image || "/assets/default-avatar.png";
+        token.role = user.role;
+        token.picture = user.image || null; // FIXED: Prevents infinite 404 loops
       }
+      
+      // Handle session updates (if you use update() on the client side)
+      if (trigger === "update" && session?.image) {
+        token.picture = session.image;
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
-        session.user.role = token.role; // Add role to the session
-        session.user.image = token.picture;
+        session.user.role = token.role;
+        session.user.image = token.picture; // Will be a URL or null
       }
       return session;
     },
   },
   pages: { 
-    signIn: "/admin", // Redirect for unauthorized admin attempts
+    signIn: "/login", // Most users should go to /login
+    error: "/auth/error", // Custom error page recommended
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
