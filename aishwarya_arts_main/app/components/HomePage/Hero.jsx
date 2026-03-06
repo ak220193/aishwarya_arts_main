@@ -42,11 +42,11 @@ export default function Hero() {
         {heroImages.map((src, i) => (
           <div
             key={i}
-            className="w-[100vw] flex-shrink-0 flex justify-center px-2"
+            className="w-screen shrink-0 flex justify-center px-2"
           >
             {/* IMAGE BOX */}
             <div className="w-full max-w-7xl rounded-2xl overflow-hidden bg-green-300">
-              <div className="relative w-full h-[420px] sm:h-[500px] md:h-[600px] lg:h-[850px]">
+              <div className="relative w-full h-105 sm:h-125 md:h-150 lg:h-212.5">
                 <NextImage
                   src={src}
                   alt={`Hero Image ${i + 1}`}

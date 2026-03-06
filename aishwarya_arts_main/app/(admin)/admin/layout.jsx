@@ -74,7 +74,7 @@ export default function AdminLayout({ children }) {
         <Navbar onMenuClick={() => setIsMobileOpen(true)} />
 
         <main className="flex-1 overflow-y-auto p-6 lg:p-10">
-          <div className="max-w-7xl mx-auto animate-in fade-in duration-700">
+          <div className="animate-in fade-in duration-700">
             {children}
           </div>
         </main>

@@ -21,7 +21,7 @@ export default function ContactAnimation() {
         {/* Heading */}
         <motion.h2
           id="contact-cta-heading"
-          className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight tracking-wide"
+          className="text-3xl md:text-4xl font-semibold text-gray-900 mb-6 leading-tight tracking-wide"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

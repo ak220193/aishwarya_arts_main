@@ -3,12 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   productionBrowserSourceMaps: true,
   images: {
-    domains: [
-      "lh3.googleusercontent.com",
-      "lh4.googleusercontent.com",
-      "lh5.googleusercontent.com",
-      "utfs.io",
-      "i.pinimg.com"
+    remotePatterns: [
+      { protocol: 'https', hostname: 'lh3.googleusercontent.com' },
+      { protocol: 'https', hostname: 'lh4.googleusercontent.com' },
+      { protocol: 'https', hostname: 'lh5.googleusercontent.com' },
+      { protocol: 'https', hostname: 'utfs.io' },
+      { protocol: 'https', hostname: 'i.pinimg.com' },
+      { protocol: 'https', hostname: '*.ufs.sh' }, 
     ],
   },
   eslint: {

@@ -79,7 +79,7 @@ export default function ArtistAboutSection() {
       icon: <Award />,
       title: "30+ Years",
       label: "Heritage",
-      fullDesc: "Preserving the 16th-century soul of Thanjavur.",
+      fullDesc: "Preserving the soul of Thanjavur.",
     },
     {
       icon: <Target />,
@@ -164,7 +164,7 @@ export default function ArtistAboutSection() {
                   <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">
                     {box.title}
                   </h3>
-                  <p className="text-md uppercase tracking-widest text-amber-700 font-semibold mb-2">
+                  <p className="text-md uppercase tracking-widest text-amber-500 font-semibold mb-2">
                     {box.label}
                   </p>
                   <p className="text-zinc-200 text-sm leading-snug tracking-normal">
