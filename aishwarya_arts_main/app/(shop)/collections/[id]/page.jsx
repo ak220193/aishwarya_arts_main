@@ -107,8 +107,9 @@ const ProductPage = ({ params }) => {
 
   // Matches 'price' (Selling Price) and 'mrp' (Original Price) from your matrix
   const displayPrice = currentSelection?.price || product?.price || 0;
-  const displayMRP =
-    currentSelection?.mrp || product?.offerPrice || product?.price || 0;
+  const displayMRP =  currentSelection?.mrp || product?.offerPrice || product?.price || 0;
+
+    
 
   const isSizeAvailable = (sizeString) => {
     if (!product || !product.priceMatrix) return false;
