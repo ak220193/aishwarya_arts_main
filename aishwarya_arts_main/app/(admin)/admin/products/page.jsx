@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Upload,
   Sparkles,
@@ -23,15 +23,37 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import { UploadButton } from "@uploadthing/react";
-import { GLOBAL_ASSETS } from "@/lib/constants";
 
 // --- DYNAMIC DATA ARRAYS ---
 const GODS = [
-  "Amman", "Annapoorni", "Annamalai", "Baba", "Balaji Lakshmi", "Balaji Thayaar",
-  "Datchnamoorthy", "Durga Devi", "Ganesha", "Gayathri Devi", "Guruvayurappan",
-  "Hanuman", "Kamadenu", "Krishna", "Lakshmi", "Lalitha Devi", "Lakshmi Narayana",
-  "Meenakshi", "Murugan", "Pooja Set Painting", "Raja Raja Rajeshwari", "Ramar",
-  "Renuga Devi", "Sathya Narayana", "Shiva Family", "Shanvanthri", "Vishwa Brahma", "GajaLakshmi",
+  "Amman",
+  "Annapoorni",
+  "Annamalai",
+  "Baba",
+  "Balaji Lakshmi",
+  "Balaji Thayaar",
+  "Datchnamoorthy",
+  "Durga Devi",
+  "Ganesha",
+  "Gayathri Devi",
+  "Guruvayurappan",
+  "Hanuman",
+  "Kamadenu",
+  "Krishna",
+  "Lakshmi",
+  "Lalitha Devi",
+  "Lakshmi Narayana",
+  "Meenakshi",
+  "Murugan",
+  "Pooja Set Painting",
+  "Raja Raja Rajeshwari",
+  "Ramar",
+  "Renuga Devi",
+  "Sathya Narayana",
+  "Shiva Family",
+  "Shanvanthri",
+  "Vishwa Brahma",
+  "GajaLakshmi",
 ];
 
 const ART_STYLES = [
@@ -40,14 +62,94 @@ const ART_STYLES = [
   { label: "3D Embossed", value: "embossed" },
 ];
 
-const FRAMES = [
- "Classic Frame", "Mani Frame", "Chettinad Frame"
-];
+const FRAMES = ["Classic Frame", "Mani Frame", "Chettinad Frame"];
 
 const DIMENSIONS = [
-  '15" X 12"', '18" X 14"', '20" X 16"', '24" X 18"',
-  '30" X 24"','36" X 24"', '48" X 36"', '60" X 36"', '72" X 48"',
+  '15" X 12"',
+  '18" X 14"',
+  '20" X 16"',
+  '24" X 18"',
+  '30" X 24"',
+  '36" X 24"',
+  '48" X 36"',
+  '60" X 36"',
+  '72" X 48"',
 ];
+
+const PRICE_SHEET = {
+  '15" X 12"': {
+    flat: 11999,
+    flatMrp: 13332,
+    "2d": 15999,
+    "2dMrp": 17777,
+    embossed: 23999,
+    embossedMrp: 26666,
+  },
+  '18" X 14"': {
+    flat: 15999,
+    flatMrp: 17777,
+    "2d": 20999,
+    "2dMrp": 23332,
+    embossed: 32499,
+    embossedMrp: 36110,
+  },
+  '20" X 16"': {
+    flat: 21499,
+    flatMrp: 23888,
+    "2d": 23999,
+    "2dMrp": 26666,
+    embossed: 39999,
+    embossedMrp: 44443,
+  },
+  '24" X 18"': {
+    flat: 27499,
+    flatMrp: 30554,
+    "2d": 32999,
+    "2dMrp": 36666,
+    embossed: 49999,
+    embossedMrp: 55554,
+  },
+  '30" X 24"': {
+    flat: 41999,
+    flatMrp: 46666,
+    "2d": 47999,
+    "2dMrp": 53332,
+    embossed: 79999,
+    embossedMrp: 88888,
+  },
+  '36" X 24"': {
+    flat: 49999,
+    flatMrp: 55554,
+    "2d": 59999,
+    "2dMrp": 66666,
+    embossed: 94999,
+    embossedMrp: 105554,
+  },
+  '48" X 36"': {
+    flat: 89999,
+    flatMrp: 99999,
+    "2d": 129999,
+    "2dMrp": 144443,
+    embossed: 179999,
+    embossedMrp: 199999,
+  },
+  '60" X 36"': {
+    flat: 114999,
+    flatMrp: 127777,
+    "2d": 164999,
+    "2dMrp": 183332,
+    embossed: 219999,
+    embossedMrp: 244443,
+  },
+  '72" X 48"': {
+    flat: 179999,
+    flatMrp: 199999,
+    "2d": 219999,
+    "2dMrp": 244443,
+    embossed: 349999,
+    embossedMrp: 388888,
+  },
+};
 
 const AddProductFinal = () => {
   const [loading, setLoading] = useState(false);
@@ -69,7 +171,8 @@ const AddProductFinal = () => {
     inStock: true,
     isBestSeller: false,
     isNewArrival: false,
-    aboutArtisan: "Crafted by master artisans from Thanjavur with generations of expertise.",
+    aboutArtisan:
+      "Crafted by master artisans from Thanjavur with generations of expertise.",
     goldPurity: "Certified 22ct Gold Foil",
     materialBase: "Water-resistant Plywood & Premium Cotton Cloth",
     storyTitle: "Heritage in Every Stroke",
@@ -78,7 +181,7 @@ const AddProductFinal = () => {
   });
 
   // --- MATRIX LOGIC: SCALABLE CONTROL ---
-  // This logic ensures that when you type a price for a specific Size + Style + Frame, 
+  // This logic ensures that when you type a price for a specific Size + Style + Frame,
   // it updates that exact object in the array.
 
   const removeImage = (index) => {
@@ -90,89 +193,128 @@ const AddProductFinal = () => {
   };
 
   // --- NEW: AUTO-FILL LOGIC ---
-// Fills the entire matrix with the Base Price to save manual entry time
-const applyBasePriceToAll = () => {
-  if (!formData.price) return toast.error("Enter a Base Price first!");
+  // Fills the entire matrix with the Base Price to save manual entry time
+  const syncPriceSheet = () => {
+    if (!formData.dimensions)
+      return toast.error("Select a Default Size first!");
 
-  const fullMatrix = [];
-  DIMENSIONS.forEach((size) => {
-    ART_STYLES.forEach((style) => {
-      // Use the global constant to ensure strings like "Mani Frame" are used
-      FRAMES.forEach((frameName) => {
-        fullMatrix.push({
-          size: size,
-          style: style.value, // e.g., "flat", "2d"
-          frame: frameName,   // This fixes the "undefined" issue in your logs
-          price: Number(formData.price),
-          mrp: Number(formData.offerPrice || formData.price),
+    const fullMatrix = [];
+    // FIND START INDEX: Only process sizes from the selected one onwards
+    const startIndex = DIMENSIONS.indexOf(formData.dimensions);
+
+    DIMENSIONS.slice(startIndex).forEach((size) => {
+      const rates = PRICE_SHEET[size];
+      if (!rates) return;
+
+      ART_STYLES.forEach((style) => {
+        FRAMES.forEach((frame) => {
+          fullMatrix.push({
+            size,
+            style: style.value,
+            frame: frame,
+            price: Number(rates[style.value]),
+            mrp: Number(rates[`${style.value}Mrp`]),
+          });
         });
       });
     });
-  });
 
-  setFormData((prev) => ({ ...prev, priceMatrix: fullMatrix }));
-  toast.success(`Matrix generated with ${fullMatrix.length} variants!`);
-};
+    setFormData((prev) => ({
+      ...prev,
+      priceMatrix: fullMatrix,
+      price: PRICE_SHEET[prev.dimensions][prev.workStyle],
+      offerPrice: PRICE_SHEET[prev.dimensions][`${prev.workStyle}Mrp`],
+    }));
 
-// --- REWRITTEN: MATRIX UPDATE ---
-// Handles individual cell changes without breaking data types
-const handleMatrixUpdate = (size, style, frame, field, value) => {
-  setFormData((prev) => {
-    const newMatrix = [...(prev.priceMatrix || [])];
-    const index = newMatrix.findIndex(
-      (item) => item.size === size && item.style === style && item.frame === frame
-    );
+    toast.success(`Synced prices for ${formData.dimensions} and above!`);
+  };
+  // --- REWRITTEN: MATRIX UPDATE ---
+  // Handles individual cell changes without breaking data types
+  const handleMatrixUpdate = (size, style, frame, field, value) => {
+    setFormData((prev) => {
+      const newMatrix = [...(prev.priceMatrix || [])];
+      const index = newMatrix.findIndex(
+        (item) =>
+          item.size === size && item.style === style && item.frame === frame,
+      );
 
+      const numericValue = value === "" ? 0 : Number(value);
+
+      if (index > -1) {
+        newMatrix[index] = { ...newMatrix[index], [field]: numericValue };
+      } else {
+        newMatrix.push({ size, style, frame, [field]: numericValue });
+      }
+      return { ...prev, priceMatrix: newMatrix };
+    });
+  };
+
+  // --- REWRITTEN: PUBLISH LOGIC ---
+  // Ensures data is clean and unblocks the Shop frontend
+  const handlePublish = async () => {
+    if (!formData.sku || !formData.price || formData.images.length === 0) {
+      return toast.error("SKU, Price, and Main Image are mandatory!");
+    }
+
+    setLoading(true);
+    try {
+      // 1. Clean the matrix: Remove empty entries
+      let finalizedMatrix = formData.priceMatrix.filter(
+        (item) => item.price > 0,
+      );
+
+      // 2. Fallback: If matrix is empty, ensure at least the base selection is buyable
+      if (finalizedMatrix.length === 0) {
+        finalizedMatrix = [
+          {
+            size: formData.dimensions,
+            frame: formData.frameType,
+            style: formData.workStyle,
+            price: Number(formData.price),
+            mrp: Number(formData.offerPrice || formData.price),
+          },
+        ];
+      }
+
+      const payload = {
+        ...formData,
+        sku: formData.sku.toUpperCase(),
+        priceMatrix: finalizedMatrix,
+      };
+
+      const res = await axios.post("/api/admin/products", payload);
+      if (res.status === 201 || res.status === 200) {
+        toast.success("Masterpiece Published Successfully!");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Database sync failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- LOGIC: REACTIVE DEFAULT UPDATER ---
+  // Automatically updates main Price/MRP fields when Default Size or Style changes
+  useEffect(() => {
+    const rates = PRICE_SHEET[formData.dimensions];
+    if (rates) {
+      setFormData((prev) => ({
+        ...prev,
+        price: rates[prev.workStyle],
+        offerPrice: rates[`${prev.workStyle}Mrp`],
+      }));
+    }
+  }, [formData.dimensions, formData.workStyle]); // Triggers on every dropdown change
+
+  // --- LOGIC: MANUAL OVERRIDE (For Festival Pricing) ---
+  // Allows you to manually type a new price in the sidebar that updates the DB
+  const handlePriceChange = (field, value) => {
     const numericValue = value === "" ? 0 : Number(value);
-
-    if (index > -1) {
-      newMatrix[index] = { ...newMatrix[index], [field]: numericValue };
-    } else {
-      newMatrix.push({ size, style, frame, [field]: numericValue });
-    }
-    return { ...prev, priceMatrix: newMatrix };
-  });
-};
-
-// --- REWRITTEN: PUBLISH LOGIC ---
-// Ensures data is clean and unblocks the Shop frontend
-const handlePublish = async () => {
-  if (!formData.sku || !formData.price || formData.images.length === 0) {
-    return toast.error("SKU, Price, and Main Image are mandatory!");
-  }
-
-  setLoading(true);
-  try {
-    // 1. Clean the matrix: Remove empty entries
-    let finalizedMatrix = formData.priceMatrix.filter((item) => item.price > 0);
-
-    // 2. Fallback: If matrix is empty, ensure at least the base selection is buyable
-    if (finalizedMatrix.length === 0) {
-      finalizedMatrix = [{
-        size: formData.dimensions,
-        frame: formData.frameType,
-        style: formData.workStyle,
-        price: Number(formData.price),
-        mrp: Number(formData.offerPrice || formData.price)
-      }];
-    }
-
-    const payload = {
-      ...formData,
-      sku: formData.sku.toUpperCase(),
-      priceMatrix: finalizedMatrix,
-    };
-
-    const res = await axios.post("/api/admin/products", payload);
-    if (res.status === 201 || res.status === 200) {
-      toast.success("Masterpiece Published Successfully!");
-    }
-  } catch (err) {
-    toast.error(err.response?.data?.error || "Database sync failed");
-  } finally {
-    setLoading(false);
-  }
-};
+    setFormData((prev) => ({
+      ...prev,
+      [field]: numericValue,
+    }));
+  };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-10 animate-in fade-in duration-700">
@@ -499,10 +641,10 @@ const handlePublish = async () => {
               </h3>
               <button
                 type="button"
-                onClick={applyBasePriceToAll}
-                className="px-4 py-2 bg-amber-100 text-amber-700 rounded-xl text-[15px] font-semibold uppercase tracking-tighter hover:bg-amber-600 hover:text-white transition-all"
+                onClick={syncPriceSheet}
+                className="px-6 py-2 bg-amber-600 text-white rounded-xl font-bold text-[11px] uppercase tracking-widest hover:bg-zinc-900 transition-all flex items-center gap-2 shadow-lg"
               >
-                Apply Base Price to All Sizes
+                <Sparkles size={14} /> Auto-Fill Excel Prices
               </button>
             </div>
             <div className="overflow-x-auto border rounded-4xl border-zinc-100">
@@ -521,58 +663,85 @@ const handlePublish = async () => {
                 <tbody>
                   {DIMENSIONS.map((size) => (
                     <React.Fragment key={size}>
-                      {ART_STYLES.map((style, sIdx) => (
-                        <tr
-                          key={`${size}-${style.value}`}
-                          className="border-t border-zinc-50 hover:bg-zinc-50/50"
-                        >
-                          {sIdx === 0 && (
-                            <td
-                              rowSpan={ART_STYLES.length}
-                              className="p-4 text-md font-bold text-zinc-900 align-top border-r border-zinc-50"
-                            >
-                              {size}
+                      {ART_STYLES.map((style, sIdx) => {
+                        // VALIDATION: Check if this row should be disabled based on default selection
+                        const isBelowDefault =
+                          DIMENSIONS.indexOf(size) <
+                          DIMENSIONS.indexOf(formData.dimensions);
+
+                        return (
+                          <tr
+                            key={`${size}-${style.value}`}
+                            className={`border-t border-zinc-50 transition-all ${
+                              isBelowDefault
+                                ? "opacity-40 bg-zinc-50 pointer-events-none"
+                                : "hover:bg-zinc-50/50"
+                            }`}
+                          >
+                            {sIdx === 0 && (
+                              <td
+                                rowSpan={ART_STYLES.length}
+                                className="p-4 text-md font-bold text-zinc-900 align-top border-r border-zinc-50"
+                              >
+                                {size}
+                              </td>
+                            )}
+                            <td className="p-4 text-md font-semibold text-amber-700 bg-amber-50/20">
+                              {style.label}
                             </td>
-                          )}
-                          <td className="p-4 text-md font-semibold text-amber-700 bg-amber-50/20">
-                            {style.label}
-                          </td>
-                          {FRAMES.map((frame) => (
-                            <td key={frame} className="p-2">
-                              <div className="flex flex-col gap-2">
-                                <input
-                                  type="number"
-                                  placeholder="Price"
-                                  className="w-full p-2 bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-amber-500 text-black font-bold"
-                                  onChange={(e) =>
-                                    handleMatrixUpdate(
-                                      size,
-                                      style.value,
-                                      frame,
-                                      "price",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                                <input
-                                  type="number"
-                                  placeholder="MRP"
-                                  className="w-full p-2 bg-zinc-50 border border-zinc-100 rounded-lg text-sm outline-none text-zinc-600"
-                                  onChange={(e) =>
-                                    handleMatrixUpdate(
-                                      size,
-                                      style.value,
-                                      frame,
-                                      "mrp",
-                                      e.target.value,
-                                    )
-                                  }
-                                />
-                              </div>
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
+                            {FRAMES.map((frame) => {
+                              // LOGIC: Find existing price for this specific combination in the state
+                              const cellData = formData.priceMatrix.find(
+                                (item) =>
+                                  item.size === size &&
+                                  item.style === style.value &&
+                                  item.frame === frame,
+                              );
+
+                              return (
+                                <td key={frame} className="p-2">
+                                  <div className="flex flex-col gap-2">
+                                    <input
+                                      type="number"
+                                      placeholder="Price"
+                                      disabled={isBelowDefault}
+                                      // BINDING: This shows the sync value in the box
+                                      value={cellData?.price || ""}
+                                      className="w-full p-2 bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-amber-500 text-black font-bold disabled:bg-zinc-100"
+                                      onChange={(e) =>
+                                        handleMatrixUpdate(
+                                          size,
+                                          style.value,
+                                          frame,
+                                          "price",
+                                          e.target.value,
+                                        )
+                                      }
+                                    />
+                                    <input
+                                      type="number"
+                                      placeholder="MRP"
+                                      disabled={isBelowDefault}
+                                      // BINDING: This shows the sync MRP in the box
+                                      value={cellData?.mrp || ""}
+                                      className="w-full p-2 bg-zinc-50 border border-zinc-100 rounded-lg text-sm outline-none text-zinc-600 disabled:opacity-50"
+                                      onChange={(e) =>
+                                        handleMatrixUpdate(
+                                          size,
+                                          style.value,
+                                          frame,
+                                          "mrp",
+                                          e.target.value,
+                                        )
+                                      }
+                                    />
+                                  </div>
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
                     </React.Fragment>
                   ))}
                 </tbody>
@@ -596,9 +765,7 @@ const handlePublish = async () => {
                 <input
                   type="number"
                   value={formData.price}
-                  onChange={(e) =>
-                    setFormData({ ...formData, price: e.target.value })
-                  }
+                  onChange={(e) => handlePriceChange("price", e.target.value)} // Manual festival edit
                   placeholder="18000"
                   className="w-full bg-transparent border-b border-zinc-200 pb-6 pl-8 text-4xl font-semibold outline-none focus:border-amber-500 transition-all text-black"
                 />
@@ -614,7 +781,7 @@ const handlePublish = async () => {
                   type="number"
                   value={formData.offerPrice}
                   onChange={(e) =>
-                    setFormData({ ...formData, offerPrice: e.target.value })
+                    handlePriceChange("offerPrice", e.target.value)
                   }
                   placeholder="15500"
                   className="w-full bg-transparent border-b border-zinc-100 pb-6 pl-8 text-4xl font-semibold outline-none focus:border-amber-500 transition-all text-black"
