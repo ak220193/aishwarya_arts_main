@@ -7,16 +7,33 @@ export const useWishlistStore = create(
       wishlist: [],
 
       toggleWishlist: (product) => {
+        // Normalize ID to ensure we don't have duplicates between _id and id
         const productId = product._id || product.id;
-        const isFav = get().wishlist.some((item) => item.id === productId);
+        const currentWishlist = get().wishlist;
+        
+        const isFav = currentWishlist.some((item) => (item._id || item.id) === productId);
+
         if (isFav) {
-          set({ wishlist: get().wishlist.filter((item) => item.id !== product.id) });
+          // Remove item
+          set({ 
+            wishlist: currentWishlist.filter((item) => (item._id || item.id) !== productId) 
+          });
         } else {
-          set({ wishlist: [...get().wishlist, product] });
+          // Add item with full metadata for the UI
+          set({ 
+            wishlist: [...currentWishlist, { 
+              ...product, 
+              id: productId, // Ensure ID is consistent
+              addedAt: new Date().toISOString() 
+            }] 
+          });
         }
       },
       
-      isInWishlist: (productId) => get().wishlist.some((item) => item.id === productId),
+      isInWishlist: (productId) => 
+        get().wishlist.some((item) => (item._id || item.id) === productId),
+        
+      clearWishlist: () => set({ wishlist: [] }),
     }),
     { name: 'wishlist-storage' }
   )

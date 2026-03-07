@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [false, "Last name is required"],
       trim: true,
+      default: ""
     },
     email: {
       type: String,
@@ -21,17 +22,19 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      select: false, // Security: won't show in queries by default
+      required:false,
+      select: false, 
     },
     primaryPhone: {
       type: String,
-      required: [false, "Primary contact number is required"],
+      required: false, // Changed to false for Google Auth compatibility
       unique: true,
+      sparse: true, // CRITICAL: Allows multiple null/undefined values
+      trim: true,
     },
     alternatePhone: {
       type: String,
-      default: "", // Optional
+      default: "",
     },
     avatar: {
       type: String,
@@ -55,7 +58,7 @@ const UserSchema = new mongoose.Schema(
     // Useful for e-commerce analytics later
     wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);

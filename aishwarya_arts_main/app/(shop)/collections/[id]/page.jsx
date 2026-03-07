@@ -63,6 +63,7 @@ const ProductPage = ({ params }) => {
       try {
         const res = await axios.get(`/api/admin/products/${productId}`);
         const data = res.data.data;
+        console.log(res.data.data);
         setProduct(data);
         setSelectedSize(data.dimensions);
         setSelectedStyle(data.workStyle || "flat");
@@ -214,15 +215,18 @@ const ProductPage = ({ params }) => {
       return;
     }
     addToCart({
-      id: product._id,
-      title: product.title,
-      price: product.offerPrice || product.price,
-      image: product.images[0],
-      quantity: quantity,
-      size: selectedSize,
-      frame: selectedFrame,
-    });
-    toast.success(`${quantity} Item(s) added to cart`);
+    id: product._id,
+    title: product.title,
+    sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`, // Important for Shopify feel
+    price: displayPrice,   // <--- FIXED: Use the matrix-aware price
+    image: product.images[0],
+    quantity: quantity,
+    size: selectedSize,
+    frame: selectedFrame,
+    style: selectedStyle,  // <--- ADDED: To show work style in cart
+    godName: product.godName
+  });
+  toast.success(`${quantity} Item(s) added to cart`);
   };
 
   const onBuyNow = () => {
@@ -252,6 +256,21 @@ const ProductPage = ({ params }) => {
     { label: "Frame Type", value: product.frameType },
     { label: "Lead Time", value: product.leadTime },
   ];
+
+  const handleWishlistClick = () => {
+  toggleWishlist({
+    id: product._id, // Unique ID
+    title: product.title,
+    sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
+    price: displayPrice,   // <--- Live Matrix Price
+    image: activeImage || product.images[0],
+    size: selectedSize,    // <--- Live Selected Size
+    frame: selectedFrame,  // <--- Live Selected Frame
+    style: selectedStyle,  // <--- Live Selected Style
+    godName: product.godName,
+    inStock: product.countInStock > 0
+  });
+};
 
   return (
     <div className="min-h-screen bg-white font-outfit pb-20 overflow-x-hidden">

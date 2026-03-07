@@ -1,7 +1,6 @@
 import { connectDB } from "../../../../lib/db";
 import User from "../../../../models/User";
 import { getServerSession } from "next-auth";
-// FIX: Import from lib/auth instead of the route file
 import { authOptions } from "../../../../lib/auth"; 
 import { NextResponse } from "next/server";
 
@@ -39,20 +38,26 @@ export async function PUT(req) {
     }
 
     const body = await req.json();
-    const { firstName, lastName, alternatePhone, address, avatar } = body;
+    const { firstName, lastName, alternatePhone, primaryPhone, address, avatar } = body;
+
+
+    const updateData = {
+      firstName,
+      lastName,
+      alternatePhone,
+      address,
+      avatar,
+    };
+
+    // 3. Only update primaryPhone if it's provided and not just an empty space
+    if (primaryPhone !== undefined) {
+      updateData.primaryPhone = primaryPhone?.trim() === "" ? null : primaryPhone.trim();
+    }
 
     const updatedUser = await User.findOneAndUpdate(
       { email: session.user.email },
-      { 
-        $set: { 
-          firstName, 
-          lastName, 
-          alternatePhone, 
-          address,
-          avatar 
-        } 
-      },
-      { new: true }
+      { $set: updateData  },
+      { new: true, runValidators: true }
     ).select("-password");
 
     return NextResponse.json({ 
@@ -63,6 +68,9 @@ export async function PUT(req) {
 
   } catch (error) {
     console.error("Profile PUT Error:", error);
+    if (error.code === 11000) {
+      return NextResponse.json({ success: false, message: "This phone number is already registered with another account." }, { status: 400 });
+    }
     return NextResponse.json({ success: false, message: "Update failed" }, { status: 500 });
   }
 }

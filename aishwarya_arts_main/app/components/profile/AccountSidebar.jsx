@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -16,9 +16,34 @@ const SidebarLink = ({ href, label }) => (
 );
 
 const AccountSidebar = () => {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const [uploading, setUploading] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [dbImage, setDbImage] = useState(null);
+
+  const [displayName, setDisplayName] = useState("");
+
+  useEffect(() => {
+    const fetchLatestProfile = async () => {
+      const res = await fetch("/api/users/profile");
+      const data = await res.json();
+      if (data.success && data.data) {
+        // Update Image
+        if (data.data.avatar) setDbImage(data.data.avatar);
+        
+        // 2. Update Name: Priority DB -> Session -> Fallback
+        const fName = data.data.firstName?.trim();
+        const lName = data.data.lastName?.trim();
+        
+        if (fName) {
+          setDisplayName(`${fName} ${lName || ""}`);
+        } else {
+          setDisplayName(session?.user?.name || "User");
+        }
+      }
+    };
+    if (session) fetchLatestProfile();
+  }, [session]);
 
 
 
@@ -55,7 +80,9 @@ const AccountSidebar = () => {
 
           const data = await res.json();
           if (data.success) {
+            setDbImage(compressedBase64);
             toast.success("Avatar updated!");
+            if (update) await update();
             setTimeout(() => window.location.reload(), 500);
           } else {
             toast.error(data.message);
@@ -69,6 +96,17 @@ const AccountSidebar = () => {
     };
   };
 
+  useEffect(() => {
+    const fetchLatestImage = async () => {
+      const res = await fetch("/api/users/profile");
+      const data = await res.json();
+      if (data.success && data.data.avatar) {
+        setDbImage(data.data.avatar);
+      }
+    };
+    fetchLatestImage();
+  }, []);
+
   const handleLogout = async () => {
     await signOut({
       callbackUrl: "/",
@@ -76,14 +114,15 @@ const AccountSidebar = () => {
     });
   };
 
+  const profileSrc = dbImage || session?.user?.image;
   return (
     <aside className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100 h-fit">
       <div className="flex flex-col items-center text-center">
         <div className="relative">
           <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-amber-50 bg-gray-50 flex items-center justify-center">
-            {session?.user?.image && !imgError ? (
+            {profileSrc && !imgError ? (
               <Image
-                src={session.user.image}
+                src={profileSrc}
                 alt="Profile"
                 width={96}
                 height={96}
@@ -111,7 +150,7 @@ const AccountSidebar = () => {
         </div>
 
         <p className="mt-4 text-sm font-semibold text-gray-800">
-          {session?.user?.name || "User"}
+          {displayName}
         </p>
         <p className="text-xs text-gray-400">
           {session?.user?.email || "user@email.com"}
