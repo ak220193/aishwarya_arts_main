@@ -21,6 +21,8 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  const [dbImage, setDbImage] = useState(null);
+
   // Get Store Data
   const cart = useCartStore((state) => state.cart);
   const wishlist = useWishlistStore((state) => state.wishlist);
@@ -34,6 +36,22 @@ const Header = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    const fetchHeaderAvatar = async () => {
+      try {
+        const res = await fetch("/api/users/profile");
+        const data = await res.json();
+        if (data.success && data.data.avatar) {
+          setDbImage(data.data.avatar);
+        }
+      } catch (err) {
+        console.error("Header Avatar Sync Error:", err);
+      }
+    };
+
+    if (isLoggedIn) fetchHeaderAvatar();
+  }, [isLoggedIn, session]);
 
   const logoutZustand = useAuthStore((state) => state.logout);
   const loginZustand = useAuthStore((state) => state.login);
@@ -60,12 +78,16 @@ const Header = () => {
     router.push("/");
   };
 
+  
+
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+
+  const headerProfileSrc = dbImage || session?.user?.image;
 
   // Updated Helper to render Icons with Real-Time Badges
   const renderIcon = (type) => {
@@ -154,9 +176,9 @@ const Header = () => {
                 onClick={() => setDropdownOpen((p) => !p)}
                 className="w-10 h-10 rounded-full overflow-hidden border-2 border-amber-100 flex items-center justify-center transition-all hover:border-amber-300 shadow-sm"
               >
-                {session?.user?.image ? (
+                {headerProfileSrc ? (
                   <Image
-                    src={session.user.image}
+                    src={headerProfileSrc}
                     alt="Avatar"
                     width={40}
                     height={40}

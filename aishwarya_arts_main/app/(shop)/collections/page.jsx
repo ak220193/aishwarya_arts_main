@@ -12,16 +12,16 @@ import toast from "react-hot-toast";
 import { useCartStore } from "../../../store/useCartStore";
 import { useWishlistStore } from "../../../store/useWishlistStore";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { useSession } from "next-auth/react";
 
 const CollectionsPage = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-
-  
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
+  const { data: session, status } = useSession();
   const { isLoggedIn } = useAuthStore();
   
   const addToCart = useCartStore((state) => state.addToCart);
@@ -45,56 +45,79 @@ const CollectionsPage = () => {
     fetchLiveProducts();
   }, []);
 
-if (!mounted) return null;
+
+
+useEffect(() => {
+  const checkGoogleUserProfile = async () => {
+    if (status === "authenticated" && session?.user) {
+      const res = await fetch("/api/users/profile");
+      const result = await res.json();
+      
+      // If a Google user has no phone, they can't buy. Remind them!
+      if (result.success && !result.data.primaryPhone) {
+        toast("Complete your profile to enable express checkout!", {
+          icon: '🎨',
+          duration: 6000,
+        });
+      }
+    }
+  };
+  checkGoogleUserProfile();
+}, [status]);
+
+
 
   const handleAddToCart = (product) => {
-  const reactiveAuth = isLoggedIn; // From the hook
-  const absoluteAuth = useAuthStore.getState().isLoggedIn; // Direct from store
+    const absoluteAuth = useAuthStore.getState().isLoggedIn;
 
-  console.log("🛒 ADD TO CART CLICKED");
-  console.log("Reactive Auth (Hook):", reactiveAuth);
-  console.log("Absolute Auth (Store):", absoluteAuth);
+    if (!absoluteAuth) {
+      toast.error("Please login to add items to cart!");
+      router.push("/login"); 
+      return;
+    }
 
-  if (!absoluteAuth) {
-    console.warn("❌ BLOCKED: User not logged in according to Store.");
-    toast.error("Please login to add items to cart!");
-    router.push("/login"); 
-    return;
-  }
-   const currentLoginStatus = useAuthStore.getState().isLoggedIn;
-
-  if (!currentLoginStatus) {
-    toast.error("Please login to add items to cart!");
-    router.push("/login"); 
-    return;
-  }
     addToCart({
       id: product._id,
       title: product.title,
-      price: product.offerPrice,
+      // Fallback SKU if not present
+      sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`, 
+      // Use the product's base price since no matrix selection is made here
+      price: product.offerPrice || product.price, 
       image: product.images[0],
-      quantity: 1,
+      quantity: 1, // Default to 1 from grid view
+      size: product.dimensions || "Standard", // Default size from DB
+      frame: product.frameType || "Classic Frame", // Default frame from DB
+      style: product.workStyle || "Flat", // Default style from DB
+      godName: product.godName
     });
+    
     toast.success(`${product.title} added to cart!`);
   };
 
   const handleWishlistToggle = (product) => {
     const currentLoginStatus = useAuthStore.getState().isLoggedIn;
 
-  if (!currentLoginStatus) {
-    toast.error("Please login to save favorites!");
-    router.push("/login");
-    return;
-  }
+    if (!currentLoginStatus) {
+      toast.error("Please login to save favorites!");
+      router.push("/login");
+      return;
+    }
+
     toggleWishlist({
       id: product._id,
       title: product.title,
-      price: product.offerPrice,
+      sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
+      price: product.offerPrice || product.price, 
       image: product.images[0],
+      size: product.dimensions || "Standard",
+      frame: product.frameType || "Classic Frame",
+      style: product.workStyle || "Flat",
+      godName: product.godName,
+      inStock: product.inStock
     });
   };
-  
 
+  if (!mounted) return null;
   
   return (
     <div className="bg-white min-h-screen font-outfit relative">

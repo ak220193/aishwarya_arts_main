@@ -1,15 +1,14 @@
 "use client";
 
-import React, {useState,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Minus, Plus, Trash2, ShoppingBag, ChevronRight } from 'lucide-react'
 import AccountSidebar from '../../components/profile/AccountSidebar'
 import { useCartStore } from '../../../store/useCartStore'
 import Empty from "../../../public/assets/notfound/Blink Emoji yellow.gif"
 
-const page = () => {
-
-  // zustand store data 
+const Page = () => {
   const { cart, removeFromCart, addToCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
 
@@ -17,28 +16,38 @@ const page = () => {
     setMounted(true);
   }, []);
 
- const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const totalAmount = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
   if (!mounted) return null;
 
-
-
-
   return (
-    <div className="bg-gray-50 min-h-screen py-10 font-outfit">
+    <div className="bg-gray-50 min-h-screen py-6 md:py-10 font-outfit">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          
-          {/* SIDEBAR (Consistent with Profile/Orders) */}
-          <AccountSidebar />
 
-          {/* MAIN CONTENT (Exact same container style as Profile) */}
+        {/* Mobile Sidebar Trigger/Breadcrumb (Optional) */}
+        <div className="lg:hidden mb-6 flex items-center gap-2 text-sm text-gray-500">
+          <Link href="/profile" className="hover:text-amber-600">Account</Link>
+          <ChevronRight size={14} />
+          <span className="font-bold text-zinc-900">Shopping Cart</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
+
+          {/* SIDEBAR - Hidden on mobile, visible on LG screens */}
+          <div className="hidden lg:block">
+            <AccountSidebar />
+          </div>
+
+          {/* MAIN CONTENT */}
           <section className="lg:col-span-3 space-y-6">
-            
-            {/* Page Header Container */}
-            <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-              <h2 className="text-xl font-semibold text-gray-900">My Shopping Cart</h2>
-              <p className="text-sm text-gray-500 mt-1">
-               {cart.length > 0 
+
+            {/* Page Header */}
+            <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-gray-100">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-4">
+                <ShoppingBag className="text-amber-600" size={24} /> My Shopping Cart
+              </h2>
+              <p className="text-sm md:text-base text-gray-800 mt-1">
+                {cart.length > 0
                   ? `You have ${cart.length} handmade paintings in your cart`
                   : "Your cart is currently empty."}
               </p>
@@ -49,89 +58,142 @@ const page = () => {
               {cart.length > 0 ? (
                 <div className="divide-y divide-gray-100">
                   {cart.map((item) => (
-                    <div key={item.id} className="p-8 flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-gray-50/50 transition-colors">
-                      <div className="flex items-center gap-6 w-full md:w-auto">
-                        {/* Product Image */}
-                        {/* <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 relative">
-                          <div className="w-full h-full bg-slate-200 animate-pulse" />
-                        </div> */}
-                        <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden border border-gray-100 shrink-0 relative">
-                           <Image 
-                             src={item.image} 
-                             alt={item.title} 
-                             fill 
-                             className="object-contain p-2"
-                           />
+                    <div key={item.id} className="p-5 md:p-8 flex flex-col sm:flex-row items-start gap-6 hover:bg-gray-50/50 transition-colors">
+
+                      {/* Product Image - Responsive Sizing */}
+                      <div className="w-full sm:w-40 md:w-52 aspect-square  rounded-xl overflow-hidden  shrink-0 relative ">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-contain p-2 md:p-4"
+                        />
+                      </div>
+
+                      {/* Product Details Section */}
+                      <div className="flex flex-col justify-between w-full min-h-full sm:min-h-45">
+                        <div className="space-y-4">
+                          {/* Title & SKU Area */}
+                          <div>
+                            <h3 className="font-bold text-zinc-900 text-xl md:text-2xl tracking-tight leading-tight">
+                              {item.title}
+                            </h3>
+                            <div className="flex flex-wrap items-center gap-2 mt-2">
+                              <span className="px-2 py-0.5 bg-amber-50 text-amber-700 text-[10px] md:text-xs font-black uppercase tracking-widest border border-amber-100 rounded">
+                                SKU: {item.sku}
+                              </span>
+                              <span className="hidden sm:block h-px w-6 bg-zinc-200" />
+                              <p className="text-[1px] md:text-xs font-semibold text-zinc-800 uppercase tracking-wide">
+                                Authentic Tanjore Masterpiece
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Metadata Grid - 2 columns on all screens */}
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-3 pt-3 border-t border-zinc-50">
+                            <div className="flex flex-col">
+                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Dimensions</span>
+                              <span className="text-sm md:text-sm font-semibold text-zinc-800">{item.size}</span>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Selected Frame</span>
+                              <span className="text-sm md:text-sm font-semibold text-zinc-800">{item.frame}</span>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Work Style</span>
+                              <span className="text-sm md:text-sm font-semibold text-zinc-800 uppercase">{item.style}</span>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Subject</span>
+                              <span className="text-sm md:text-sm font-semibold text-zinc-800">{item.godName}</span>
+                            </div>
+                          </div>
                         </div>
 
-                        {/* Product Details */}
-                        <div>
-                          <h3 className="font-bold text-gray-800 text-lg">{item.title}</h3>
-                          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
-                            <p className="text-xs text-gray-500 font-medium">Size: <span className="text-gray-700">{item.size}</span></p>
-                            <p className="text-xs text-gray-500 font-medium">Type: <span className="text-gray-700">{item.godName}</span></p>
+                        {/* Bottom Actions & Price Row */}
+                        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-zinc-50 pt-4">
+                          <div className="flex items-center gap-4">
+                            {/* Quantity Control */}
+                            <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                              <button
+                                onClick={() => addToCart({ ...item, quantity: -1 })}
+                                className="px-3 py-1.5 hover:bg-gray-100 text-gray-500 transition-colors"
+                              >
+                                <Minus size={14} />
+                              </button>
+                              <span className="px-4 py-1 text-sm font-bold border-x border-gray-100 text-zinc-800">
+                                {item.quantity}
+                              </span>
+                              <button
+                                onClick={() => addToCart({ ...item, quantity: 1 })}
+                                className="px-3 py-1.5 hover:bg-gray-100 text-gray-500 transition-colors"
+                              >
+                                <Plus size={14} />
+                              </button>
+                            </div>
+
+                            {/* Trash Button */}
+                            <button
+                              onClick={() => removeFromCart(item.id)}
+                              className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                              <Trash2 size={18} />
+                            </button>
                           </div>
-                          <div className="mt-3 flex items-center gap-3">
-                            
-                            <span className="text-sm text-gray-400 line-through">₹{item.price.toLocaleString('en-IN')}</span>
+
+                          <div className="text-right">
+                            <span className="block text-[15px]  font-semibold text-zinc-800 tracking-widest mb-0.5">Item Total</span>
+                            <span className="text-xl font-semibold text-zinc-900">
+                              ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                            </span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Actions */}
-                      <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
-                        <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
-                          <button onClick={() => addToCart({ ...item, quantity: -1 })} className="px-3 py-1 hover:bg-gray-100 text-gray-600">-</button>
-                          <span className="px-3 py-1 text-sm font-bold border-x border-gray-200">{item.quantity}</span>
-                          <button  onClick={() => addToCart({ ...item, quantity: 1 })} className="px-3 py-1 hover:bg-gray-100 text-gray-600">+</button>
-                        </div>
-                        <button onClick={() => removeFromCart(item.id)} className="text-red-500 text-xs font-bold hover:bg-red-50 px-3 py-2 rounded-lg transition-colors">
-                          Remove Item
-                        </button>
-                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="p-20 text-center">
-                  <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Image src={Empty} alt="Empty" width={120} height={120}  unoptimized />
+                <div className="py-20 text-center px-6">
+                  <div className="w-24 md:w-32 mx-auto mb-6">
+                    <Image src={Empty} alt="Empty" width={120} height={120} unoptimized />
                   </div>
-                  <p className="text-gray-500 mb-6">Your cart is empty.</p>
-                  <Link href="/collections" className="rounded-lg bg-linear-to-r from-yellow-700 to-yellow-500
-               px-8 py-3 text-white font-semibold hover:opacity-90 transition">
-                    Explore our Premium Tanjore Collections
+                  <h3 className="text-xl font-bold text-zinc-900">Your collection is empty</h3>
+                  <p className="text-gray-500 mb-8 mt-2 max-w-xs mx-auto">Start adding premium handcrafted Tanjore paintings to your gallery.</p>
+                  <Link href="/collections" className="inline-block rounded-full bg-zinc-900 px-8 py-4 text-white font-bold uppercase text-[10px] tracking-[0.2em] hover:bg-amber-600 transition shadow-xl">
+                    Explore Collections
                   </Link>
                 </div>
               )}
             </div>
 
-            {/* Bottom Summary Bar (Matching the Form Save section style) */}
+            {/* Responsive Summary Bar */}
             {cart.length > 0 && (
-              <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-6">
-                <div>
-                  <p className="text-sm text-gray-500">Estimated Total (Incl. Taxes)</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    ₹{totalAmount.toLocaleString('en-IN')}
-                  </p>
+              <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-amber-100 flex flex-col md:flex-row items-center justify-between gap-6 sticky bottom-4 z-20">
+                <div className="text-center md:text-left">
+                  <p className="text-sm uppercase font-bold text-zinc-800 tracking-widest">Estimated Total</p>
+                  <div className="flex items-baseline justify-center md:justify-start gap-4">
+                    <span className="text-sm text-gray-800 font-medium">INR</span>
+                    <p className="text-3xl font-semibold text-zinc-900">
+                      ₹{totalAmount.toLocaleString('en-IN')}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex gap-4 w-full md:w-auto">
-                   <Link href="/collections" className="flex-1 md:flex-none text-center px-8 py-3 rounded-xl border border-gray-200 font-semibold hover:bg-gray-50 transition">
+                <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                  <Link href="/collections" className="px-8 py-4 rounded-xl border border-zinc-200 font-semibold uppercase text-md tracking-widest text-zinc-600 hover:bg-gray-50 transition text-center order-2 sm:order-1">
                     Continue Shopping
                   </Link>
-                  <Link href="/checkout" className="flex-1 md:flex-none text-center  rounded-lg bg-linear-to-r from-yellow-700 to-yellow-500
-               px-8 py-3 text-white font-semibold hover:opacity-90 transition">
-                    Proceed to Checkout
+                  <Link href="/checkout" className="px-10 py-4 rounded-xl bg-linear-to-r from-amber-600 to-amber-500 text-white font-semibold uppercase text-md tracking-widest hover:shadow-lg hover:shadow-amber-200 transition text-center shadow-md order-1 sm:order-2">
+                    Secure Checkout
                   </Link>
                 </div>
               </div>
             )}
           </section>
-
         </div>
       </div>
     </div>
   )
 }
 
-export default page;
+export default Page;
