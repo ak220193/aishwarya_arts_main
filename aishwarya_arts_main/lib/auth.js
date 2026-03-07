@@ -46,14 +46,14 @@ export const authOptions = {
           await connectDB();
           // select("+password") is necessary because it's hidden by default in the model
           const user = await User.findOne({ email: credentials.email }).select("+password");
-          
+
           if (!user) throw new Error("No user found with this email");
 
           const isValid = await bcrypt.compare(
             credentials.password,
             user.password
           );
-          
+
           if (!isValid) throw new Error("Incorrect password");
 
           return {
@@ -70,7 +70,7 @@ export const authOptions = {
       },
     }),
   ],
-  session: { 
+  session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
@@ -82,7 +82,7 @@ export const authOptions = {
         token.role = user.role;
         token.picture = user.image || null; // FIXED: Prevents infinite 404 loops
       }
-      
+
       // Handle session updates (if you use update() on the client side)
       if (trigger === "update" && session?.image) {
         token.picture = session.image;
@@ -99,7 +99,7 @@ export const authOptions = {
       return session;
     },
   },
-  pages: { 
+  pages: {
     signIn: "/login", // Most users should go to /login
     error: "/auth/error", // Custom error page recommended
   },
