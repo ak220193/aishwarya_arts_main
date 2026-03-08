@@ -44,7 +44,7 @@ const Footer = () => {
             <div className="flex items-center gap-3 pt-2">
               <div className="h-px w-8 bg-amber-300"></div>
               <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-800">
-                ESTD. 1995 • Tamil Nadu
+                ESTD. 2000 • Tamil Nadu
               </span>
             </div>
           </div>
@@ -103,6 +103,11 @@ const Footer = () => {
             <li>
               <a href="tel:+919655007661" className="hover:underline">
                 +91 9655007661
+              </a>
+            </li>
+            <li>
+              <a href="tel:+919655007661" className="hover:underline">
+                +91 7550152764
               </a>
             </li>
             <li>Namakkal, Tamil Nadu</li>

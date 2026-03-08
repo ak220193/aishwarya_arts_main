@@ -78,7 +78,7 @@ export default function ArtistAboutSection() {
     {
       icon: <Award />,
       title: "30+ Years",
-      label: "Heritage",
+      label: "Expertise",
       fullDesc: "Preserving the soul of Thanjavur.",
     },
     {
@@ -90,7 +90,7 @@ export default function ArtistAboutSection() {
     {
       icon: <Users />,
       title: "10k+",
-      label: "Patrons",
+      label: "Customers",
       fullDesc: "Bringing divine radiance to homes worldwide.",
     },
   ];
@@ -132,7 +132,7 @@ export default function ArtistAboutSection() {
               <div className="flex items-center gap-4">
                 <span className="h-px w-12 bg-amber-600" />
                 <h2 className="text-[15px] uppercase tracking-[0.5em] text-amber-500 font-semibold text-center md:text-left">
-                  Since 1995 • Thanjavur
+                  Since 2000 • Thanjavur
                 </h2>
               </div>
               <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white">

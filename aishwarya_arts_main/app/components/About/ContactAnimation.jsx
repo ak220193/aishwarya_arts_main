@@ -8,7 +8,7 @@ export default function ContactAnimation() {
   return (
     <section
       id="contact-cta"
-      className="relative overflow-hidden bg-gradient-to-b  py-20"
+      className="relative overflow-hidden bg-linear-to-b  py-20"
       aria-labelledby="contact-cta-heading"
     >
       {/* Decorative background accent */}
@@ -27,14 +27,14 @@ export default function ContactAnimation() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          Preserving the Legacy of{" "}
-          <span className="text-yellow-700">Tanjore Painting</span> — Where
+          Preserving the Legacy of
+          <span className="text-yellow-700 ml-2 ">Tanjore Painting</span> — Where
           Tradition Meets Creativity
         </motion.h2>
 
         {/* Description */}
         <motion.p
-          className="max-w-3xl mx-auto text-gray-700 text-base md:text-lg leading-relaxed mb-10"
+          className="max-w-3xl mx-auto text-zinc-900 text-base md:text-lg leading-relaxed mb-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -57,7 +57,7 @@ export default function ContactAnimation() {
         >
           <Link
             href="/contact"
-            className="inline-block px-8 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-yellow-700 to-yellow-500 shadow-md hover:shadow-xl hover:-translate-y-0.5 transform transition-all duration-300"
+            className="inline-block px-8 py-3 rounded-full text-white font-semibold bg-linear-to-r from-yellow-700 to-yellow-500 shadow-md hover:shadow-xl hover:-translate-y-0.5 transform transition-all duration-300"
             aria-label="Contact Aishwarya Arts"
           >
             Contact Us
@@ -72,25 +72,35 @@ export default function ContactAnimation() {
         </motion.div>
 
         {/* Contact Info */}
-        <div className="mt-10 text-gray-600 text-sm">
-          <p className="mb-1 font-medium text-gray-700">
-            Prefer to connect directly?
+        <div className="mt-15 text-gray-600 text-xl">
+          <div className="flex flex-row gap-4 justify-center items-center">
+
+          
+          <p className="mb-1 font-semibold text-xl text-gray-700 ">
+            For Custom Orders 
           </p>
-          <p>
-            <a
-              href="tel:+919655007661"
-              className="underline hover:text-yellow-700"
-            >
-              +91 96550 07661
-            </a>{" "}
-            •{" "}
-            <a
-              href="mailto:contact.aishwaryaarts@gmail.com"
-              className="underline hover:text-yellow-700"
-            >
-              contact.aishwaryaarts@gmail.com
-            </a>
+          <span className="-mt-2"> | </span>
+          <p className="mb-1 font-semibold text-xl text-gray-700 ">
+            Contact now
           </p>
+          </div>
+          <div className="">
+            <p className="flex sm:flex-col md:flex-col justify-center items-center gap-2 p-4">
+              <a
+                href="tel:+919655007661"
+                className="hover:text-yellow-700 text-xl text-zinc-900"
+              >
+                +91 96550 07661
+              </a>
+              •
+              <a
+                href="mailto:contact.aishwaryaarts@gmail.com"
+                className="text-xl text-zinc-900 hover:text-yellow-700"
+              >
+                contact.aishwaryaarts@gmail.com
+              </a>
+            </p>
+          </div>
         </div>
       </div>
 

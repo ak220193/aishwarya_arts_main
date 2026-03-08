@@ -20,10 +20,10 @@ export default function ProfessionalJourney() {
             priority
             fetchPriority="high"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent"></div>
         </div>
         <figcaption className="sr-only">
-          Aishwarya — founder of Aishwarya Art Gallery
+          Devandran K — founder of Aishwarya Art Gallery
         </figcaption>
       </figure>
 
@@ -38,7 +38,7 @@ export default function ProfessionalJourney() {
 
         <p className="text-black leading-relaxed mb-5 text-lg md:text-xl">
           Founded by
-          <span className="font-semibold text-gray-900">Aishwarya</span>, the
+          <span className="font-semibold text-gray-900 ml-2">Devandran K </span>, the
           gallery began as a small creative studio deeply committed to
           preserving the intricate legacy of Tanjore art. From humble
           beginnings, her path evolved through years of dedication, innovation,
@@ -53,7 +53,7 @@ export default function ProfessionalJourney() {
         </p>
 
         <div
-          className="mt-10 w-24 h-[3px] bg-gradient-to-r from-yellow-500 to-yellow-700 mx-auto md:mx-0 rounded-full"
+          className="mt-10 w-24 h-0.75 bg-linear-to-r from-yellow-500 to-yellow-700 mx-auto md:mx-0 rounded-full"
           role="presentation"
         ></div>
       </article>

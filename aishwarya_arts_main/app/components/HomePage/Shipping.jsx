@@ -7,7 +7,7 @@ const Shipping = () => {
   const details = [
     {
       icon: "/assets/shipping/delivery.svg",
-      title: "Free Shipping Across India",
+      title: "Shipping Across India",
       desc: "Enjoy safe and fast delivery to every destination in India with Aishwarya Arts.",
       alt: "Delivery truck representing free shipping",
     },
@@ -57,7 +57,7 @@ const Shipping = () => {
                 height={80}
                 loading="lazy"
                 decoding="async"
-                className="object-contain"
+                className="object-contain invert-25"
               />
             </div>
             <h3 className="font-semibold text-black text-xl">

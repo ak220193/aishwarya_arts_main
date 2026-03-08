@@ -24,7 +24,7 @@ const Faq = () => {
     {
       question: "How long does delivery take?",
       answer:
-        "Delivery typically takes 5-10 business days depending on your location in India.",
+        "Delivery typically takes 2-3 weeks depending on your location in India.",
     },
     {
       question: "Are the gold foils used in paintings authentic?",
@@ -56,11 +56,7 @@ const Faq = () => {
       answer:
         "Basic framing is included. For premium frames, additional costs may apply based on customization.",
     },
-    {
-      question: "Do you offer certificates of authenticity?",
-      answer:
-        "Yes, every painting comes with a certificate of authenticity verifying its craftsmanship.",
-    },
+   
   ];
 
   return (

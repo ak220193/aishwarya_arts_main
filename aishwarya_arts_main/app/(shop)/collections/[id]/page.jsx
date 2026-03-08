@@ -108,9 +108,9 @@ const ProductPage = ({ params }) => {
 
   // Matches 'price' (Selling Price) and 'mrp' (Original Price) from your matrix
   const displayPrice = currentSelection?.price || product?.price || 0;
-  const displayMRP =  currentSelection?.mrp || product?.offerPrice || product?.price || 0;
+  const displayMRP = currentSelection?.mrp || product?.offerPrice || product?.price || 0;
 
-    
+
 
   const isSizeAvailable = (sizeString) => {
     if (!product || !product.priceMatrix) return false;
@@ -195,11 +195,15 @@ const ProductPage = ({ params }) => {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const { left, top, width, height } = imgRef.current.getBoundingClientRect();
-    // Calculate percentage and clamp between 0-100 to prevent edge glitches
+
+    // Calculate position in percentage (0 to 100)
     let x = ((clientX - left) / width) * 100;
     let y = ((clientY - top) / height) * 100;
+
+    // Clamp values to keep zoom within bounds
     x = Math.max(0, Math.min(100, x));
     y = Math.max(0, Math.min(100, y));
+
     setZoomData({ x, y, show: true });
   };
 
@@ -215,18 +219,18 @@ const ProductPage = ({ params }) => {
       return;
     }
     addToCart({
-    id: product._id,
-    title: product.title,
-    sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`, // Important for Shopify feel
-    price: displayPrice,   // <--- FIXED: Use the matrix-aware price
-    image: product.images[0],
-    quantity: quantity,
-    size: selectedSize,
-    frame: selectedFrame,
-    style: selectedStyle,  // <--- ADDED: To show work style in cart
-    godName: product.godName
-  });
-  toast.success(`${quantity} Item(s) added to cart`);
+      id: product._id,
+      title: product.title,
+      sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`, // Important for Shopify feel
+      price: displayPrice,   // <--- FIXED: Use the matrix-aware price
+      image: product.images[0],
+      quantity: quantity,
+      size: selectedSize,
+      frame: selectedFrame,
+      style: selectedStyle,  // <--- ADDED: To show work style in cart
+      godName: product.godName
+    });
+    toast.success(`${quantity} Item(s) added to cart`);
   };
 
   const onBuyNow = () => {
@@ -243,7 +247,7 @@ const ProductPage = ({ params }) => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-white">
         <Loader2 className="animate-spin text-amber-600" size={40} />
-        <p className="uppercase text-[10px] font-black tracking-[0.4em] text-amber-800">
+        <p className="uppercase text-[15px] font-zinc-900 tracking-wide text-amber-800">
           Restoring Art Signal...
         </p>
       </div>
@@ -258,19 +262,19 @@ const ProductPage = ({ params }) => {
   ];
 
   const handleWishlistClick = () => {
-  toggleWishlist({
-    id: product._id, // Unique ID
-    title: product.title,
-    sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
-    price: displayPrice,   // <--- Live Matrix Price
-    image: activeImage || product.images[0],
-    size: selectedSize,    // <--- Live Selected Size
-    frame: selectedFrame,  // <--- Live Selected Frame
-    style: selectedStyle,  // <--- Live Selected Style
-    godName: product.godName,
-    inStock: product.countInStock > 0
-  });
-};
+    toggleWishlist({
+      id: product._id, // Unique ID
+      title: product.title,
+      sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
+      price: displayPrice,   // <--- Live Matrix Price
+      image: activeImage || product.images[0],
+      size: selectedSize,    // <--- Live Selected Size
+      frame: selectedFrame,  // <--- Live Selected Frame
+      style: selectedStyle,  // <--- Live Selected Style
+      godName: product.godName,
+      inStock: product.countInStock > 0
+    });
+  };
 
   return (
     <div className="min-h-screen bg-white font-outfit pb-20 overflow-x-hidden">
@@ -297,7 +301,7 @@ const ProductPage = ({ params }) => {
           {/* --- LEFT: IMAGE EXHIBIT --- */}
           <div className="lg:col-span-7 space-y-6 md:space-y-8">
             <div
-              className="relative aspect-4/5 rounded-3xl md:rounded-[2.5rem] overflow-hidden cursor-crosshair group touch-none border border-zinc-100 bg-zinc-50"
+              className="relative aspect-4/5 rounded-3xl md:rounded-[2.5rem] overflow-hidden cursor-crosshair group touch-none"
               onMouseMove={handleInteraction}
               onTouchMove={handleInteraction}
               onMouseEnter={() =>
@@ -306,28 +310,23 @@ const ProductPage = ({ params }) => {
               onMouseLeave={() =>
                 setZoomData((prev) => ({ ...prev, show: false }))
               }
-              onTouchStart={() =>
-                setZoomData((prev) => ({ ...prev, show: true }))
-              }
-              onTouchEnd={() =>
-                setZoomData((prev) => ({ ...prev, show: false }))
-              }
             >
               <Image
                 ref={imgRef}
                 src={activeImage}
                 alt={product.title || "Masterpiece"}
                 fill
-                className={`object-contain p-4 transition-opacity duration-300 ${zoomData.show ? "opacity-0 md:opacity-0" : "opacity-100"}`}
+                className={`object-contain p-4 transition-opacity duration-300 ${zoomData.show ? "lg:opacity-0 opacity-0" : "opacity-100"}`}
                 priority
               />
               {zoomData.show && (
                 <div
-                  className="absolute inset-0 z-10 w-full h-full pointer-events-none"
+                  className="absolute inset-0 z-10 w-full h-full pointer-events-none hidden lg:block"
                   style={{
-                    backgroundImage: `url(${product.images[activeImage]})`,
+                    // FIXED: Use activeImage directly as it is the URL string
+                    backgroundImage: `url(${activeImage})`,
                     backgroundPosition: `${zoomData.x}% ${zoomData.y}%`,
-                    backgroundSize: "clamp(180%, 20vw + 150%, 280%)", // Adaptive zoom scale
+                    backgroundSize: "280%",
                     backgroundRepeat: "no-repeat",
                   }}
                 />
@@ -371,7 +370,7 @@ const ProductPage = ({ params }) => {
                 {product.title}
               </h1>
 
-              
+
               <div className="flex flex-col gap-1">
                 <div className="flex items-baseline gap-4">
                   {/* Use displayPrice to show matrix-updated value */}
@@ -426,13 +425,12 @@ const ProductPage = ({ params }) => {
                         disabled={!isAvailable}
                         onClick={() => setSelectedSize(size)}
                         className={`relative py-2 px-1 rounded-lg border text-lg font-semibold transition-all duration-300
-                        ${
-                          !isAvailable
+                        ${!isAvailable
                             ? "bg-zinc-50 border-zinc-100 text-zinc-400 cursor-not-allowed"
                             : isSelected
                               ? "border-amber-600 bg-amber-900 text-white shadow-md ring-2 ring-amber-100"
                               : "border-zinc-200 bg-white text-zinc-800 hover:border-amber-400"
-                        }`}
+                          }`}
                       >
                         {size.replace(/["\s]/g, "").replace("X", "x")}
                         {!isAvailable && (
@@ -463,10 +461,9 @@ const ProductPage = ({ params }) => {
                       setActiveImage(frame.url); // Use frame URL from GLOBAL_ASSETS
                     }}
                     className={`px-4 py-2 rounded-full border text-md font-semibold uppercase tracking-wider transition-all duration-300
-                      ${
-                        selectedFrame === frame.name
-                          ? "bg-amber-900 text-white border-amber-900 shadow-lg scale-105"
-                          : "bg-zinc-50 text-zinc-800 border-zinc-200 hover:border-amber-500 hover:text-amber-800 hover:bg-white"
+                      ${selectedFrame === frame.name
+                        ? "bg-amber-900 text-white border-amber-900 shadow-lg scale-105"
+                        : "bg-zinc-50 text-zinc-800 border-zinc-200 hover:border-amber-500 hover:text-amber-800 hover:bg-white"
                       }`}
                   >
                     {frame.name.replace(" Frame", "")}
