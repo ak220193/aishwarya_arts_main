@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const OrderSchema = new mongoose.Schema(
   {
+    orderId: { type: String, required: true, unique: true }, // ADDED THIS
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -26,7 +27,8 @@ const OrderSchema = new mongoose.Schema(
       },
     ],
     shippingAddress: {
-      fullName: { type: String, required: true }, // Added this
+      fullName: { type: String, required: true }, 
+      address: String,
       houseNo: String,
       street: String,
       city: String,
@@ -34,11 +36,7 @@ const OrderSchema = new mongoose.Schema(
       pincode: String,
       phone: String,
     },
-    paymentMethod: {
-      type: String,
-      required: true,
-      default: "Online",
-    },
+    paymentMethod: { type: String, required: true, default: "Online" },
     paymentStatus: {
       type: String,
       enum: ["Pending", "Paid", "Failed"],
