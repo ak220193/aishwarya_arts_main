@@ -1,52 +1,40 @@
 import { connectDB } from "../../../../lib/db";
 import Order from "../../../../models/Order";
-import Product from "../../../../models/Product"; 
+import User from "../../../../models/User"; // Import User model
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../../lib/auth";
 import { NextResponse } from "next/server";
 
-// 1. Receive 'params' from the dynamic route [id]
 export async function GET(req, { params }) {
   try {
     await connectDB();
     const session = await getServerSession(authOptions);
-    
-    // Extract the ID from the URL
-    const { id } = params;
+    const { id } = await params; // This is the Order ID from the URL
 
-    if (!session || !session.user) {
-      return NextResponse.json(
-        { success: false, message: "Unauthorized" }, 
-        { status: 401 }
-      );
+    if (!session?.user) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id || session.user._id;
+    // 1. GET THE REAL DB USER ID (Fixes the BSON Error)
+    const dbUser = await User.findOne({ email: session.user.email });
+    
+    if (!dbUser) {
+      return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+    }
 
-    // 2. Change .find() to .findOne() 
-    // 3. Match BOTH the Order ID and the User ID for security
-    const order = await Order.findOne({ 
-      _id: id, 
-      user: userId 
+    // 2. QUERY USING dbUser._id
+    const order = await Order.findOne({
+      _id: id,
+      user: dbUser._id // Uses the 24-char ObjectId
     }).populate("orderItems.product", "title images price");
 
     if (!order) {
-      return NextResponse.json(
-        { success: false, message: "Order not found or access denied" }, 
-        { status: 404 }
-      );
+      return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ 
-      success: true, 
-      data: order 
-    }, { status: 200 });
-
+    return NextResponse.json({ success: true, data: order }, { status: 200 });
   } catch (error) {
-    console.error("GET_SINGLE_ORDER_ERROR:", error);
-    return NextResponse.json(
-      { success: false, message: "Server error" }, 
-      { status: 500 }
-    );
+    console.error("Order Detail Error:", error.message);
+    return NextResponse.json({ success: false, message: "Failed to fetch order details" }, { status: 500 });
   }
 }

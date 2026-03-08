@@ -54,6 +54,10 @@ const GODS = [
   "Shanvanthri",
   "Vishwa Brahma",
   "GajaLakshmi",
+  "Saraswathi",
+  "Narashimar",
+  "Kamatchi amman",
+  "Ratha krishnan",
 ];
 
 const ART_STYLES = [

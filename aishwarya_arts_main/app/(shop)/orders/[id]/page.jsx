@@ -81,12 +81,12 @@ const OrderDetails = () => {
             </div>
             <div className="flex gap-10">
               <div className="text-right">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Date</p>
+                <p className="text-[10px] font-bold text-zinc-800 uppercase tracking-widest mb-1">Date</p>
                 <p className="text-sm font-bold">{new Date(order.createdAt).toLocaleDateString('en-IN')}</p>
               </div>
               <div className="text-right">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Status</p>
-                <span className="px-3 py-1 bg-amber-50 text-amber-800 rounded-full text-[10px] font-black uppercase border border-amber-100">
+                <p className="text-[10px] font-bold text-zinc-800 uppercase tracking-widest mb-1">Status</p>
+                <span className="px-3 py-1 bg-amber-50 text-amber-800 rounded-full text-sm font-semibold uppercase border border-amber-100">
                   {order.orderStatus}
                 </span>
               </div>
@@ -96,8 +96,8 @@ const OrderDetails = () => {
           <div className="p-8 lg:p-12 grid grid-cols-1 lg:grid-cols-3 gap-12">
             
             <div className="lg:col-span-2 space-y-8">
-              <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
-                <Package size={14} /> Purchased Artworks
+              <h3 className="text-md font-bold uppercase tracking-[0.2em] text-zinc-800 flex items-center gap-2">
+                <Package size={20} /> Purchased Artworks
               </h3>
               <div className="space-y-6">
                 {order.orderItems?.map((item, idx) => (
@@ -107,12 +107,12 @@ const OrderDetails = () => {
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-900 text-lg">{item.title}</h4>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                      <p className="text-[10px] font-semibold text-zinc-800 uppercase tracking-widest mt-1">
                         {item.size} • {item.frame}
                       </p>
                       <div className="flex justify-between items-end mt-4">
-                        <span className="text-sm font-bold text-gray-400">Qty: {item.quantity}</span>
-                        <span className="text-lg font-black text-gray-900">₹{item.price?.toLocaleString()}</span>
+                        <span className="text-sm font-semibold text-zinc-800">Qty: {item.quantity}</span>
+                        <span className="text-lg font-semibold text-gray-900">₹{item.price?.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -121,46 +121,46 @@ const OrderDetails = () => {
 
               <div className="mt-12 pt-8 border-t border-gray-50 space-y-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Subtotal</span>
-                  <span className="font-bold">₹{subtotal.toLocaleString()}</span>
+                  <span className="text-zinc-800 font-semibold uppercase tracking-widest text-[10px]">Subtotal</span>
+                  <span className="font-semibold">₹{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                   <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">GST (5%)</span>
+                   <span className="text-zinc-800 font-bold uppercase tracking-widest text-[10px]">GST (5%)</span>
                    <span className="font-bold">₹{gst.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center pt-4 border-t-2 border-gray-900">
-                  <span className="font-black uppercase tracking-widest text-xs">Total Amount</span>
-                  <span className="text-3xl font-black tracking-tighter text-gray-900">₹{currentTotal.toLocaleString()}</span>
+                  <span className="font-semibold uppercase tracking-widest text-xs">Total Amount</span>
+                  <span className="text-3xl font-semibold tracking-tighter text-gray-900">₹{currentTotal.toLocaleString()}</span>
                 </div>
               </div>
             </div>
 
             <div className="space-y-10">
               <div className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
+                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-800 flex items-center gap-2">
                   <MapPin size={14} /> Shipping To
                 </h3>
-                <div className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100 space-y-2">
-                  <p className="font-bold text-gray-900">{order.shippingAddress?.fullName}</p>
-                  <p className="text-xs text-gray-500 leading-relaxed uppercase tracking-wider">
+                <div className="p-6 bg-gray-50 rounded-4xl border border-gray-100 space-y-2">
+                  <p className="font-semibold text-gray-900">{order.shippingAddress?.fullName}</p>
+                  <p className="text-sm text-zinc-900 leading-relaxed uppercase tracking-wider">
                     {order.shippingAddress?.address}<br/>
                     {order.shippingAddress?.city}, {order.shippingAddress?.state}<br/>
                     {order.shippingAddress?.pincode}
                   </p>
-                  <p className="text-xs font-bold pt-2 border-t border-gray-200 mt-2">
+                  <p className="text-xs font-semibold pt-2 border-t border-gray-200 mt-2">
                     Phone: {order.shippingAddress?.phone}
                   </p>
                 </div>
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-800 flex items-center gap-2">
                   <CreditCard size={14} /> Payment Method
                 </h3>
-                <div className="p-6 bg-gray-50 rounded-[2rem] border border-gray-100 flex items-center justify-between">
+                <div className="p-6 bg-gray-50 rounded-4xl border border-gray-100 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold text-gray-900">{order.paymentMethod}</p>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">
+                    <p className="text-[10px] text-zinc-800 font-bold uppercase tracking-widest mt-1">
                       Status: {order.paymentStatus}
                     </p>
                   </div>
