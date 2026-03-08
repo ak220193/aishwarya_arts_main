@@ -193,9 +193,9 @@ useEffect(() => {
           <main className="lg:w-3/4 w-full">
             {/* 4. Conditional Rendering based on Signal Status */}
             {loading ? (
-              <div className="h-96 flex flex-col items-center justify-center text-zinc-400 gap-4">
+              <div className="h-96 flex flex-col items-center justify-center text-amber-700 gap-4">
                 <Loader2 className="animate-spin" size={32} />
-                <p className="font-bold uppercase tracking-widest text-xs">Syncing Art Gallery...</p>
+                <p className="font-semibold uppercase tracking-wide text-md">Syncing Art Gallery...</p>
               </div>
             ) : products.length > 0 ? (
               <ProductGrid 

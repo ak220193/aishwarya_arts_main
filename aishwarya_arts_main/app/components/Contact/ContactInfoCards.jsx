@@ -46,12 +46,12 @@ export default function ContactInfoCards() {
             </h3>
 
             {/* Description */}
-            <p className="text-gray-500 mt-2 text-lg font-medium leading-relaxed">
+            <p className="text-gray-600 mt-2 text-lg font-medium leading-relaxed">
               {item.desc}
             </p>
 
             {/* Value */}
-            <p className="text-gray-900 mt-3 text-xl font-semibold">
+            <p className="text-zinc-900 mt-3 text-xl font-semibold">
               {item.value}
             </p>
           </div>

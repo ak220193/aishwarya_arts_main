@@ -36,7 +36,7 @@ const Story = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="relative w-full h-[480px] md:h-[580px] lg:h-[640px]"
+          className="relative w-full h-120 md:h-145 lg:h-160"
         >
           <Image
             src={images[currentImage]}
@@ -82,9 +82,9 @@ const Story = () => {
             <Button
               href="/about"
               color="emerald"
-              className="bg-gradient-to-r from-yellow-700 to-yellow-500 shadow-md hover:shadow-xl hover:-translate-y-0.5  hover:bg-[#000000] transition transform duration-300 hover:scale-105 text-white"
+              className="bg-linear-to-r from-yellow-700 to-yellow-500 shadow-md hover:shadow-xl hover:-translate-y-0.5  hover:bg-[#000000] transition transform duration-300 hover:scale-105 text-white"
             >
-              Watch Our Video
+              Know About us
             </Button>
           </div>
         </motion.div>

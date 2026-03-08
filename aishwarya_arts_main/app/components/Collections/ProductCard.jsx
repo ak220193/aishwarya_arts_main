@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, Star, ArrowUpRight, ShoppingBag } from "lucide-react";
@@ -17,6 +17,19 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
   const isInWishlist = useWishlistStore((state) =>
     state.wishlist.some((item) => item.id === product._id),
   );
+
+  const { randomRating, reviewCount } = useMemo(() => {
+    // Generate a simple seed from the product ID
+    const seed = product._id ? product._id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) : 0;
+    
+    // High-end range: 4.4 to 5.0
+    const rating = (4.4 + (seed % 7) / 10).toFixed(1);
+    // Review range: 18 to 120
+    const reviews = 18 + (seed % 103);
+    
+    return { randomRating: rating, reviewCount: reviews };
+  }, [product._id]);
+
 
   if (!product) return null;
 
@@ -56,9 +69,7 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
               Best Seller
             </span>
           )}
-          <span className="bg-yellow-500 text-black text-[10px] font-medium uppercase tracking-[0.15em] px-4 py-2 rounded-r-md shadow-lg">
-            New Arrival
-          </span>
+          
         </div>
 
         {/* WISHLIST */}
@@ -105,9 +116,10 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
           <p className="text-md uppercase text-black tracking-wide font-medium">
             {product.godName || "Handmade Art"}
           </p>
-          <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
-            <Star size={10} className="fill-yellow-500 text-yellow-500" />
-            <span className="text-sm font-semibold text-black">5.0</span>
+          <div className="flex items-center gap-1.5 bg-amber-50 px-2 py-1 rounded-lg border border-amber-100">
+            <Star size={10} className="fill-amber-500 text-amber-500" />
+            <span className="text-[15px] font-zinc-800 text-amber-900">{randomRating}</span>
+            
           </div>
         </div>
 
@@ -126,9 +138,9 @@ const ProductCard = ({ product, onWishlistToggle, onAddToCart }) => {
         </Link>
 
         {/* --- PRICING & ACTION ROW --- */}
-        <div className="mt-4 pt-4 border-t border-gray-50 flex flex-col gap-1">
+        <div className=" pt-4 border-t border-gray-50 flex flex-col gap-1">
           {/* "Starting from" Label */}
-          <p className="text-[10px] uppercase text-black font-bold tracking-wider">
+          <p className="text-[18px] uppercase text-zinc-900 font-bold tracking-wider">
             Starting from
           </p>
           <div className="flex items-center justify-between gap-10">
