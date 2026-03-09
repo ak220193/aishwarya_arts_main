@@ -27,16 +27,47 @@ const CollectionsPage = () => {
   const addToCart = useCartStore((state) => state.addToCart);
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist);
 
+  
   useEffect(() => {
     setMounted(true);
     const fetchLiveProducts = async () => {
       try {
+        setLoading(true);
+        console.log("🔍 DEBUG: Starting API call to /api/admin/products...");
+        
         const res = await axios.get("/api/admin/products");
-        // Filter: Only show products that are marked "In Stock" for customers
-        const publicProducts = (res.data.data || []).filter(p => p.inStock);
+
+        // 1. Log the RAW response to see if it's HTML or JSON
+        console.log("📡 RAW RESPONSE TYPE:", typeof res.data);
+        console.log("📄 FULL RESPONSE DATA:", res.data);
+
+        // 2. Check for HTML Redirect (Middleware/404)
+        if (typeof res.data === "string" && res.data.includes("<!DOCTYPE html>")) {
+          console.error("🛑 CRITICAL: API returned HTML instead of JSON.");
+          console.error("This usually means Middleware is redirecting you to a Login or Home page.");
+          toast.error("API Error: Received HTML. Check Middleware.");
+          return;
+        }
+
+        // 3. Extract and Validate Array
+        const rawData = res.data?.data || [];
+        console.log("📦 DATA EXTRACTED FROM WRAPPER:", rawData);
+
+        if (!Array.isArray(rawData)) {
+          console.error("⚠️ DATA ERROR: Expected an array but got:", typeof rawData);
+          return;
+        }
+
+        const publicProducts = rawData.filter(p => p.inStock);
+        console.log("✅ SUCCESS: Products found and filtered:", publicProducts.length);
+        
         setProducts(publicProducts);
       } catch (err) {
-        console.error("COLLECTION SIGNAL ERROR:", err);
+        console.error("❌ AXIOS CATCH ERROR:", err);
+        if (err.response) {
+          console.error("Status Code:", err.response.status);
+          console.error("Response Header:", err.response.headers);
+        }
         toast.error("Could not sync gallery data.");
       } finally {
         setLoading(false);
@@ -44,7 +75,6 @@ const CollectionsPage = () => {
     };
     fetchLiveProducts();
   }, []);
-
 
 
 useEffect(() => {
