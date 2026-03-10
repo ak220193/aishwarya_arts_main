@@ -20,7 +20,7 @@ const cards = [
   },
   {
     id: 3,
-    title: "30-Year Vow",
+    title: "25-Year Vow",
     icon: <HeartHandshake aria-hidden="true" className="text-amber-500 w-12 h-12" />,
     text: "Three decades of mastery in every stroke. We guarantee pure gold, sacred precision, and art that lasts generations.",
   },

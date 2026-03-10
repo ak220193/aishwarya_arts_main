@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import Img1 from "../../../public/assets/about/man-2.jpg";
+import Img1 from "../../../public/assets/about/as.png";
 
 export default function ProfessionalJourney() {
   return (
