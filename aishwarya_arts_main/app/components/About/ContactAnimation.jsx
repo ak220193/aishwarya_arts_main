@@ -90,7 +90,7 @@ export default function ContactAnimation() {
                 href="tel:+919655007661"
                 className="hover:text-yellow-700 text-xl text-zinc-900"
               >
-                +91 96550 07661
+                +91 7550152764
               </a>
               •
               <a

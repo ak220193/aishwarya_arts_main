@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FilterSidebar from "../../components/Collections/FilterSidebar";
 import ProductGrid from "../../components/Collections/ProductGrid";
 import SortDropdown from "../../components/Collections/SortDropdown";
@@ -20,6 +20,15 @@ const CollectionsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  //state for filtering and sorting
+
+  const [sortBy, setSortBy] = useState("newest");
+  const [filters, setFilters] = useState({
+    godName: [],
+    workStyle: [],
+    dimensions:[],
+  });
+
   const router = useRouter();
   const { data: session, status } = useSession();
   const { isLoggedIn } = useAuthStore();
@@ -33,13 +42,8 @@ const CollectionsPage = () => {
     const fetchLiveProducts = async () => {
       try {
         setLoading(true);
-        console.log("🔍 DEBUG: Starting API call to /api/admin/products...");
-        
-        const res = await axios.get("/api/admin/products");
 
-        // 1. Log the RAW response to see if it's HTML or JSON
-        console.log("📡 RAW RESPONSE TYPE:", typeof res.data);
-        console.log("📄 FULL RESPONSE DATA:", res.data);
+        const res = await axios.get("/api/admin/products");
 
         // 2. Check for HTML Redirect (Middleware/404)
         if (typeof res.data === "string" && res.data.includes("<!DOCTYPE html>")) {
@@ -48,19 +52,10 @@ const CollectionsPage = () => {
           toast.error("API Error: Received HTML. Check Middleware.");
           return;
         }
-
         // 3. Extract and Validate Array
         const rawData = res.data?.data || [];
         console.log("📦 DATA EXTRACTED FROM WRAPPER:", rawData);
-
-        if (!Array.isArray(rawData)) {
-          console.error("⚠️ DATA ERROR: Expected an array but got:", typeof rawData);
-          return;
-        }
-
         const publicProducts = rawData.filter(p => p.inStock);
-        console.log("✅ SUCCESS: Products found and filtered:", publicProducts.length);
-        
         setProducts(publicProducts);
       } catch (err) {
         console.error("❌ AXIOS CATCH ERROR:", err);
@@ -75,6 +70,64 @@ const CollectionsPage = () => {
     };
     fetchLiveProducts();
   }, []);
+
+  const processedProducts = useMemo(() => {
+    let result = [...products];
+    console.log(result, "result");
+
+    // Filter by God Name
+    if (filters.godName.length > 0) {
+      result = result.filter((p) => 
+        filters.godName.includes(p.godName?.toLowerCase())
+      );
+    }
+
+    // Filter by Work Style
+   if (filters.dimensions.length > 0) {
+  }
+
+  // 3. DIMENSIONS FILTER
+  if (filters.dimensions.length > 0) {
+    result = result.filter((p) => {
+      if (!p.dimensions) return false;
+
+      // This normalization handles the " (quotes), X (capital), and spaces
+      const normalize = (str) => 
+        str.toLowerCase()
+           .replace(/["\s]/g, "") 
+           .replace(/[*x]/g, "x"); 
+
+      const productDim = normalize(p.dimensions);
+      const isMatched = filters.dimensions.some(f => normalize(f) === productDim);
+
+      if (filters.dimensions.length > 0) {
+        console.log(`Comparing DB: [${productDim}] with Filter: [${normalize(filters.dimensions[0])}] | Match: ${isMatched}`);
+      }
+      return isMatched;
+    });
+  }
+
+    // Sorting
+    if (sortBy === "price-low") {
+      result.sort((a, b) => (a.offerPrice || a.price) - (b.offerPrice || b.price));
+    } else if (sortBy === "price-high") {
+      result.sort((a, b) => (b.offerPrice || b.price) - (a.offerPrice || a.price));
+    } else if (sortBy === "newest") {
+      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    return result;
+  }, [products, filters, sortBy]);
+
+  const handleFilterChange = (category, value) => {
+    setFilters((prev) => {
+      const currentValues = prev[category];
+      const newValues = currentValues.includes(value)
+        ? currentValues.filter((v) => v !== value)
+        : [...currentValues, value];
+      return { ...prev, [category]: newValues };
+    });
+  };
 
 
 useEffect(() => {
@@ -169,7 +222,7 @@ useEffect(() => {
               <X size={24} />
             </button>
           </div>
-          <FilterSidebar />
+          <FilterSidebar selectedFilters={filters} onFilterChange={handleFilterChange} />
         </div>
       </div>
 
@@ -203,9 +256,9 @@ useEffect(() => {
             {/* Desktop Count & Sort */}
             <div className="hidden lg:flex items-center justify-between">
               <p className="text-md text-black italic">
-                Showing unique designs
+                Showing {processedProducts.length} unique designs
               </p>
-              <SortDropdown />
+              <SortDropdown currentSort={sortBy} onSortChange={setSortBy} />
             </div>
           </div>
         </div>
@@ -216,7 +269,7 @@ useEffect(() => {
         <div className="flex flex-col lg:flex-row gap-12">
           {/* DESKTOP SIDEBAR */}
           <aside className="hidden lg:block lg:w-1/4 h-fit sticky top-24">
-            <FilterSidebar />
+            <FilterSidebar selectedFilters={filters} onFilterChange={handleFilterChange} />
           </aside>
 
           {/* PRODUCT GRID */}
@@ -229,7 +282,7 @@ useEffect(() => {
               </div>
             ) : products.length > 0 ? (
               <ProductGrid 
-                products={products} // Now using live database signal
+                products={processedProducts} // Now using live database signal
                 onWishlistToggle={handleWishlistToggle} 
                 onAddToCart={handleAddToCart}
               />

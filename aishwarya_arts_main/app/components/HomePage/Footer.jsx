@@ -31,7 +31,7 @@ const Footer = () => {
                 Aishwaraya Arts
               </h1>
               <p className="text-sm uppercase tracking-wide text-zinc 900 font-semibold mt-1">
-                Tanjore Art Gallery
+                Crafting Tanjore Masterpieces
               </p>
             </div>
 

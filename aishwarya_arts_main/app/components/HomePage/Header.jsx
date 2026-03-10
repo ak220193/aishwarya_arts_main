@@ -139,7 +139,7 @@ const Header = () => {
               Aishwaraya Arts
             </h1>
             <span className="text-sm md:text-[15px] uppercase trackaing-wide text-zinc-900 font-semibold mt-1">
-              Tanjore Art Gallery
+              Crafting Tanjore Masterpieces 
             </span>
           </div>
         </Link>

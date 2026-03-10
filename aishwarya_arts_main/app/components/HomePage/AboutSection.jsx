@@ -77,7 +77,7 @@ export default function ArtistAboutSection() {
   const infoBoxes = [
     {
       icon: <Award />,
-      title: "30+ Years",
+      title: "25+ Years",
       label: "Expertise",
       fullDesc: "Preserving the soul of Thanjavur.",
     },
@@ -89,7 +89,7 @@ export default function ArtistAboutSection() {
     },
     {
       icon: <Users />,
-      title: "10k+",
+      title: "1.5K+",
       label: "Customers",
       fullDesc: "Bringing divine radiance to homes worldwide.",
     },

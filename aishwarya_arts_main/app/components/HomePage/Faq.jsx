@@ -29,7 +29,7 @@ const Faq = () => {
     {
       question: "Are the gold foils used in paintings authentic?",
       answer:
-        "We use 22K real gold foils in our traditional Tanjore paintings to maintain authenticity.",
+        "We use 22K  gold foils in our traditional Tanjore paintings to maintain authenticity.",
     },
     {
       question: "Can I visit the studio in person?",
@@ -39,7 +39,7 @@ const Faq = () => {
     {
       question: "Do you ship internationally?",
       answer:
-        "Currently, we ship only within India. International shipping will be available soon.",
+        "Currently, we ship only within India. International shipping be done with prior consultation.",
     },
     {
       question: "How can I place a bulk order?",
