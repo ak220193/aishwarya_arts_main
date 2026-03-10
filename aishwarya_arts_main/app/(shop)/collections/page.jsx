@@ -250,7 +250,7 @@ useEffect(() => {
                 <SlidersHorizontal size={16} /> Filters
               </button>
               <div className="h-4 w-px "></div>
-              <SortDropdown />
+              <SortDropdown currentSort={sortBy} onSortChange={(value) => setSortBy(value)} />
             </div>
 
             {/* Desktop Count & Sort */}

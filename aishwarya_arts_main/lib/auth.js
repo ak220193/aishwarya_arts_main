@@ -58,7 +58,7 @@ export const authOptions = {
 
           return {
             id: user._id.toString(),
-            name: user.name,
+            name: `${user.firstName} ${user.lastName || ""}`.trim(),
             email: user.email,
             image: user.avatar || null, // Ensure this is null if empty
             role: "user",

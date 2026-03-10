@@ -45,7 +45,7 @@ export default function Hero() {
             className="w-screen shrink-0 flex justify-center px-2"
           >
             {/* IMAGE BOX */}
-            <div className="w-full max-w-7xl rounded-2xl overflow-hidden bg-green-300">
+            <div className="w-full max-w-7xl rounded-2xl overflow-hidden">
               <div className="relative w-full h-105 sm:h-125 md:h-150 lg:h-212.5">
                 <NextImage
                   src={src}

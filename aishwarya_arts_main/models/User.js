@@ -22,9 +22,11 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required:false,
-      select: false, 
+      required: false,
+      select: false,
     },
+    resetPasswordToken: { type: String, select: false },
+    resetPasswordExpires: { type: Date, select: false },
     primaryPhone: {
       type: String,
       required: false, // Changed to false for Google Auth compatibility
