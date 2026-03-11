@@ -1,40 +1,31 @@
-import { withAuth } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    const token = req.nextauth.token;
-    const pathname = req.nextUrl.pathname;
+export async function middleware(req) {
+  const path = req.nextUrl.pathname;
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 
-    // 1. If it's the Admin UI and not an admin, send to login
-    if (pathname.startsWith("/admin") && token?.role !== "admin") {
-      return NextResponse.redirect(new URL("/admin/login", req.url));
+  // 1. If they are trying to access Admin pages
+  if (path.startsWith("/admin")) {
+    
+    // 🚩 ALLOW the login page to always load
+    if (path === "/admin") {
+      return NextResponse.next();
     }
-  },
-  {
-    callbacks: {
-      authorized: ({ req, token }) => {
-        const { pathname, method } = req.nextUrl;
 
-        // ✅ 2. EXPLICIT ALLOW: If it's a GET request to the products API, return true (Authorized)
-        if (pathname.startsWith("/api/admin/products") && method === "GET") {
-          return true;
-        }
-
-        // 🔒 3. RESTRICT: Everything else in the matcher needs a token
-        return !!token;
-      },
-    },
-    pages: {
-      signIn: "/admin/login",
-    },
+    // 🚩 PROTECT other admin routes
+    if (!token || token.role !== "admin") {
+      // Instead of letting next-auth handle it, we manually redirect
+      // This prevents the infinite 'callbackUrl' stacking
+      const loginUrl = new URL("/admin/login", req.url);
+      return NextResponse.redirect(loginUrl);
+    }
   }
-);
 
-// 4. Ensure the matcher captures the exact API path
-export const config = { 
-  matcher: [
-    "/admin/:path*", 
-   
-  ] 
+  return NextResponse.next();
+}
+
+// 2. Only run middleware on these paths
+export const config = {
+  matcher: ["/admin/:path*"],
 };

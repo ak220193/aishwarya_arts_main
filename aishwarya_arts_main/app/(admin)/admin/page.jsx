@@ -6,6 +6,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { Loader2, Lock, Mail, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import LogoRevised from "../../../public/LogoRevised.png"
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ export default function AdminLoginPage() {
       toast.error("Access Denied: Invalid Credentials");
       setIsLoading(false);
     } else {
-      toast.success("Welcome back, Akash");
+      toast.success("Welcome back, Aishwarya Arts");
       router.push("/admin/dashboard");
     }
   };
@@ -81,7 +82,7 @@ export default function AdminLoginPage() {
               className="w-20 h-20 relative mb-8 drop-shadow-2xl"
             >
               <Image
-                src="/logo.png"
+                src={LogoRevised}
                 alt="Aishwarya Arts"
                 fill
                 className="object-contain"

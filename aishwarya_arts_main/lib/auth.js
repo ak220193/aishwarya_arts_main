@@ -6,13 +6,11 @@ import bcrypt from "bcryptjs";
 
 export const authOptions = {
   providers: [
-    // 1. Google OAuth (For Customers)
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
 
-    // 2. Credentials Provider (Dual-Purpose)
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -24,84 +22,86 @@ export const authOptions = {
           throw new Error("Email and password are required");
         }
 
-        // --- A. HARDCODED ADMIN CHECK (Akash) ---
+        // Normalize email to prevent "Incorrect Credentials" due to caps
+        const inputEmail = credentials.email.toLowerCase().trim();
+        const inputPassword = credentials.password.trim();
+
+        // --- A. HARDCODED ADMIN CHECK (PRIORITY) ---
         const ADMIN_EMAIL = "aishwaryaarts@gmail.com";
         const ADMIN_PASSWORD = "123456";
 
-        if (
-          credentials.email === ADMIN_EMAIL &&
-          credentials.password === ADMIN_PASSWORD
-        ) {
+        if (inputEmail === ADMIN_EMAIL && inputPassword === ADMIN_PASSWORD) {
+          console.log("🚀 Admin Login Successful");
           return {
             id: "admin-1",
             name: "Akash",
             email: ADMIN_EMAIL,
             role: "admin",
-            image: null, // Hardcoded admin has no DB avatar, set to null
+            image: null,
           };
         }
 
         // --- B. DATABASE CUSTOMER CHECK ---
         try {
           await connectDB();
-          // select("+password") is necessary because it's hidden by default in the model
-          const user = await User.findOne({ email: credentials.email }).select("+password");
+          // We select +password because it's hidden in your Schema
+          const user = await User.findOne({ email: inputEmail }).select("+password");
 
-          if (!user) throw new Error("No user found with this email");
+          if (!user) {
+            console.error("❌ Auth Error: No user found in DB");
+            throw new Error("Invalid email or password");
+          }
 
-          const isValid = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
+          const isValid = await bcrypt.compare(inputPassword, user.password);
 
-          if (!isValid) throw new Error("Incorrect password");
+          if (!isValid) {
+            console.error("❌ Auth Error: Password mismatch");
+            throw new Error("Invalid email or password");
+          }
 
           return {
             id: user._id.toString(),
             name: `${user.firstName} ${user.lastName || ""}`.trim(),
             email: user.email,
-            image: user.avatar || null, // Ensure this is null if empty
+            image: user.avatar || null,
             role: "user",
           };
         } catch (error) {
-          console.error("Auth Error:", error.message);
-          throw new Error(error.message);
+          // Providing a generic error to the UI for security, but logging detail to server
+          console.error("Database Auth Error:", error.message);
+          throw new Error(error.message || "Internal Server Error");
         }
       },
     }),
   ],
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
     async jwt({ token, user, trigger, session }) {
-      // Standard login
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        token.picture = user.image || null; // FIXED: Prevents infinite 404 loops
+        token.picture = user.image || null;
       }
-
-      // Handle session updates (if you use update() on the client side)
       if (trigger === "update" && session?.image) {
         token.picture = session.image;
       }
-
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
         session.user.role = token.role;
-        session.user.image = token.picture; // Will be a URL or null
+        session.user.image = token.picture;
       }
       return session;
     },
   },
   pages: {
-    signIn: "/login", // Most users should go to /login
-    error: "/auth/error", // Custom error page recommended
+    signIn: "/login",
+    error: "/auth/error",
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
