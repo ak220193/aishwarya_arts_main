@@ -112,7 +112,7 @@ const Sidebar = ({
           x: isDesktop ? 0 : isMobileOpen ? 0 : -300,
         }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className={`fixed lg:sticky top-0 left-0 h-screen bg-[#09090b] text-zinc-400 flex flex-col border-r border-zinc-800/50 z-[101] font-sans shadow-2xl lg:shadow-none`}
+        className={`fixed lg:sticky top-0 left-0 h-screen bg-[#09090b] text-zinc-400 flex flex-col border-r border-zinc-800/50 z-101 font-sans shadow-2xl lg:shadow-none`}
       >
         {/* 1. BRANDING & TOGGLE */}
         <div className="p-6 pb-6">
