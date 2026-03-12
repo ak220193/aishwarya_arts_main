@@ -90,9 +90,7 @@ const OrderDetail = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <button onClick={() => window.print()} className="flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 text-zinc-600 rounded-xl text-[11px] font-semibold uppercase tracking-widest hover:border-amber-500 transition-all">
-            <Printer size={14} /> Print Invoice
-          </button>
+
           <button className="px-6 py-2 bg-zinc-900 text-white rounded-xl text-[11px] font-semibold uppercase tracking-widest hover:bg-amber-700 transition-all shadow-lg shadow-zinc-200">
             Dispatch Order
           </button>
@@ -229,8 +227,8 @@ const OrderDetail = () => {
                       key={status}
                       onClick={() => handleUpdateStatus(status)}
                       className={`px-6 py-2 rounded-xl text-[10px] font-semibold uppercase tracking-widest transition-all border ${order.paymentStatus === status
-                          ? 'bg-amber-600 border-amber-600 text-white'
-                          : 'bg-white border-zinc-200 text-zinc-400 hover:border-amber-200'
+                        ? 'bg-amber-600 border-amber-600 text-white'
+                        : 'bg-white border-zinc-200 text-zinc-400 hover:border-amber-200'
                         }`}
                     >
                       {status}
