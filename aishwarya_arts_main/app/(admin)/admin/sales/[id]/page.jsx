@@ -31,7 +31,7 @@ const OrderDetail = () => {
     };
     fetchOrderDetail();
   }, [id]);
-  
+
 
   const handleUpdateStatus = async (newStatus) => {
     const loadingToast = toast.loading(`Updating status to ${newStatus}...`);
@@ -152,7 +152,7 @@ const OrderDetail = () => {
                 <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-[0.2em] mb-1">Stock Item</p>
                 <h2 className="text-2xl font-semibold text-zinc-900 tracking-tight italic">{order.artwork}</h2>
               </div>
-            
+
             </div>
 
             {/* Admin Checklist UI */}
@@ -221,24 +221,23 @@ const OrderDetail = () => {
               </div>
 
               {/* Quick Status Control */}
-             <div className="mt-8 pt-8 border-t border-zinc-100">
-               <p className="text-sm font-semibold text-zinc-900 uppercase tracking-wide mb-4">Update Payment Ledger</p>
-               <div className="flex gap-3">
+              <div className="mt-8 pt-8 border-t border-zinc-100">
+                <p className="text-sm font-semibold text-zinc-900 uppercase tracking-wide mb-4">Update Payment Ledger</p>
+                <div className="flex gap-3">
                   {['Pending', 'Paid', 'Refunded'].map((status) => (
-                    <button 
+                    <button
                       key={status}
                       onClick={() => handleUpdateStatus(status)}
-                      className={`px-6 py-2 rounded-xl text-[10px] font-semibold uppercase tracking-widest transition-all border ${
-                        order.paymentStatus === status 
-                        ? 'bg-amber-600 border-amber-600 text-white' 
-                        : 'bg-white border-zinc-200 text-zinc-400 hover:border-amber-200'
-                      }`}
+                      className={`px-6 py-2 rounded-xl text-[10px] font-semibold uppercase tracking-widest transition-all border ${order.paymentStatus === status
+                          ? 'bg-amber-600 border-amber-600 text-white'
+                          : 'bg-white border-zinc-200 text-zinc-400 hover:border-amber-200'
+                        }`}
                     >
                       {status}
                     </button>
                   ))}
-               </div>
-            </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -246,18 +245,18 @@ const OrderDetail = () => {
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center"><CheckCircle2 size={24} /></div>
               <div>
-      <p className="text-sm font-semibold text-zinc-900">Final Inspection Passed</p>
-      <p className="text-[10px] text-zinc-800 font-semibold uppercase tracking-wide">
-        {/* Uses the order date from your API, or current date if loading */}
-        System Timestamp: {order?.date || new Date().toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric'
-        })}
-      </p>
-    </div>
+                <p className="text-sm font-semibold text-zinc-900">Final Inspection Passed</p>
+                <p className="text-[10px] text-zinc-800 font-semibold uppercase tracking-wide">
+                  {/* Uses the order date from your API, or current date if loading */}
+                  System Timestamp: {order?.date || new Date().toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                  })}
+                </p>
+              </div>
             </div>
-            
+
           </div>
         </div>
 
@@ -271,7 +270,7 @@ const OrderDetail = () => {
 
             <div className="relative pl-6 space-y-8">
               {/* Vertical Tracker Line */}
-              <div className="absolute left-1.5 top-1.5 bottom-1.5 w-[2px] bg-zinc-100" />
+              <div className="absolute left-1.5 top-1.5 bottom-1.5 w-0.5 bg-zinc-100" />
 
               <div className="relative">
                 <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-amber-500 ring-4 ring-amber-50" />
@@ -296,7 +295,7 @@ const OrderDetail = () => {
               <button className="w-full py-3 bg-zinc-100 text-zinc-900 rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-zinc-200 transition-all">
                 Assign Tracking Agent
               </button>
-              
+
             </div>
           </div>
 
