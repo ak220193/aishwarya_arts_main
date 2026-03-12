@@ -55,6 +55,14 @@ const OrderSchema = new mongoose.Schema(
       enum: ["Processing", "Shipped", "Delivered", "Cancelled"],
       default: "Processing",
     },
+    logisticsPartner: { 
+      type: String, 
+      default: "" // e.g., BlueDart, Delhivery
+    },
+    trackingId: { 
+      type: String, 
+      default: "" 
+    },
     paidAt: { type: Date }, // Useful for accounting
   },
   { timestamps: true }
