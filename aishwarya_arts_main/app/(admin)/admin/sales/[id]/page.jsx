@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { 
-  ArrowLeft, MapPin, User, CreditCard, ShieldCheck, Printer, 
-  ExternalLink, Package, Truck, CheckCircle2, Copy, Phone, 
+import {
+  ArrowLeft, MapPin, User, CreditCard, ShieldCheck, Printer,
+  ExternalLink, Package, Truck, CheckCircle2, Copy, Phone,
   Mail, Hash, Clock, Landmark,
   AlertCircle
 } from "lucide-react";
@@ -20,6 +20,8 @@ const OrderDetail = () => {
       try {
         const res = await fetch(`/api/admin/sales/${id}`);
         const data = await res.json();
+        console.log("--- FRONTEND RECEIVED DATA ---", data);
+        if (data.error) throw new Error(data.error);
         setOrder(data);
       } catch (error) {
         toast.error("Data Sync Failed");
@@ -29,6 +31,24 @@ const OrderDetail = () => {
     };
     fetchOrderDetail();
   }, [id]);
+  
+
+  const handleUpdateStatus = async (newStatus) => {
+    const loadingToast = toast.loading(`Updating status to ${newStatus}...`);
+    try {
+      const res = await fetch(`/api/admin/sales/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentStatus: newStatus }),
+      });
+      if (res.ok) {
+        setOrder({ ...order, paymentStatus: newStatus });
+        toast.success("Ledger Updated", { id: loadingToast });
+      }
+    } catch (error) {
+      toast.error("Update Failed", { id: loadingToast });
+    }
+  };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
@@ -45,12 +65,12 @@ const OrderDetail = () => {
   );
 
   return (
-    <div className="max-w-[1600px] mx-auto p-6 space-y-6 font-outfit">
-      
+    <div className="max-w-400 mx-auto p-6 space-y-6 font-outfit">
+
       {/* --- HEADER BAR --- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => router.back()}
             className="p-2.5 bg-white border border-zinc-200 rounded-xl hover:bg-zinc-50 transition-all"
           >
@@ -58,13 +78,14 @@ const OrderDetail = () => {
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Transaction Record</span>
-              <span className="px-2 py-0.5 bg-zinc-100 text-zinc-600 text-[10px] font-bold rounded uppercase tracking-tighter">Verified</span>
+              <span className="text-sm font-semibold text-zinc-800 uppercase tracking-widest">Transaction Record</span>
+              <span className="px-2 py-0.5 bg-zinc-100 text-zinc-700 text-sm font-bold rounded uppercase tracking-tighter">Verified</span>
             </div>
-            <h1 className="text-xl font-semibold text-zinc-900 flex items-center gap-2">
-              Order {order.orderId}
+            <h2 className="text-xl font-semibold text-zinc-900 flex items-center gap-2">
+              Order Status
+              <span className="ml-2">{order.orderId}</span>
               <button onClick={() => copyToClipboard(order.orderId)} className="text-zinc-300 hover:text-amber-600"><Copy size={14} /></button>
-            </h1>
+            </h2>
           </div>
         </div>
 
@@ -79,33 +100,33 @@ const OrderDetail = () => {
       </div>
 
       {/* --- MAIN DASHBOARD GRID --- */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+
         {/* COLUMN 1: PATRON INTELLIGENCE (LHS) */}
         <div className="lg:col-span-3 space-y-6">
           <div className="bg-white border border-zinc-200 rounded-3xl p-6 shadow-sm">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+              <div className="w-15 h-15 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center">
                 <User size={20} />
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-zinc-900">{order.name}</h3>
-                <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">Master Patron</p>
+                <p className="text-sm text-zinc-700 font-semibold uppercase tracking-wide">Customer Details</p>
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 text-zinc-600">
-                <div className="w-8 h-8 bg-zinc-50 rounded-lg flex items-center justify-center border border-zinc-100"><Mail size={14} /></div>
-                <p className="text-xs font-medium truncate">{order.email}</p>
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 text-white">
+                <div className="w-8 h-8 bg-amber-700 rounded-lg flex items-center justify-center border border-zinc-100"><Mail size={14} /></div>
+                <p className="text-sm font-semibold truncate text-black">{order.email}</p>
               </div>
-              <div className="flex items-center gap-3 text-zinc-600">
-                <div className="w-8 h-8 bg-zinc-50 rounded-lg flex items-center justify-center border border-zinc-100"><Phone size={14} /></div>
-                <p className="text-xs font-semibold">{order.contact}</p>
+              <div className="flex items-center gap-3 text-white">
+                <div className="w-8 h-8 bg-amber-700 rounded-lg flex items-center justify-center border border-zinc-100"><Phone size={14} /></div>
+                <p className="text-sm font-semibold text-black">{order.contact}</p>
               </div>
-              <div className="flex items-start gap-3 text-zinc-600 pt-4 border-t border-zinc-50">
-                <div className="w-8 h-8 bg-zinc-50 rounded-lg flex items-center justify-center border border-zinc-100 mt-1"><MapPin size={14} /></div>
-                <p className="text-xs font-medium leading-relaxed">{order.location}</p>
+              <div className="flex items-start gap-3 text-white   border-t border-zinc-50">
+                <div className="w-8 h-8 bg-amber-700 rounded-lg flex items-center justify-center border border-zinc-100 "><MapPin size={14} /></div>
+                <p className="text-sm font-semibold leading-relaxed py-1 text-black">{order.location}</p>
               </div>
             </div>
           </div>
@@ -117,7 +138,7 @@ const OrderDetail = () => {
               <p className="text-2xl font-semibold text-white">{order.amount}</p>
               <div className="flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${order.paymentStatus === 'Paid' ? 'bg-green-500' : 'bg-amber-500'}`} />
-                <p className="text-[10px] font-semibold uppercase text-zinc-400">{order.paymentStatus} via {order.method}</p>
+                <p className="text-sm font-semibold uppercase text-zinc-400">{order.paymentStatus} via {order.method}</p>
               </div>
             </div>
           </div>
@@ -131,39 +152,112 @@ const OrderDetail = () => {
                 <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-[0.2em] mb-1">Stock Item</p>
                 <h2 className="text-2xl font-semibold text-zinc-900 tracking-tight italic">{order.artwork}</h2>
               </div>
-              <button className="p-2.5 bg-zinc-50 text-zinc-400 rounded-xl hover:text-zinc-900 border border-zinc-100">
-                <ExternalLink size={16} />
-              </button>
+            
             </div>
 
             {/* Admin Checklist UI */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-              {[
-                { label: "Frame Material", val: "A-Grade Teakwood", icon: ShieldCheck },
-                { label: "Surface Finish", val: "22K Pure Gold Foil", icon: CheckCircle2 },
-                { label: "Packing Status", val: "Multi-Layer Fragile", icon: Package },
-                { label: "Verification", val: "Aishwarya Arts Certified", icon: ShieldCheck },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 bg-zinc-50 rounded-2xl border border-zinc-100/50">
-                  <div className="p-2 bg-white rounded-lg shadow-sm text-amber-600"><item.icon size={16} /></div>
+            {/* COLUMN 2: ARTWORK SPECS (CENTER) */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="bg-white border border-zinc-200 rounded-[2.5rem] p-8 shadow-sm">
+                <div className="flex justify-between items-start mb-8">
                   <div>
-                    <p className="text-[9px] font-semibold text-zinc-400 uppercase tracking-widest">{item.label}</p>
-                    <p className="text-xs font-semibold text-zinc-800">{item.val}</p>
+                    <p className="text-[10px] font-semibold text-amber-600 uppercase tracking-[0.2em] mb-1">Item Verification</p>
+                    <h2 className="text-2xl font-semibold text-zinc-900 tracking-tight italic">Product Breakdown</h2>
+                  </div>
+                  <span className="px-3 py-1 bg-zinc-100 text-zinc-600 text-[10px] font-bold rounded-lg uppercase">
+                    1 Item
+                  </span>
+                </div>
+
+                {/* Real Item Detail Row */}
+                <div className="flex flex-col md:flex-row gap-8 p-6 bg-zinc-50 rounded-4xl border border-zinc-100">
+                  {/* Painting Thumbnail */}
+                  <div className="w-full md:w-40 aspect-square bg-white rounded-2xl border border-zinc-200 flex items-center justify-center overflow-hidden relative group">
+                    <img
+                      src={order.image || "/assets/placeholder-painting.jpg"}
+                      alt={order.artwork}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <ExternalLink size={16} className="text-white" />
+                    </div>
+                  </div>
+
+                  {/* Specifications Ledger */}
+                  <div className="flex-1 grid grid-cols-2 gap-y-6 gap-x-4">
+                    <div>
+                      <p className="text-[9px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">Artwork Name</p>
+                      <p className="text-sm font-semibold text-zinc-800">{order.artwork}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">Dimensions</p>
+                      <p className="text-sm font-semibold text-zinc-800">{order.dimensions || "24 x 30 Inches"}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">Frame Style</p>
+                      <p className="text-sm font-semibold text-zinc-800">{order.frameType || "Classic Teakwood"}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">Price Unit</p>
+                      <p className="text-sm font-semibold text-amber-700">{order.amount}</p>
+                    </div>
                   </div>
                 </div>
-              ))}
+
+                {/* Shipping Destination Verification */}
+                <div className="mt-8 pt-8 border-t border-zinc-100">
+                  <div className="flex items-center gap-2 mb-4">
+                    <MapPin size={14} className="text-zinc-900" />
+                    <h4 className="text-sm font-semibold text-zinc-800 uppercase tracking-wide">Confirmed Shipping Address</h4>
+                  </div>
+                  <div className="p-5 bg-amber-50/50 border border-amber-100 rounded-2xl">
+                    <p className="text-sm font-medium text-zinc-800 leading-relaxed">
+                      {order.name} <br />
+                      {order.fullAddress || order.location} <br />
+                      <span className="text-zinc-900 font-semibold uppercase text-sm">Contact: {order.contact}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Status Control */}
+             <div className="mt-8 pt-8 border-t border-zinc-100">
+               <p className="text-sm font-semibold text-zinc-900 uppercase tracking-wide mb-4">Update Payment Ledger</p>
+               <div className="flex gap-3">
+                  {['Pending', 'Paid', 'Refunded'].map((status) => (
+                    <button 
+                      key={status}
+                      onClick={() => handleUpdateStatus(status)}
+                      className={`px-6 py-2 rounded-xl text-[10px] font-semibold uppercase tracking-widest transition-all border ${
+                        order.paymentStatus === status 
+                        ? 'bg-amber-600 border-amber-600 text-white' 
+                        : 'bg-white border-zinc-200 text-zinc-400 hover:border-amber-200'
+                      }`}
+                    >
+                      {status}
+                    </button>
+                  ))}
+               </div>
+            </div>
             </div>
           </div>
 
           <div className="bg-white border border-zinc-200 rounded-[2.5rem] p-8 flex items-center justify-between shadow-sm">
-             <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center"><CheckCircle2 size={24} /></div>
-                <div>
-                   <p className="text-sm font-semibold text-zinc-900">Final Inspection Passed</p>
-                   <p className="text-[10px] text-zinc-400 font-semibold uppercase tracking-widest">System Timestamp: 11 March 2026</p>
-                </div>
-             </div>
-             <button className="text-xs font-semibold text-amber-600 underline">View Quality Logs</button>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center"><CheckCircle2 size={24} /></div>
+              <div>
+      <p className="text-sm font-semibold text-zinc-900">Final Inspection Passed</p>
+      <p className="text-[10px] text-zinc-800 font-semibold uppercase tracking-wide">
+        {/* Uses the order date from your API, or current date if loading */}
+        System Timestamp: {order?.date || new Date().toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric'
+        })}
+      </p>
+    </div>
+            </div>
+            
           </div>
         </div>
 
@@ -176,48 +270,45 @@ const OrderDetail = () => {
             </div>
 
             <div className="relative pl-6 space-y-8">
-               {/* Vertical Tracker Line */}
-               <div className="absolute left-1.5 top-1.5 bottom-1.5 w-[2px] bg-zinc-100" />
-               
-               <div className="relative">
-                  <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-amber-500 ring-4 ring-amber-50" />
-                  <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Order Logged</p>
-                  <p className="text-xs font-semibold text-zinc-800">{order.date}</p>
-               </div>
-               
-               <div className="relative">
-                  <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-zinc-200" />
-                  <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Packing & Framing</p>
-                  <p className="text-xs font-semibold text-zinc-400 italic">In Progress...</p>
-               </div>
+              {/* Vertical Tracker Line */}
+              <div className="absolute left-1.5 top-1.5 bottom-1.5 w-[2px] bg-zinc-100" />
 
-               <div className="relative">
-                  <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-zinc-200" />
-                  <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Shipment Dispatch</p>
-                  <p className="text-xs font-semibold text-zinc-400 italic">Awaiting Courier</p>
-               </div>
+              <div className="relative">
+                <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-amber-500 ring-4 ring-amber-50" />
+                <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Order Logged</p>
+                <p className="text-xs font-semibold text-zinc-800">{order.date}</p>
+              </div>
+
+              <div className="relative">
+                <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-zinc-200" />
+                <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Packing & Framing</p>
+                <p className="text-xs font-semibold text-zinc-400 italic">In Progress...</p>
+              </div>
+
+              <div className="relative">
+                <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-zinc-200" />
+                <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Shipment Dispatch</p>
+                <p className="text-xs font-semibold text-zinc-400 italic">Awaiting Courier</p>
+              </div>
             </div>
 
             <div className="mt-8 space-y-3">
-               <button className="w-full py-3 bg-zinc-100 text-zinc-900 rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-zinc-200 transition-all">
-                  Assign BlueDart Tracking
-               </button>
-               <button className="w-full py-3 border border-zinc-200 text-zinc-400 rounded-xl text-[10px] font-semibold uppercase tracking-widest cursor-not-allowed">
-                  Manifest Generated
-               </button>
+              <button className="w-full py-3 bg-zinc-100 text-zinc-900 rounded-xl text-[10px] font-semibold uppercase tracking-widest hover:bg-zinc-200 transition-all">
+                Assign Tracking Agent
+              </button>
+              
             </div>
           </div>
 
           <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl">
-             <div className="flex gap-3">
-                <AlertCircle size={16} className="text-amber-600 shrink-0" />
-                <p className="text-[10px] font-medium text-amber-800 leading-relaxed">
-                   <span className="font-bold">Admin Note:</span> This artwork requires wooden crate packaging for interstate transport.
-                </p>
-             </div>
+            <div className="flex gap-3">
+              <AlertCircle size={16} className="text-amber-600 shrink-0" />
+              <p className="text-[10px] font-medium text-amber-800 leading-relaxed">
+                <span className="font-bold">Admin Note:</span> This artwork requires wooden crate packaging for interstate transport.
+              </p>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );

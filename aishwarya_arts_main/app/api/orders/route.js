@@ -37,14 +37,15 @@ export async function POST(req) {
 
     // --- 1. GENERATE CUSTOM ORDER ID (AG-DDMM-XXX) ---
     const now = new Date();
-    const dateStr = `${String(now.getDate()).padStart(2, '0')}${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const monthYearStr = `${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
     
     const counter = await Counter.findOneAndUpdate(
-      { dateStr: dateStr },
+      { dateStr: monthYearStr },
       { $inc: { seq: 1 } },
       { new: true, upsert: true }
     );
-    const customOrderId = `AG-${dateStr}-${String(counter.seq).padStart(3, '0')}`;
+    const customOrderId = `AG-${String(counter.seq).padStart(3, '0')}-${monthYearStr}`;
+    
 
     // --- 2. VALIDATE ITEMS & PRICE ---
     let subtotal = 0;
