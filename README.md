@@ -11,9 +11,9 @@ TailwindCSS
 
 ShadCN UI
 
-Stripe (optional, if you add payments later)
+Razor Pay
 
-MongoDB / Firebase (future backend integration)
+MongoDB 
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
