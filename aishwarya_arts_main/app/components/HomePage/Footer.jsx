@@ -37,7 +37,8 @@ const Footer = () => {
 
             {/* THE MISSION (Improved Content) */}
             <p className="text-sm leading-relaxed text-zinc-900 max-w-xs font-normal">
-              Every stroke a story, every leaf a legacy. We bring the 16th-century soul of Tamil Nadu to your modern sanctuary.
+              Every stroke a story, every leaf a legacy. We bring the
+              16th-century soul of Tamil Nadu to your modern sanctuary.
             </p>
 
             {/* HERITAGE TAG */}
@@ -110,7 +111,8 @@ const Footer = () => {
                 +91 7550152764
               </a>
             </li>
-            <li>Namakkal, Tamil Nadu</li>
+            <li>3/648, Thuraiyur Road, N. Kosavampatti</li>
+            <li>Namakkal Tamilnadu - 637002</li>
           </ul>
         </address>
       </div>

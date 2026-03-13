@@ -143,7 +143,7 @@ const ProfilePage = () => {
           <section className="lg:col-span-3 bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-gray-900">Account Details</h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-zinc-800 mt-1">
                 Provide your details for authenticated shipping and tracking.
               </p>
             </div>
@@ -155,7 +155,7 @@ const ProfilePage = () => {
               
               {/* FIXED LOGIC: Unlock phone number if it's missing (Google users) */}
               <Input 
-                label="Primary Phone (Required for Delivery)" 
+                label="Primary Phone (Required for Delivery)" className="text-zin-900"
                 name="primaryPhone" 
                 value={formData.primaryPhone} 
                 onChange={handleChange} 
@@ -212,7 +212,7 @@ const ProfilePage = () => {
 
 const Input = ({ label, full, name, value, onChange, disabled }) => (
   <div className={full ? "md:col-span-2" : ""}>
-    <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">{label}</label>
+    <label className="block text-xs font-bold text-zinc-900 uppercase tracking-widest mb-2">{label}</label>
     <input
       type="text"
       name={name}

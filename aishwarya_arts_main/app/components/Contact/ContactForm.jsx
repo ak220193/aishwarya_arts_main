@@ -13,12 +13,12 @@ export default function ContactForm() {
     setLoading(true);
 
     const formData = new FormData(event.currentTarget);
-    
+
     try {
       const result = await sendEmail(formData);
       if (result.success) {
         toast.success("Inquiry sent! We'll contact you soon.");
-        event.target.reset(); 
+        event.target.reset();
       } else {
         toast.error("Error: " + (result.error || "Failed to send"));
       }
@@ -30,8 +30,8 @@ export default function ContactForm() {
   }
 
   return (
-    <section className="py-24 max-w-7xl mx-auto px-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
+    <section className="py-10 max-w-7xl mx-auto px-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-20 items-start">
         {/* LEFT CONTENT */}
         <div>
           <h3 className="text-5xl font-semibold mb-8 leading-tight">Connect With Us</h3>
@@ -40,8 +40,10 @@ export default function ContactForm() {
             our studio creates pieces that last generations.
           </p>
           <div className="space-y-2 text-lg">
-            <p className="text-gray-800 font-semibold">Aishwarya Arts Tanjore Art Gallery</p>
-            <p className="text-gray-800">Namakkal, Tamil Nadu, India</p>
+            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none ">Aishwarya Arts  </h1>
+            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none "> Tanjore Art Gallery </h1>
+
+            <p className="text-gray-800">3/648, Thuraiyur Road, N. Kosavampatti Namakkal Tamilnadu - 637002</p>
             <p className="text-gray-800 font-medium">Phone: <span className="text-gray-600">+91 9655007661</span></p>
             <p className="text-gray-800 font-medium">Email: <span className="text-gray-600">contact.aishwaryaarts@gmail.com</span></p>
           </div>

@@ -30,13 +30,17 @@ const Shipping = () => {
       className="max-w-7xl mx-auto py-20 px-6 md:px-16"
       aria-labelledby="shipping-info"
     >
-      <div className="flex justify-center mb-5">
-      <h1
-        id="shipping-info"
-        className="font-semibold text-4xl tracking-wide"
-      >
-        Delivery | Offers| Best Price
-      </h1>
+      <div className="flex justify-center items-center mb-8 px-4">
+        <h1
+          id="shipping-info"
+          className="font-semibold text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-wide text-center leading-tight"
+        >
+          <span className="inline-block">Delivery</span>
+          <span className="mx-2 text-zinc-300">|</span>
+          <span className="inline-block">Offers</span>
+          <span className="mx-2 text-zinc-300">|</span>
+          <span className="inline-block">Best Price</span>
+        </h1>
       </div>
 
       <div className="grid md:grid-cols-3 gap-12 text-center hover:group hover:transition hover:scale-105">

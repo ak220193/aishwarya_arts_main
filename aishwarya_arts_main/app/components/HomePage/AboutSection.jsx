@@ -127,22 +127,25 @@ export default function ArtistAboutSection() {
           </motion.div>
 
           {/* --- RIGHT: CONTENT --- */}
-          <div className="order-1 lg:order-2 space-y-12">
-            <motion.div variants={itemVariants} className="space-y-6">
+          <div className="order-1 lg:order-2 space-y-10 lg:space-y-12">
+            {/* --- TEXT CONTENT --- */}
+            <motion.div variants={itemVariants} className="space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
               <div className="flex items-center gap-4">
-                <span className="h-px w-12 bg-amber-600" />
-                <h2 className="text-[15px] uppercase tracking-[0.5em] text-amber-500 font-semibold text-center md:text-left">
+                <span className="hidden md:block h-px w-12 bg-amber-600" />
+                <h2 className="text-[13px] md:text-[15px] uppercase tracking-[0.3em] md:tracking-[0.5em] text-amber-500 font-semibold">
                   Since 2000 • Thanjavur
                 </h2>
               </div>
-              <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white">
+
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-white">
                 Sacred Gold <br />
-                <span className="bg-linear-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent italic drop-shadow-[0_4px_15px_rgba(251,191,36,0.3)] select-none px-4">
+                <span className="bg-linear-to-r from-amber-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent italic drop-shadow-[0_4px_15px_rgba(251,191,36,0.3)] select-none">
                   Timeless Art
                 </span>
               </h1>
-              <p className="text-zinc-200 text-lg md:text-xl leading-relaxed max-w-xl font-medium">
-                Rooted in centuries of devotion, Aishwaraya Arts preserves the
+
+              <p className="text-zinc-300 text-base md:text-xl leading-relaxed max-w-xl font-medium px-4 md:px-0">
+                Rooted in centuries of devotion, Aishwarya Arts preserves the
                 regal legacy of Tanjore. We turn traditional spirituality into
                 golden heirlooms for your modern sanctuary.
               </p>
@@ -151,59 +154,44 @@ export default function ArtistAboutSection() {
             {/* --- REFINED STATS --- */}
             <motion.div
               variants={itemVariants}
-              className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-6 pt-4 w-full"
             >
               {infoBoxes.map((box, idx) => (
                 <div
                   key={idx}
-                  className="group border-l border-white/10 pl-6 py-2 hover:border-amber-600 transition-colors flex flex-col justify-center items-center"
+                  className="group border-b sm:border-b-0 sm:border-l border-white/10 pb-6 sm:pb-0 sm:pl-6 hover:border-amber-600 transition-colors flex flex-col items-center lg:items-start text-center lg:text-left"
                 >
-                  <div className="text-amber-500 mb-3 transition-transform items-center group-hover:scale-110">
-                    {React.cloneElement(box.icon, { size: 40 })}
+                  <div className="text-amber-500 mb-3 transition-transform group-hover:scale-110">
+                    {React.cloneElement(box.icon, { size: 32 })}
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1 tracking-tight">
                     {box.title}
                   </h3>
-                  <p className="text-md uppercase tracking-widest text-amber-500 font-semibold mb-2">
+                  <p className="text-[10px] md:text-xs uppercase tracking-widest text-amber-500 font-semibold mb-2">
                     {box.label}
                   </p>
-                  <p className="text-zinc-200 text-sm leading-snug tracking-normal">
+                  <p className="text-zinc-400 text-xs md:text-sm leading-snug max-w-50 lg:max-w-none">
                     {box.fullDesc}
                   </p>
                 </div>
               ))}
             </motion.div>
 
-            {/* --- RESTORED MAGNETIC GOLD CTA --- */}
+            {/* --- MAGNETIC GOLD CTA --- */}
             <motion.div
               variants={itemVariants}
-              className="pt-6 flex items-center justify-center flex-col"
+              className="pt-6 flex justify-center lg:justify-start"
             >
               <Link
                 href="/collections"
-                className="group relative inline-flex items-center justify-center px-12 py-5 font-semibold text-md uppercase tracking-widest text-zinc-950 overflow-hidden rounded-full transition-all active:scale-95 shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_35px_rgba(251,191,36,0.5)]"
+                className="group relative inline-flex items-center justify-center px-8 md:px-12 py-4 md:py-5 font-semibold text-sm md:text-md uppercase tracking-widest text-zinc-950 overflow-hidden rounded-full transition-all active:scale-95 shadow-[0_0_20px_rgba(217,119,6,0.3)] hover:shadow-[0_0_35px_rgba(251,191,36,0.5)]"
               >
-                {/* BASE PREMIUM GOLD SIGNAL (Before Hover) */}
-                <div className="absolute inset-0 bg-[#D4AF37] bg-linear-to-tr from-[#B8860B] via-[#FFD700] to-[#FDB931]" />
-
-                {/* THE TEXT (Using dark zinc for maximum contrast on gold) */}
+                <div className="absolute inset-0 bg-linear-to-tr from-[#B8860B] via-[#FFD700] to-[#FDB931]" />
                 <span className="relative z-10 flex items-center gap-3">
                   Explore Collection
-                  <ArrowRight
-                    size={17}
-                    strokeWidth={1}
-                    className="transition-transform group-hover:translate-x-1.5"
-                  />
+                  <ArrowRight size={17} className="transition-transform group-hover:translate-x-1.5" />
                 </span>
-
-                {/* DYNAMIC METALLIC SHINE (Hover Layer 1) */}
                 <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-
-                {/* RADIAL GLOW (Hover Layer 2) */}
-                <div className="absolute inset-0 bg-radial-at-tl from-yellow-200 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* BORDER SHARPENING */}
-                <div className="absolute inset-0 rounded-full border border-white/20 group-hover:border-white/40 transition-all" />
               </Link>
             </motion.div>
           </div>

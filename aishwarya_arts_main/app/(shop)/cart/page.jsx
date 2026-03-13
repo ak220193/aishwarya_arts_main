@@ -40,18 +40,58 @@ const Page = () => {
 
           {/* MAIN CONTENT */}
           <section className="lg:col-span-3 space-y-6">
+            {/* --- ENHANCED CART HEADER --- */}
+            <header className="bg-white rounded-4xl p-6 md:p-8 border border-zinc-100 shadow-sm relative overflow-hidden">
 
-            {/* Page Header */}
-            <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-gray-100">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-4">
-                <ShoppingBag className="text-amber-600" size={24} /> My Shopping Cart
-              </h2>
-              <p className="text-sm md:text-base text-gray-800 mt-1">
-                {cart.length > 0
-                  ? `You have ${cart.length} handmade paintings in your cart`
-                  : "Your cart is currently empty."}
-              </p>
-            </div>
+              {/* Decorative Background Icon */}
+              <ShoppingBag className="absolute -right-6 -bottom-6 text-zinc-50 size-48 -rotate-12 pointer-events-none" />
+
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+
+                {/* Left Side: Title and Icon */}
+                <div className="flex items-center gap-5">
+                  <div className="p-4 bg-amber-50 rounded-2xl text-amber-600 shadow-sm">
+                    <ShoppingBag size={32} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-semibold text-zinc-900 tracking-tight">
+                      Shopping Cart
+                    </h2>
+                    <p className="text-sm md:text-base text-zinc-800 font-medium mt-1 leading-tight">
+                      {cart.length > 0
+                        ? `Reviewing your ${cart.length} selected masterpieces`
+                        : "Your gallery collection is currently empty"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right Side: High-Contrast Stats Badge */}
+                <div className="flex items-center md:justify-end">
+                  <div className="px-6 py-3 bg-zinc-950 rounded-2xl text-center shadow-2xl border border-white/5 min-w-30">
+                    <p className="text-sm text-white uppercase font-semibold tracking-wide mb-0.5">
+                      Paintings
+                    </p>
+                    <p className="text-3xl font-black text-amber-400">
+                      {cart.length}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Summary Row (Visible only if items exist) */}
+              {cart.length > 0 && (
+                <div className="mt-8 pt-6 border-t border-zinc-50 flex flex-wrap gap-6 md:gap-10">
+                  <div className="flex items-center gap-2 text-zinc-900 text-md font-semibold uppercase tracking-wide">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Verified Items
+                  </div>
+                  <div className="flex items-center gap-2 text-zinc-600 text-md font-bold uppercase tracking-wide">
+                    <span className="text-zinc-800">Cart Value:</span>
+                    <span className="text-zinc-900 ">₹{totalAmount.toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+              )}
+            </header>
 
             {/* Cart Items List */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -79,7 +119,7 @@ const Page = () => {
                               {item.title}
                             </h3>
                             <div className="flex flex-wrap items-center gap-2 mt-2">
-                              <span className="px-2 py-0.5 bg-amber-50 text-amber-700 text-[10px] md:text-xs font-black uppercase tracking-widest border border-amber-100 rounded">
+                              <span className="px-2 py-0.5 bg-amber-50 text-amber-700 text-md font-semibold uppercase tracking-widest border border-amber-100 rounded">
                                 SKU: {item.sku}
                               </span>
                               <span className="hidden sm:block h-px w-6 bg-zinc-200" />
@@ -92,20 +132,20 @@ const Page = () => {
                           {/* Metadata Grid - 2 columns on all screens */}
                           <div className="grid grid-cols-2 gap-x-4 gap-y-3 pt-3 border-t border-zinc-50">
                             <div className="flex flex-col">
-                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Dimensions</span>
-                              <span className="text-sm md:text-sm font-semibold text-zinc-800">{item.size}</span>
+                              <span className="text-md uppercase font-semibold text-zinc-800 tracking-widest">Dimensions</span>
+                              <span className="text-md md:text-md font-semibold text-zinc-800">{item.size}</span>
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Selected Frame</span>
-                              <span className="text-sm md:text-sm font-semibold text-zinc-800">{item.frame}</span>
+                              <span className="text-md uppercase font-semibold text-zinc-800 tracking-widest">Selected Frame</span>
+                              <span className="text-md md:text-md font-semibold text-zinc-800">{item.frame}</span>
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Work Style</span>
-                              <span className="text-sm md:text-sm font-semibold text-zinc-800 uppercase">{item.style}</span>
+                              <span className="text-md uppercase font-semibold text-zinc-800 tracking-widest">Work Style</span>
+                              <span className="text-md md:text-md font-semibold text-zinc-800 uppercase">{item.style}</span>
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-xs uppercase font-semibold text-zinc-800 tracking-widest">Subject</span>
-                              <span className="text-sm md:text-sm font-semibold text-zinc-800">{item.godName}</span>
+                              <span className="text-md uppercase font-semibold text-zinc-800 tracking-widest">Subject</span>
+                              <span className="text-md md:text-md font-semibold text-zinc-800">{item.godName}</span>
                             </div>
                           </div>
                         </div>

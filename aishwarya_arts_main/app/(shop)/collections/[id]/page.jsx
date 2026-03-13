@@ -108,9 +108,8 @@ const ProductPage = ({ params }) => {
 
   // Matches 'price' (Selling Price) and 'mrp' (Original Price) from your matrix
   const displayPrice = currentSelection?.price || product?.price || 0;
-  const displayMRP = currentSelection?.mrp || product?.offerPrice || product?.price || 0;
-
-
+  const displayMRP =
+    currentSelection?.mrp || product?.offerPrice || product?.price || 0;
 
   const isSizeAvailable = (sizeString) => {
     if (!product || !product.priceMatrix) return false;
@@ -222,13 +221,13 @@ const ProductPage = ({ params }) => {
       id: product._id,
       title: product.title,
       sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`, // Important for Shopify feel
-      price: displayPrice,   // <--- FIXED: Use the matrix-aware price
+      price: displayPrice, // <--- FIXED: Use the matrix-aware price
       image: product.images[0],
       quantity: quantity,
       size: selectedSize,
       frame: selectedFrame,
-      style: selectedStyle,  // <--- ADDED: To show work style in cart
-      godName: product.godName
+      style: selectedStyle, // <--- ADDED: To show work style in cart
+      godName: product.godName,
     });
     toast.success(`${quantity} Item(s) added to cart`);
   };
@@ -256,7 +255,6 @@ const ProductPage = ({ params }) => {
   const technicalSpecs = [
     { label: "Divine Subject", value: product.godName },
     { label: "Work Style", value: product.workStyle },
-    { label: "Weight", value: product.weight },
     { label: "Frame Type", value: product.frameType },
     { label: "Lead Time", value: product.leadTime },
   ];
@@ -266,13 +264,13 @@ const ProductPage = ({ params }) => {
       id: product._id, // Unique ID
       title: product.title,
       sku: product.sku || `AA-${product._id.slice(-5).toUpperCase()}`,
-      price: displayPrice,   // <--- Live Matrix Price
+      price: displayPrice, // <--- Live Matrix Price
       image: activeImage || product.images[0],
-      size: selectedSize,    // <--- Live Selected Size
-      frame: selectedFrame,  // <--- Live Selected Frame
-      style: selectedStyle,  // <--- Live Selected Style
+      size: selectedSize, // <--- Live Selected Size
+      frame: selectedFrame, // <--- Live Selected Frame
+      style: selectedStyle, // <--- Live Selected Style
       godName: product.godName,
-      inStock: product.countInStock > 0
+      inStock: product.countInStock > 0,
     });
   };
 
@@ -369,7 +367,6 @@ const ProductPage = ({ params }) => {
               <h1 className="text-3xl md:text-5xl font-semibold tracking-tighter text-zinc-900 leading-tight md:leading-[0.9]">
                 {product.title}
               </h1>
-
 
               <div className="flex flex-col gap-1">
                 <div className="flex items-baseline gap-4">
@@ -517,22 +514,60 @@ const ProductPage = ({ params }) => {
             </div>
 
             {/* SHIPPING INFO BOX */}
-            <div className="p-4 md:p-5 bg-amber-50/30 rounded-2xl border border-amber-100/50 space-y-2">
-              <div className="flex items-center gap-3 text-amber-900 font-semibold uppercase text-sm md:text-md tracking-widest">
-                <Truck size={16} /> Shipping Logistics
-              </div>
-              <p className="text-sm md:text-md text-zinc-900 leading-relaxed italic">
-                Shipping charges calculated after packing. Lead time:{" "}
-                <span className="text-zinc-800 font-semibold">
-                  {product.leadTime || "7-18 Days"}
+            <div className="p-5 md:p-6 bg-white rounded-3xl border border-zinc-100 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] space-y-4">
+              {/* --- HEADER --- */}
+              <div className="flex items-center justify-between border-b border-zinc-50 pb-3">
+                <div className="flex items-center gap-2.5 text-amber-600 font-bold uppercase text-md tracking-wide">
+                  <div className="p-1.5 bg-amber-50 rounded-lg">
+                    <Truck size={20} strokeWidth={2.5} />
+                  </div>
+                  Logistics & Delivery
+                </div>
+                <span
+                  className=" inline-flex items-center justify-center bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-1 rounded-full tracking-widest uppercase md:text-xs md:px-3 md:py-1.5 lg:text-sm lg:px-4 lg:py-2border border-emerald-100/50 shadow-sm whitespace-nowrap"
+                >
+                  Safe Transit
                 </span>
-                .
-              </p>
+              </div>
+
+              {/* --- INFO GRID --- */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Lead Time */}
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-zinc-900 uppercase tracking-wider">
+                    Creation & Lead Time
+                  </p>
+                  <p className="text-sm md:text-md text-zinc-900 font-bold flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                    {product.leadTime || "7-18 Days"}
+                  </p>
+                </div>
+
+                {/* Shipping Note */}
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-zinc-900 uppercase tracking-wider">
+                    Shipping Fee
+                  </p>
+                  <p className="text-sm text-zinc-700 font-medium leading-tight">
+                    Calculated based on{" "}
+                    <span className="text-zinc-900 font-bold underline decoration-amber-200 underline-offset-4">
+                      final weight
+                    </span>{" "}
+                    after packing.
+                  </p>
+                </div>
+              </div>
+
+              {/* --- TRUST FOOTER --- */}
+              <div className="pt-2 flex items-center gap-2 text-sm text-zinc-900 italic">
+                <div className="w-1 h-1 bg-zinc-100 rounded-full" />
+                Professionally crated for break-free delivery.
+              </div>
             </div>
           </div>
         </div>
         {/* --- BOTTOM EXHIBIT --- */}
-        <div className="mt-20 md:mt-32 pt-12 md:pt-20 border-t border-zinc-100 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-32">
+        <div className="mt-20 md:mt-32 pt-12 md:pt-20 border-t border-zinc-100 grid grid-cols-1 xl:grid-cols-12 gap-12 xl:gap-30">
           {/* TECHNICAL SPECS */}
           <div className="lg:col-span-5 space-y-8 md:space-y-10">
             <h3 className="text-sm font-semibold uppercase tracking-widest text-amber-700">

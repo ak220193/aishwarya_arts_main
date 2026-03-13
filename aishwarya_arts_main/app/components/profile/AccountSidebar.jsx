@@ -152,7 +152,7 @@ const AccountSidebar = () => {
         <p className="mt-4 text-sm font-semibold text-gray-800">
           {displayName}
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-md text-gray-900 font-semibold">
           {session?.user?.email || "user@email.com"}
         </p>
       </div>
