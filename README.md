@@ -1,11 +1,11 @@
 # ✨ Aishwarya Arts — Tanjore Arts E-Commerce
-A modern e-commerce platform showcasing handcrafted Tanjore artworks, built using Next.js 14 and optimized for speed, SEO, and a premium shopping experience.
+A modern e-commerce platform showcasing handcrafted Tanjore artworks, built using Next.js 15 and optimized for speed, SEO, and a premium shopping experience.
 
 
 
 🚀 Tech Stack
 
-Next.js 14 (App Router)
+Next.js 15
 
 TailwindCSS
 
