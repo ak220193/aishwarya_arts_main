@@ -51,14 +51,14 @@ const menuItems = [
       { icon: Package, label: "Shipments", href: "/admin/shipments" },
     ],
   },
-  {
-    group: "Editorial (CMS)",
-    items: [
-      { icon: FileText, label: "Blog Posts", href: "/admin/blog" },
-      { icon: MessageSquare, label: "Comments", href: "/admin/comments" },
-      { icon: Star, label: "Product Reviews", href: "/admin/reviews" },
-    ],
-  },
+  // {
+  //   group: "Editorial (CMS)",
+  //   items: [
+  //     { icon: FileText, label: "Blog Posts", href: "/admin/blog" },
+  //     { icon: MessageSquare, label: "Comments", href: "/admin/comments" },
+  //     { icon: Star, label: "Product Reviews", href: "/admin/reviews" },
+  //   ],
+  // },
 ];
 
 const Sidebar = ({

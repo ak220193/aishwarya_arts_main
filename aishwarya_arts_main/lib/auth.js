@@ -63,8 +63,8 @@ export const authOptions = {
             id: user._id.toString(),
             name: `${user.firstName} ${user.lastName || ""}`.trim(),
             email: user.email,
-            image: user.avatar || null,
-            role: "user",
+            image: user.avatar?.startsWith('data:') ? null : user.avatar,
+            role: user.role || "user",
           };
         } catch (error) {
           // Providing a generic error to the UI for security, but logging detail to server
@@ -79,14 +79,42 @@ export const authOptions = {
     maxAge: 30 * 24 * 60 * 60,
   },
   callbacks: {
+
+    async signIn({ user, account, profile }) {
+    if (account.provider === "google") {
+      try {
+        await connectDB();
+        const existingUser = await User.findOne({ email: user.email });
+
+        if (!existingUser) {
+          // Create a new user if they don't exist
+          await User.create({
+            firstName: profile.given_name || user.name.split(" ")[0],
+            lastName: profile.family_name || "",
+            email: user.email,
+            avatar: user.image,
+            role: "user",
+          });
+        }
+        return true;
+      } catch (error) {
+        console.error("Error saving Google user:", error);
+        return false;
+      }
+    }
+    return true;
+  },
+  
     async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
-        token.picture = user.image || null;
+        const isBase64 = typeof user.image === 'string' && user.image.startsWith('data:');
+        token.picture = isBase64 ? null : user.image;
       }
       if (trigger === "update" && session?.image) {
-        token.picture = session.image;
+        const isBase64Update = session.image.startsWith('data:');
+        token.picture = isBase64Update ? null : session.image;
       }
       return token;
     },

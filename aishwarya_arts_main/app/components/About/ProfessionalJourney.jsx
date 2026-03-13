@@ -12,7 +12,7 @@ export default function ProfessionalJourney() {
     >
       {/* Left: Founder Image */}
       <figure className="relative group order-2 md:order-1">
-        <div className="relative w-full h-90 md:h-100 xl:h-150 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-yellow-700/20">
+        <div className="relative w-full h-90 md:h-90 lg:h-95 xl:h-120 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:scale-[1.03] group-hover:shadow-yellow-700/20">
           <Image
             src={Img1}
             alt="Portrait of Aishwarya, founder of Aishwarya Art Gallery"

@@ -8,8 +8,8 @@ const page = () => {
   return (
       <div>
       <ContactHeader />
-      <ContactInfoCards />
       <ContactForm />
+      <ContactInfoCards />
       <ContactMap />
     </div>
   )

@@ -33,8 +33,8 @@ const WishlistPage = () => {
       style: item.style,
       godName: item.godName
     });
-    
-    toggleWishlist(item); 
+
+    toggleWishlist(item);
     toast.success("Moved to cart!");
   };
 
@@ -48,7 +48,7 @@ const WishlistPage = () => {
   return (
     <div className="bg-gray-50 min-h-screen py-6 md:py-10 font-outfit">
       <div className="max-w-7xl mx-auto px-4">
-        
+
         {/* Mobile Navigation */}
         <div className="lg:hidden mb-6 flex items-center gap-2 text-sm text-gray-500">
           <Link href="/profile" className="hover:text-amber-600">Account</Link>
@@ -57,29 +57,53 @@ const WishlistPage = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
-          
+
           <div className="hidden lg:block">
             <AccountSidebar />
           </div>
 
           <section className="lg:col-span-3 space-y-6">
-            
+
             {/* Header Container */}
-            <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-gray-100 flex justify-between items-center">
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center gap-2">
-                   <Heart className="text-amber-600 fill-amber-600" size={24} /> My Wishlist
-                </h2>
-                <p className="text-sm text-gray-500 mt-1">
-                  {wishlist.length > 0 
-                    ? `You have ${wishlist.length} saved masterpieces`
-                    : "Your collection of saved art"} 
-                </p>
+            
+            <header className="bg-white rounded-4xl p-8 border border-zinc-100 shadow-sm relative overflow-hidden">
+              {/* Faded Background Icon for Art Curation */}
+              <Heart className="absolute -right-6 -bottom-6 text-zinc-50 size-48 -rotate-12 pointer-events-none fill-zinc-50" />
+
+              <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-5">
+                  <div className="p-4 bg-rose-50 rounded-2xl text-rose-600 shadow-sm">
+                    <Heart size={32} strokeWidth={1.5} className="fill-rose-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-semibold text-zinc-900 tracking-tight">My Wishlist</h2>
+                    <p className="text-zinc-800 font-semibold mt-1">A curated collection of your favorite traditional art</p>
+                  </div>
+                </div>
+
+                {/* High-Contrast Saved Items Badge */}
+                <div className="flex items-center gap-3">
+                  <div className="px-6 py-3 bg-zinc-900 rounded-2xl text-center shadow-xl border border-white/5">
+                    <p className="text-sm text-white uppercase font-semibold tracking-wide">Saved Pieces</p>
+                    <p className="text-2xl font-black text-amber-400">{wishlist.length}</p>
+                  </div>
+                </div>
               </div>
-              <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-zinc-900 to-amber-600 bg-clip-text text-transparent leading-none hidden sm:block">
-                Aishwarya Arts
-              </h1>
-            </div>
+
+              {/* Gallery Quick-Status Row */}
+              {wishlist.length > 0 && (
+                <div className="mt-8 pt-8 border-t border-zinc-50 flex flex-wrap gap-8">
+                  <div className="flex items-center gap-2 text-zinc-800 text-md font-semibold uppercase tracking-wide">
+                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                    Ready to Order
+                  </div>
+                  <div className="flex items-center gap-2 text-zinc-800 text-md font-semibold uppercase tracking-wide">
+                    <span className="text-zinc-900">Total Selection Value:</span>
+                    <span>₹{wishlist.reduce((acc, item) => acc + item.price, 0).toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
+              )}
+            </header>
 
             {/* Wishlist Items List */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -87,13 +111,13 @@ const WishlistPage = () => {
                 <div className="divide-y divide-gray-100">
                   {wishlist.map((item) => (
                     <div key={item.id} className="p-5 md:p-8 flex flex-col sm:flex-row items-start gap-6 hover:bg-gray-50/50 transition-colors">
-                      
+
                       {/* Product Image */}
                       <div className="w-full sm:w-40 md:w-48 aspect-square  rounded-xl overflow-hidden  shrink-0 relative">
-                        <Image 
-                          src={item.image || item.images?.[0]} 
-                          alt={item.title} 
-                          fill 
+                        <Image
+                          src={item.image || item.images?.[0]}
+                          alt={item.title}
+                          fill
                           className="object-contain p-2 md:p-4"
                         />
                         {item.inStock === false && (
@@ -143,19 +167,19 @@ const WishlistPage = () => {
 
                         {/* Actions Row */}
                         <div className="mt-6 flex items-center justify-between gap-4 border-t border-zinc-50 pt-4">
-                          <button 
-                            onClick={() => handleRemove(item)} 
-                            className="flex items-center gap-2 text-zinc-900 hover:text-red-500 text-xs font-semibold uppercase tracking-widest transition-colors"
+                          <button
+                            onClick={() => handleRemove(item)}
+                            className=" px-6 py-3  rounded-xl font-bold uppercase text-sm tracking-wide flex items-center gap-2 transition-all shadow-md  text-zinc-900 hover:text-red-500 "
                           >
                             <Trash2 size={16} /> Remove
                           </button>
-                          
-                          <button 
+
+                          <button
                             onClick={() => handleMoveToCart(item)}
                             disabled={item.inStock === false}
-                            className={`px-6 py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest flex items-center gap-2 transition-all shadow-md
-                              ${item.inStock !== false 
-                                ? "bg-zinc-900 text-white hover:bg-amber-600" 
+                            className={`px-6 py-3 rounded-xl font-bold uppercase text-sm tracking-wide flex items-center gap-2 transition-all shadow-md
+                              ${item.inStock !== false
+                                ? "bg-zinc-900 text-white hover:bg-amber-600"
                                 : "bg-zinc-100 text-zinc-400 cursor-not-allowed"}`}
                           >
                             <ShoppingBag size={14} />
@@ -170,11 +194,11 @@ const WishlistPage = () => {
               ) : (
                 <div className="py-20 flex flex-col items-center justify-center text-center px-6">
                   <div className="w-48 h-48 relative mb-6">
-                    <Image 
-                      src={EmptyWishlistGif} 
-                      alt="Empty Wishlist" 
-                      fill 
-                      unoptimized 
+                    <Image
+                      src={EmptyWishlistGif}
+                      alt="Empty Wishlist"
+                      fill
+                      unoptimized
                       priority
                       className="object-contain"
                     />
